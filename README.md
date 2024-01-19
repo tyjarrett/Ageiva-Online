@@ -1,4 +1,4 @@
-dev setup
+frontend dev setup
 
 - download expo go app
 - npx expo start
