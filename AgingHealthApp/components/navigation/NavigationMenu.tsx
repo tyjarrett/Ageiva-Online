@@ -1,7 +1,7 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import ResultsScreen from "../results/ResultsScreen";
 import ProfileScreen from "../profile/ProfileScreen";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import TestScreen from "../test/TestScreen";
 const NavigationMenu = () => {
   const Tab = createMaterialBottomTabNavigator();
 
@@ -9,7 +9,7 @@ const NavigationMenu = () => {
     <Tab.Navigator>
       <Tab.Screen
         name="Results"
-        component={ResultsScreen}
+        component={TestScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <Entypo name="bar-graph" size={24} color={color} />
