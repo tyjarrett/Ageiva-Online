@@ -5,6 +5,7 @@ import {
 } from "@react-navigation/native";
 import { useState } from "react";
 import { adaptNavigationTheme } from "react-native-paper";
+import LoginPageStub from "./LoginPageStub";
 
 const LoginOrApp = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -14,9 +15,13 @@ const LoginOrApp = () => {
 
   return (
     <>
-      <NavigationContainer theme={DarkTheme}>
-        <NavigationMenu />
-      </NavigationContainer>
+      {isAuthorized ? (
+        <NavigationContainer theme={DarkTheme}>
+          <NavigationMenu />
+        </NavigationContainer>
+      ) : (
+        <LoginPageStub />
+      )}
     </>
   );
 };

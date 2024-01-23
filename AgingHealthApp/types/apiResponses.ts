@@ -1,0 +1,3 @@
+type GetTokenResponse = {
+  token: string;
+};
