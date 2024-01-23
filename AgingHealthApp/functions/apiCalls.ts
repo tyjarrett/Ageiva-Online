@@ -14,3 +14,10 @@ export function getToken(
     password: password,
   });
 }
+
+export function createUser(
+  username: string,
+  password: string
+): Promise<AxiosResponse<CreateUserResponse>> {
+  return apiPost("users/", { username, password });
+}
