@@ -4,8 +4,13 @@ export const commonStyles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
   },
-  center: {
+  centerStack: {
+    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    alignSelf: "center",
+    width: "90%",
+  },
+  textInput: {
+    width: "100%",
   },
 });
