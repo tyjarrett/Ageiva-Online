@@ -6,8 +6,8 @@ const AuthContext = createContext<AuthContextTokenNotRequired | undefined>(
 );
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [authToken, setAuthToken] = useState("test1"); // initial value should be from storage
-  const [currentUser, setCurrentUser] = useState(testUser as User | undefined); // initial value should be from db
+  const [authToken, setAuthToken] = useState("");
+  const [currentUser, setCurrentUser] = useState(undefined as User | undefined);
   const authContextValue = {
     authToken,
     setAuthToken,

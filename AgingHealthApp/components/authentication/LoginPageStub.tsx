@@ -9,13 +9,15 @@ import {
 } from "../../functions/apiCalls";
 import { useState } from "react";
 import { useAuthWithoutToken } from "./AuthProvider";
+import * as SecureStore from "expo-secure-store";
+import { AxiosError } from "axios";
 
 type Props = {
-  setIsAuthorized: React.Dispatch<React.SetStateAction<boolean>>;
+  setCredsEntered: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // temporary login page -- should be removed after actual login page is created
-const LoginPageStub = ({ setIsAuthorized }: Props) => {
+const LoginPageStub = ({ setCredsEntered }: Props) => {
   const username = "lmartin8";
   const password = "password";
   const createUsername = "lmartin10";
@@ -33,19 +35,25 @@ const LoginPageStub = ({ setIsAuthorized }: Props) => {
   };
 
   const loginUsingCreds = () => {
-    getToken(username, password).then(({ data: tkn }) => {
-      setApiRes(JSON.stringify(tkn));
-      auth.setAuthToken(tkn.token);
-      setIsAuthorized(true);
-      // should set some loading in here for between the button press and the user being fetched
-      // alternatively we could change the token endpoint to return the user
-    });
+    getToken(username, password)
+      .then(({ data: tkn }) => {
+        SecureStore.setItemAsync("token", tkn.token).then((res) => {
+          setCredsEntered(true);
+        });
+      })
+      .catch((err: AxiosError) => {
+        console.log(err.message);
+        // probably incorrect creds, but need to do more error validation
+      });
+
+    // should set some loading in here for between the button press and the user being fetched
+    // alternatively we could change the token endpoint to return the user
   };
 
   const createUserPressed = () => {
     createUser(createUsername, createPassword).then(({ data }) => {
       auth.setAuthToken(data.token);
-      setIsAuthorized(true);
+      setCredsEntered(true);
     });
   };
 

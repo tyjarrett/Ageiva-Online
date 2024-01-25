@@ -2,7 +2,6 @@ import axios, { AxiosError } from "axios";
 import { API_URL } from "../utilities/constants";
 
 export const apiGet = (path: string, token?: string) => {
-  console.log(`${API_URL}/${path}`);
   return axios.get(`${API_URL}/${path}`, {
     headers: {
       Authorization: `Bearer ${token}`,
