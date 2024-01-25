@@ -6,14 +6,14 @@ import {
 import { useEffect, useState } from "react";
 import { Text, adaptNavigationTheme } from "react-native-paper";
 import LoginPageStub from "./LoginPageStub";
-import { getToken, getUserGivenToken } from "../../functions/apiCalls";
+import { getUserGivenToken } from "../../functions/apiCalls";
 import { useAuthWithoutToken } from "./AuthProvider";
 import { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
 
 const LoginOrApp = () => {
   const auth = useAuthWithoutToken();
-  const [credsEntered, setCredsEntered] = useState(false);
+  const [checkCreds, setCheckCreds] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [loadingCreds, setLoadingCreds] = useState(true);
   const { DarkTheme } = adaptNavigationTheme({
@@ -21,6 +21,10 @@ const LoginOrApp = () => {
   });
 
   useEffect(() => {
+    setIsAuthorized(false);
+    if (!checkCreds) {
+      return;
+    }
     async function fetchCreds() {
       const token = await SecureStore.getItemAsync("token");
       if (token) {
@@ -44,18 +48,19 @@ const LoginOrApp = () => {
       // should eventually remove all of these console logs
     }
     fetchCreds();
-  }, [credsEntered]);
+    setCheckCreds(false);
+  }, [checkCreds, auth.clearIndicator]);
 
   return (
     <>
       {loadingCreds ? (
         <Text>Loading</Text>
-      ) : isAuthorized ? (
+      ) : isAuthorized && auth.authToken ? (
         <NavigationContainer theme={DarkTheme}>
           <NavigationMenu />
         </NavigationContainer>
       ) : (
-        <LoginPageStub setCredsEntered={setCredsEntered} />
+        <LoginPageStub setCheckCreds={setCheckCreds} />
       )}
     </>
   );

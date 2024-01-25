@@ -2,6 +2,8 @@ type AuthContextBaseType = {
   authToken: string | undefined;
   setAuthToken: React.Dispatch<React.SetStateAction<string>>;
   setCurrentUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  clearAuth: VoidFunction;
+  clearIndicator: boolean;
 };
 
 type AuthContextTokenNotRequired = {

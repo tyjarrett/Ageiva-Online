@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { commonStyles } from "../../style/CommonStyles";
-import { Button, Text, TextInput, Title } from "react-native-paper";
+import { Button, Text, Title } from "react-native-paper";
 import { View } from "react-native";
 import {
   createUser,
@@ -13,11 +13,11 @@ import * as SecureStore from "expo-secure-store";
 import { AxiosError } from "axios";
 
 type Props = {
-  setCredsEntered: React.Dispatch<React.SetStateAction<boolean>>;
+  setCheckCreds: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // temporary login page -- should be removed after actual login page is created
-const LoginPageStub = ({ setCredsEntered }: Props) => {
+const LoginPageStub = ({ setCheckCreds }: Props) => {
   const username = "lmartin8";
   const password = "password";
   const createUsername = "lmartin10";
@@ -38,7 +38,7 @@ const LoginPageStub = ({ setCredsEntered }: Props) => {
     getToken(username, password)
       .then(({ data: tkn }) => {
         SecureStore.setItemAsync("token", tkn.token).then((res) => {
-          setCredsEntered(true);
+          setCheckCreds(true);
         });
       })
       .catch((err: AxiosError) => {
@@ -47,14 +47,18 @@ const LoginPageStub = ({ setCredsEntered }: Props) => {
       });
 
     // should set some loading in here for between the button press and the user being fetched
-    // alternatively we could change the token endpoint to return the user
   };
 
   const createUserPressed = () => {
-    createUser(createUsername, createPassword).then(({ data }) => {
-      auth.setAuthToken(data.token);
-      setCredsEntered(true);
-    });
+    createUser(createUsername, createPassword)
+      .then(({ data }) => {
+        auth.setAuthToken(data.token);
+        setCheckCreds(true);
+      })
+      .catch((err: AxiosError) => {
+        // possible username conflict error
+        console.log(err.message);
+      });
   };
 
   return (

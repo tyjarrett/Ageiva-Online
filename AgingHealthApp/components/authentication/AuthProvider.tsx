@@ -1,5 +1,11 @@
-import { PropsWithChildren, createContext, useContext, useState } from "react";
-import { testUser } from "../test/TestConstants";
+import {
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
+import * as SecureStore from "expo-secure-store";
 
 const AuthContext = createContext<AuthContextTokenNotRequired | undefined>(
   undefined
@@ -8,11 +14,26 @@ const AuthContext = createContext<AuthContextTokenNotRequired | undefined>(
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [authToken, setAuthToken] = useState("");
   const [currentUser, setCurrentUser] = useState(undefined as User | undefined);
+  const [clearIndicator, setClearIndicator] = useState(false);
+
+  const clearAuth = useCallback(() => {
+    async function clear() {
+      await SecureStore.deleteItemAsync("token");
+      setAuthToken("");
+      setCurrentUser(undefined);
+      setClearIndicator((prev) => !prev);
+    }
+
+    clear();
+  }, [setAuthToken, setCurrentUser, setClearIndicator]);
+
   const authContextValue = {
     authToken,
     setAuthToken,
     currentUser,
     setCurrentUser,
+    clearAuth,
+    clearIndicator,
   };
 
   return (

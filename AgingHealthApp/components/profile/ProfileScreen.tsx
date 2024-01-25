@@ -1,20 +1,25 @@
-import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
+import { SafeAreaView, StyleSheet, View } from "react-native";
+import { Button, Text, Title } from "react-native-paper";
+import { commonStyles } from "../../style/CommonStyles";
+import { useAuth } from "../authentication/AuthProvider";
 
 const ProfileScreen = () => {
+  const auth = useAuth();
+
+  const logout = () => {
+    auth.clearAuth();
+    // should do some loading here bc clearAuth is an async call
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>profile</Text>
-    </View>
+    <SafeAreaView style={commonStyles.safeAreaView}>
+      <View style={commonStyles.centerStack}>
+        <Title>profile</Title>
+        <Text>{auth.currentUser.username}</Text>
+        <Button onPress={logout}>Logout</Button>
+      </View>
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default ProfileScreen;
