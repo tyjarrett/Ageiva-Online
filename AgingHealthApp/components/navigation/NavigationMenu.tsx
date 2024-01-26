@@ -1,3 +1,4 @@
+import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import ProfileScreen from "../profile/ProfileScreen";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";

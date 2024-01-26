@@ -1,3 +1,4 @@
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { commonStyles } from "../../style/CommonStyles";
 import { Button, Text, Title } from "react-native-paper";
@@ -37,7 +38,7 @@ const LoginPageStub = ({ setCheckCreds }: Props) => {
   const loginUsingCreds = () => {
     getToken(username, password)
       .then(({ data: tkn }) => {
-        SecureStore.setItemAsync("token", tkn.token).then((res) => {
+        SecureStore.setItemAsync("token", tkn.token).then(() => {
           setCheckCreds(true);
         });
       })

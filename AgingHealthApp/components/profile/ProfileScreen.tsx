@@ -1,4 +1,5 @@
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import React from "react";
+import { SafeAreaView, View } from "react-native";
 import { Button, Text, Title } from "react-native-paper";
 import { commonStyles } from "../../style/CommonStyles";
 import { useAuth } from "../authentication/AuthProvider";

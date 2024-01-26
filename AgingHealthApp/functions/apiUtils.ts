@@ -11,10 +11,11 @@ export const apiGet = (path: string, token?: string) => {
 
 export const apiPost = (
   path: string,
-  body: Record<string, any>,
+  body: Record<string, string | Blob>,
   token?: string,
   contentType = "json" as "json" | "form"
 ) => {
+  console.log(`${API_URL}/${path}`);
   const authHeader = token ? { Authorization: `Bearer ${token}` } : null;
   const url = `${API_URL}/${path}`;
   if (contentType === "json") {
@@ -43,13 +44,13 @@ export const apiPost = (
 
 export const apiPut = (
   path: string,
-  body: Record<string, any>,
+  body: Record<string, string | Blob>,
   token?: string,
   contentType = "json" as "json" | "form"
 ) => {
   const authHeader = token ? { Authorization: `Bearer ${token}` } : null;
   const url = `${API_URL}/${path}`;
-  let cleanedUpBody = {} as Record<string, any>;
+  const cleanedUpBody = {} as Record<string, string | Blob>;
   Object.keys(body).forEach((key) => {
     if (body[key] !== undefined) {
       cleanedUpBody[key] = body[key];

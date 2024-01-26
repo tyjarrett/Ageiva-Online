@@ -1,3 +1,4 @@
+import React from "react";
 import { View } from "react-native";
 import { Button, Text, Title } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";

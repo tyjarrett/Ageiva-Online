@@ -1,3 +1,4 @@
+import React from "react";
 import NavigationMenu from "../navigation/NavigationMenu";
 import {
   NavigationContainer,
@@ -21,6 +22,7 @@ const LoginOrApp = () => {
   });
 
   useEffect(() => {
+    console.log("check auth");
     setIsAuthorized(false);
     if (!checkCreds) {
       return;
@@ -29,8 +31,10 @@ const LoginOrApp = () => {
       const token = await SecureStore.getItemAsync("token");
       if (token) {
         auth.setAuthToken(token);
+        console.log("getting user");
         getUserGivenToken(token)
           .then(({ data: user }) => {
+            console.log("user got");
             auth.setCurrentUser(user);
             setIsAuthorized(true);
             setLoadingCreds(false);
