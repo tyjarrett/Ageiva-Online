@@ -1,26 +1,22 @@
 import React from "react";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
 import { Button, Text, Title } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { commonStyles } from "../../style/CommonStyles";
 import { useAuth } from "../authentication/AuthProvider";
 
-const ProfileScreen = () => {
+const TestScreen = () => {
   const auth = useAuth();
-
-  const logout = () => {
-    auth.clearAuth();
-    // should do some loading here bc clearAuth is an async call
-  };
 
   return (
     <SafeAreaView style={commonStyles.safeAreaView}>
       <View style={commonStyles.centerStack}>
-        <Title>profile</Title>
+        <Title>Test Page</Title>
         <Text>{auth.currentUser.username}</Text>
-        <Button onPress={logout}>Logout</Button>
+        <Button>Test</Button>
       </View>
     </SafeAreaView>
   );
 };
 
-export default ProfileScreen;
+export default TestScreen;
