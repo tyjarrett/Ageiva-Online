@@ -1,8 +1,8 @@
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { commonStyles } from "../../style/CommonStyles";
-import { Button, Text, Title } from "react-native-paper";
-import { View } from "react-native";
+import { Button, Text, Title, TextInput } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
 import {
   createUser,
   getToken,
@@ -12,13 +12,20 @@ import { useState } from "react";
 import { useAuthWithoutToken } from "./AuthProvider";
 import * as SecureStore from "expo-secure-store";
 import { AxiosError } from "axios";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from "../../types/RootStack";
 
-type Props = {
-  setCheckCreds: React.Dispatch<React.SetStateAction<boolean>>;
-};
+// type Props = {
+//   setCheckCreds: React.Dispatch<React.SetStateAction<boolean>>;
+// };
+
+type NavigationProps = NativeStackScreenProps<RootStackParamList, 'LoginPageStub'>;
 
 // temporary login page -- should be removed after actual login page is created
-const LoginPageStub = ({ setCheckCreds }: Props) => {
+const LoginPageStub = (/*{ setCheckCreds }: Props,*/ { route, navigation } : NavigationProps) => {
+  const [pass, setPass] = React.useState("");
+  const [user, setUser] = React.useState("");
+  
   const username = "lmartin8";
   const password = "password";
   const createUsername = "lmartin10";
@@ -36,10 +43,11 @@ const LoginPageStub = ({ setCheckCreds }: Props) => {
   };
 
   const loginUsingCreds = () => {
+    console.log("hello")
     getToken(username, password)
       .then(({ data: tkn }) => {
         SecureStore.setItemAsync("token", tkn.token).then(() => {
-          setCheckCreds(true);
+          navigation.navigate('NavigationMenu');
         });
       })
       .catch((err: AxiosError) => {
@@ -54,7 +62,8 @@ const LoginPageStub = ({ setCheckCreds }: Props) => {
     createUser(createUsername, createPassword)
       .then(({ data }) => {
         auth.setAuthToken(data.token);
-        setCheckCreds(true);
+        // setCheckCreds(true);
+        navigation.navigate('NavigationMenu');
       })
       .catch((err: AxiosError) => {
         // possible username conflict error
@@ -63,16 +72,64 @@ const LoginPageStub = ({ setCheckCreds }: Props) => {
   };
 
   return (
-    <SafeAreaView style={commonStyles.safeAreaView}>
-      <View style={{ backgroundColor: "#000", ...commonStyles.centerStack }}>
-        <Title>Login Page</Title>
-        <Text>{`Api res: ${apiRes}`}</Text>
-        <Button onPress={getUserWithToken}>User with token</Button>
-        <Button onPress={loginUsingCreds}>Login using creds</Button>
-        <Button onPress={createUserPressed}>Create user</Button>
-      </View>
-    </SafeAreaView>
+    // <SafeAreaView style={commonStyles.safeAreaView}>
+    //   <View style={{ backgroundColor: "#000", ...commonStyles.centerStack }}>
+    //     <Title>Login Page</Title>
+    //     <Text>{`Api res: ${apiRes}`}</Text>
+    //     <Button onPress={getUserWithToken}>User with token</Button>
+    //     <Button onPress={loginUsingCreds}>Login using creds</Button>
+    //     <Button onPress={createUserPressed}>Create user</Button>
+    //   </View>
+    // </SafeAreaView>
+    <SafeAreaView style={styles.container}>
+             <Button style={style2.container} mode="contained" onPress={() => navigation.navigate('FirstScreen')}>
+              Back
+            </Button>
+            <Text variant="displayMedium">Logo</Text>
+            <Text>Welcome Back</Text>
+            <TextInput
+                mode ="outlined"
+                label="Username"
+                value={user}
+                onChangeText={user => setUser(user)}
+            >    
+            </TextInput>
+            <TextInput
+                mode ="outlined"
+                label="Password"
+                value={pass}
+                onChangeText={pass => setPass(pass)}
+                secureTextEntry = {true}
+            >    
+            </TextInput>
+            <Button mode="contained" onPress={() => {
+              console.log({user, pass})
+              loginUsingCreds()
+            }}>
+              Login
+            </Button>
+        </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexWrap: "wrap",
+    gap: 30,
+    alignItems: "center",
+    backgroundColor: "rgb(29, 27, 30)",
+    justifyContent: "center",
+  },
+});
+
+const style2 = StyleSheet.create({
+  container: {
+      position: 'absolute',
+      top: 30,
+      left: 10,
+      backgroundColor: "rgb(29, 27, 30)",
+  },
+});
 
 export default LoginPageStub;

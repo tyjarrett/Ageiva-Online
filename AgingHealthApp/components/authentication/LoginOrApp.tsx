@@ -11,8 +11,12 @@ import { getUserGivenToken } from "../../functions/apiCalls";
 import { useAuthWithoutToken } from "./AuthProvider";
 import { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from "../../types/RootStack";
 
-const LoginOrApp = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'LoginOrApp'>;
+
+const LoginOrApp = ({ route, navigation } : Props) => {
   const auth = useAuthWithoutToken();
   const [checkCreds, setCheckCreds] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -57,17 +61,22 @@ const LoginOrApp = () => {
 
   return (
     <>
-      {loadingCreds ? (
-        <Text>Loading</Text>
-      ) : isAuthorized && auth.authToken ? (
-        <NavigationContainer theme={DarkTheme}>
-          <NavigationMenu />
-        </NavigationContainer>
+      { isAuthorized && auth.authToken ? (
+        // <NavigationContainer theme={DarkTheme}>
+        //   <NavigationMenu />
+        // </NavigationContainer>
+        navigation.navigate('NavigationMenu')
       ) : (
-        <LoginPageStub setCheckCreds={setCheckCreds} />
+        navigation.navigate('FirstScreen')
+        // <LoginPageStub setCheckCreds={setCheckCreds} />
       )}
     </>
   );
 };
 
 export default LoginOrApp;
+
+
+// loadingCreds ? (
+//   <Text>Loading</Text>
+// ) :
