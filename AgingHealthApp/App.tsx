@@ -1,3 +1,4 @@
+import React from "react";
 import { MD3DarkTheme as DefaultTheme, PaperProvider } from "react-native-paper";
 import LoginOrApp from "./components/authentication/LoginOrApp";
 import FirstScreen from "./components/authentication/FirstScreen";

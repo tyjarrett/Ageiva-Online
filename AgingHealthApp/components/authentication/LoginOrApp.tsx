@@ -1,29 +1,22 @@
 import React from "react";
-import NavigationMenu from "../navigation/NavigationMenu";
-import {
-  NavigationContainer,
-  DarkTheme as NavigationTheme,
-} from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Text, adaptNavigationTheme } from "react-native-paper";
-import LoginPageStub from "./LoginPageStub";
 import { getUserGivenToken } from "../../functions/apiCalls";
 import { useAuthWithoutToken } from "./AuthProvider";
 import { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/RootStack";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'LoginOrApp'>;
+type Props = NativeStackScreenProps<RootStackParamList, "LoginOrApp">;
 
-const LoginOrApp = ({ route, navigation } : Props) => {
+const LoginOrApp = ({ navigation } : Props) => {
   const auth = useAuthWithoutToken();
   const [checkCreds, setCheckCreds] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [loadingCreds, setLoadingCreds] = useState(true);
-  const { DarkTheme } = adaptNavigationTheme({
-    reactNavigationDark: NavigationTheme,
-  });
+  // const [loadingCreds, setLoadingCreds] = useState(true);
+  // const { DarkTheme } = adaptNavigationTheme({
+  //   reactNavigationDark: NavigationTheme,
+  // });
 
   useEffect(() => {
     console.log("check auth");
@@ -41,18 +34,18 @@ const LoginOrApp = ({ route, navigation } : Props) => {
             console.log("user got");
             auth.setCurrentUser(user);
             setIsAuthorized(true);
-            setLoadingCreds(false);
+            // setLoadingCreds(false);
           })
           .catch((err: AxiosError) => {
             // possibly invalid token, but should do more error validation
             console.log(err.message);
-            setLoadingCreds(false);
+            // setLoadingCreds(false);
           });
       } else {
         console.log("no creds");
-        setLoadingCreds(false);
+        // setLoadingCreds(false);
       }
-      setLoadingCreds(false);
+      // setLoadingCreds(false);
       // should eventually remove all of these console logs
     }
     fetchCreds();
@@ -65,9 +58,9 @@ const LoginOrApp = ({ route, navigation } : Props) => {
         // <NavigationContainer theme={DarkTheme}>
         //   <NavigationMenu />
         // </NavigationContainer>
-        navigation.navigate('NavigationMenu')
+        navigation.navigate("NavigationMenu")
       ) : (
-        navigation.navigate('FirstScreen')
+        navigation.navigate("FirstScreen")
         // <LoginPageStub setCheckCreds={setCheckCreds} />
       )}
     </>
