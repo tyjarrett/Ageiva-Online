@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from dotenv import dotenv_values
+import os
 
 env = dotenv_values(".env")
 
@@ -25,12 +26,13 @@ REST_FRAMEWORK = {
 }
 
 # need to change this for prod
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:8000",
-    "http://localhost:8100",
-    "http://localhost:8081"
-]
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://localhost:8000",
+#     "http://localhost:8100",
+#     "http://localhost:8081"
+# ]
 
 AUTH_USER_MODEL = "users.User"
 
@@ -48,7 +50,7 @@ SECRET_KEY = env["SECRET_KEY"]
 DEBUG = True
 
 # need to change this for prod
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*" if env['ENV'] == "dev" else env['CNAME']]
 
 
 # Application definition
@@ -101,16 +103,28 @@ WSGI_APPLICATION = 'AgingHealthBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env["DB_NAME"], 
-        'USER': env["DB_USER"],
-        'PASSWORD': env["DB_PASSWORD"],
-        'HOST': env["DB_HOST"], 
-        'PORT': env["DB_PORT"],
+if 'RDS_HOSTNAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env["DB_NAME"], 
+            'USER': env["DB_USER"],
+            'PASSWORD': env["DB_PASSWORD"],
+            'HOST': env["DB_HOST"], 
+            'PORT': env["DB_PORT"],
+        }
+    }
 
 
 # Password validation
