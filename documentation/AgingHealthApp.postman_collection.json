@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}",
+					"raw": "{\n    \"username\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -34,7 +34,7 @@
 			"response": []
 		},
 		{
-			"name": "Get User (with username)",
+			"name": "Get User (with userId)",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -49,14 +49,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseurl}}/users/user/{{username}}/",
+					"raw": "{{baseurl}}/users/user/{{userId}}/",
 					"host": [
 						"{{baseurl}}"
 					],
 					"path": [
 						"users",
 						"user",
-						"{{username}}",
+						"{{userId}}",
 						""
 					]
 				}
@@ -80,7 +80,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"lmartin8\"\n}",
+					"raw": "{\n    \"password\": \"newPass\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -88,14 +88,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseurl}}/users/user/{{username}}/",
+					"raw": "{{baseurl}}/users/user/{{userId}}/",
 					"host": [
 						"{{baseurl}}"
 					],
 					"path": [
 						"users",
 						"user",
-						"{{username}}",
+						"{{userId}}",
 						""
 					]
 				}
@@ -168,7 +168,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}",
+					"raw": "{\n    \"username\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
