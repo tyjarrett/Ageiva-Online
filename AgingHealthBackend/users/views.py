@@ -20,15 +20,15 @@ class UserView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         try:
             user = models.User.objects.create_user(
-                username=serializer.validated_data["username"],
+                email=serializer.validated_data["username"],
                 password=serializer.validated_data["password"],
             )
         except IntegrityError:
-            # username already in use in db
+            # email already in use in db
             return Response(status=status.HTTP_409_CONFLICT)
 
         token = Token.objects.create(user=user)
-        response = {"username": user.username, "token": token.key}
+        response = {"userId": user.pk, "username": user.email, "token": token.key}
         return Response(response, status=status.HTTP_201_CREATED)
 
 
@@ -36,27 +36,25 @@ class TargetUserView(APIView):
     permission_classes = []
     parser_classes = [JSONParser, FormParser, MultiPartParser]
 
-    def get(self, request, username):
-        user = get_object_or_404(models.User, username=username)
+    def get(self, request, userId):
+        user = get_object_or_404(models.User, pk=userId)
         if request.user.pk != user.pk and not request.user.is_superuser:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         response = {
             "userId": user.pk,
-            "username": user.username,
+            "username": user.email,
             "dateJoined": user.date_joined,
             "isSuperuser": user.is_superuser,
         }
         return Response(response, status=status.HTTP_200_OK)
 
-    def put(self, request, username):
-        user = get_object_or_404(models.User, username=username)
+    def put(self, request, userId):
+        user = get_object_or_404(models.User, pk=userId)
         if request.user.pk != user.pk and not request.user.is_superuser:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         serializer = PutUserSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        if "username" in serializer.validated_data:
-            user.username = serializer.validated_data["username"]
         if "password" in serializer.validated_data:
             user.set_password(serializer.validated_data["password"])
         try:
@@ -65,8 +63,8 @@ class TargetUserView(APIView):
             return Response(status=status.HTTP_409_CONFLICT)
         return Response(status=status.HTTP_200_OK)
 
-    def delete(self, request, username):
-        user = get_object_or_404(models.User, username=username)
+    def delete(self, request, userId):
+        user = get_object_or_404(models.User, pk=userId)
         if request.user.pk != user.pk and not request.user.is_superuser:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         user.delete()
@@ -79,7 +77,7 @@ class UserViewWithToken(APIView):
     def get(self, request):
         response = {
             "userId": request.user.pk,
-            "username": request.user.username,
+            "username": request.user.email,
             "dateJoined": request.user.date_joined,
             "isSuperuser": request.user.is_superuser,
         }

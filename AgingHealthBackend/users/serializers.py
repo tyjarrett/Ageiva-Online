@@ -6,19 +6,18 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["userId", "username"]
+        fields = ["userId", "email"]
 
     def get_userId(self, obj):
         return obj.id
 
 
 class PostUserSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    username = serializers.EmailField()
     password = serializers.CharField()
 
 
 class PutUserSerializer(serializers.Serializer):
-    username = serializers.CharField(required=False)
     password = serializers.CharField(required=False)
 
     def validate(self, data):
