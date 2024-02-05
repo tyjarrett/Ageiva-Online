@@ -6,5 +6,5 @@ urlpatterns = [
     path("", views.UserView.as_view()),
     path("me/", views.UserViewWithToken.as_view()),
     path("token/", obtain_auth_token),
-    path("user/<str:username>/", views.TargetUserView.as_view()),
+    path("user/<int:userId>/", views.TargetUserView.as_view()),
 ]

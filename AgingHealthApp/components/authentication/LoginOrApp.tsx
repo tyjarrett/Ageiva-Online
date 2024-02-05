@@ -4,22 +4,23 @@ import { getUserGivenToken } from "../../functions/apiCalls";
 import { useAuthWithoutToken } from "./AuthProvider";
 import { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../types/RootStack";
+import NavigationMenu from "../navigation/NavigationMenu";
+import FirstScreen from "./FirstScreen";
+import LoginPageStub from "./LoginPageStub";
+import CreateUserScreen from "./CreateUserScreen";
+import ResetScreen from "./ResetScreen";
 
-type Props = NativeStackScreenProps<RootStackParamList, "LoginOrApp">;
-
-const LoginOrApp = ({ navigation } : Props) => {
+const LoginOrApp = () => {
   const auth = useAuthWithoutToken();
   const [checkCreds, setCheckCreds] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [page, setPage] = useState("FirstScreen");
   // const [loadingCreds, setLoadingCreds] = useState(true);
   // const { DarkTheme } = adaptNavigationTheme({
   //   reactNavigationDark: NavigationTheme,
   // });
 
   useEffect(() => {
-    console.log("check auth");
     setIsAuthorized(false);
     if (!checkCreds) {
       return;
@@ -28,10 +29,8 @@ const LoginOrApp = ({ navigation } : Props) => {
       const token = await SecureStore.getItemAsync("token");
       if (token) {
         auth.setAuthToken(token);
-        console.log("getting user");
         getUserGivenToken(token)
           .then(({ data: user }) => {
-            console.log("user got");
             auth.setCurrentUser(user);
             setIsAuthorized(true);
             // setLoadingCreds(false);
@@ -54,21 +53,22 @@ const LoginOrApp = ({ navigation } : Props) => {
 
   return (
     <>
-      { isAuthorized && auth.authToken ? (
-        // <NavigationContainer theme={DarkTheme}>
-        //   <NavigationMenu />
-        // </NavigationContainer>
-        navigation.navigate("NavigationMenu")
+      {isAuthorized && auth.authToken ? (
+        <NavigationMenu />
+      ) : page == "LoginPageStub" ? (
+        <LoginPageStub setCheckCreds={setCheckCreds} setPage={setPage} />
+      ) : page == "CreateUserScreen" ? (
+        <CreateUserScreen setCheckCreds={setCheckCreds} setPage={setPage} />
+      ) : page == "Reset" ? (
+        <ResetScreen setPage={setPage} />
       ) : (
-        navigation.navigate("FirstScreen")
-        // <LoginPageStub setCheckCreds={setCheckCreds} />
+        <FirstScreen setCheckCreds={setCheckCreds} setPage={setPage} />
       )}
     </>
   );
 };
 
 export default LoginOrApp;
-
 
 // loadingCreds ? (
 //   <Text>Loading</Text>
