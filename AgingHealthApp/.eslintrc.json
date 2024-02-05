@@ -15,8 +15,11 @@
   },
   "plugins": ["@typescript-eslint", "react"],
   "rules": {
-    "indent": ["error", 2],
-    "quotes": ["error", "double"],
-    "semi": ["error", "always"]
+    "indent": ["warn", 2],
+    "quotes": ["warn", "double"],
+    "semi": ["warn", "always"],
+    "@typescript-eslint/no-unused-vars": ["warn", {}],
+    "@typescript-eslint/no-unused-expressions": ["warn", {}],
+    "react/react-in-jsx-scope": "off"
   }
 }
