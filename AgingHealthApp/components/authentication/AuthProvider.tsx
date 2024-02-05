@@ -7,6 +7,10 @@ import {
   useState,
 } from "react";
 import * as SecureStore from "expo-secure-store";
+import {
+  AuthContextTokenNotRequired,
+  AuthContextTokenRequired,
+} from "../../types/Authentication";
 
 const AuthContext = createContext<AuthContextTokenNotRequired | undefined>(
   undefined

@@ -6,12 +6,12 @@ type AuthContextBaseType = {
   clearIndicator: boolean;
 };
 
-type AuthContextTokenNotRequired = {
+export type AuthContextTokenNotRequired = {
   authToken: string | undefined;
   currentUser: User | undefined;
 } & AuthContextBaseType;
 
-type AuthContextTokenRequired = {
+export type AuthContextTokenRequired = {
   authToken: string;
   currentUser: User;
 } & AuthContextBaseType;

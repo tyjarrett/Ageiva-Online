@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import { apiGet, apiPost } from "./apiUtils";
+import { CreateUserResponse, GetTokenResponse } from "../types/apiResponses";
 
 export function getUserGivenToken(token: string): Promise<AxiosResponse<User>> {
   return apiGet("users/me/", token);
