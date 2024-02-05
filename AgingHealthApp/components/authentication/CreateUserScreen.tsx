@@ -1,57 +1,84 @@
 import React from "react";
-import { SafeAreaView, StyleSheet} from "react-native";
-import { Text, Button , TextInput } from "react-native-paper";
+import { SafeAreaView, StyleSheet } from "react-native";
+import { Text, Button, TextInput } from "react-native-paper";
 import { useState } from "react";
+import { AxiosError } from "axios";
+import {
+  createUser,
+  // createUser,
+  // getUserGivenToken,
+} from "../../functions/apiCalls";
+import { useAuthWithoutToken } from "./AuthProvider";
 
 type Props = {
-    setCheckCreds: React.Dispatch<React.SetStateAction<boolean>>;
-    setPage: React.Dispatch<React.SetStateAction<string>>;
-  };
+  setCheckCreds: React.Dispatch<React.SetStateAction<boolean>>;
+  setPage: React.Dispatch<React.SetStateAction<string>>;
+};
 
-const CreateUserScreen = ( {setPage} : Props) => {
+const CreateUserScreen = ({ setPage }: Props) => {
+  const auth = useAuthWithoutToken();
   const [pass, setPass] = useState("");
   const [user, setUser] = useState("");
+
+  //   const getUserWithToken = () => {
+  //     getUserGivenToken(token)
+  //       .then(({ data: user }) => {
+  //         setApiRes(JSON.stringify(user));
+  //       })
+  //       .catch((err) => console.error(err));
+  //   };
+
+  const createUserPressed = () => {
+    createUser(user, pass)
+      .then(({ data }) => {
+        auth.setAuthToken(data.token);
+        console.log("user created");
+        // setCheckCreds(true);
+        // navigation.navigate("NavigationMenu");
+      })
+      .catch((err: AxiosError) => {
+        // possible username conflict error
+        console.log(err.message);
+      });
+  };
+
   return (
-  // <SafeAreaView style={commonStyles.safeAreaView}>
-  //   <View style={{ backgroundColor: "#000", ...commonStyles.centerStack }}>
-  //     <Title>Login Page</Title>
-  //     <Text>{`Api res: ${apiRes}`}</Text>
-  //     <Button onPress={getUserWithToken}>User with token</Button>
-  //     <Button onPress={loginUsingCreds}>Login using creds</Button>
-  //     <Button onPress={createUserPressed}>Create user</Button>
-  //   </View>
-  // </SafeAreaView>
     <SafeAreaView style={styles.container}>
-      <Button style={style2.container} mode="contained" onPress={() => setPage("FirstScreen")}>
-                  Back
+      <Button
+        style={style2.container}
+        mode="contained"
+        onPress={() => setPage("FirstScreen")}
+      >
+        Back
       </Button>
       <Text variant="displayMedium">Logo</Text>
       <Text>Welcome</Text>
       <TextInput
-        mode ="outlined"
+        mode="outlined"
         label="Email"
         value={user}
-        onChangeText={user => setUser(user)}
-      >    
-      </TextInput>
+        onChangeText={(user) => setUser(user)}
+      ></TextInput>
       <TextInput
-        mode ="outlined"
+        mode="outlined"
         label="Password"
         value={pass}
-        onChangeText={pass => setPass(pass)}
-        secureTextEntry = {true}
-      >    
-      </TextInput>
-      <Button mode="contained" onPress={() => {
-        console.log({user, pass});
-        // loginUsingCreds();
-      }}>
-                  Create User
+        onChangeText={(pass) => setPass(pass)}
+        secureTextEntry={true}
+      ></TextInput>
+      <Button
+        mode="contained"
+        onPress={() => {
+          createUserPressed();
+          // loginUsingCreds();
+        }}
+      >
+        Create User
       </Button>
     </SafeAreaView>
   );
 };
-    
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -63,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-    
+
 const style2 = StyleSheet.create({
   container: {
     position: "absolute",
@@ -72,5 +99,5 @@ const style2 = StyleSheet.create({
     backgroundColor: "rgb(29, 27, 30)",
   },
 });
-  
+
 export default CreateUserScreen;

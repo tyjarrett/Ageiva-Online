@@ -12,7 +12,7 @@ const ResetScreen = ( {setPage} : Props) => {
   
   return (
     <SafeAreaView style={styles.container}>
-      <Button style={styles.container2} mode="contained" onPress={() => setPage("FirstScreen")}>
+      <Button style={styles.container2} mode="contained" onPress={() => setPage("LoginPageStub")}>
               Back
       </Button>
       <Text variant="displayMedium">Logo</Text>

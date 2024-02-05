@@ -10,7 +10,6 @@ import LoginPageStub from "./LoginPageStub";
 import CreateUserScreen from "./CreateUserScreen";
 import ResetScreen from "./ResetScreen";
 
-
 const LoginOrApp = () => {
   const auth = useAuthWithoutToken();
   const [checkCreds, setCheckCreds] = useState(true);
@@ -22,7 +21,6 @@ const LoginOrApp = () => {
   // });
 
   useEffect(() => {
-    console.log("check auth");
     setIsAuthorized(false);
     if (!checkCreds) {
       return;
@@ -31,10 +29,8 @@ const LoginOrApp = () => {
       const token = await SecureStore.getItemAsync("token");
       if (token) {
         auth.setAuthToken(token);
-        console.log("getting user");
         getUserGivenToken(token)
           .then(({ data: user }) => {
-            console.log("user got");
             auth.setCurrentUser(user);
             setIsAuthorized(true);
             // setLoadingCreds(false);
@@ -57,22 +53,22 @@ const LoginOrApp = () => {
 
   return (
     <>
-      { isAuthorized && auth.authToken ? (
+      {isAuthorized && auth.authToken ? (
         <NavigationMenu />
-      ) : ( page == "LoginPageStub" ? (
-        <LoginPageStub setCheckCreds={setCheckCreds} setPage={setPage}/>
-      ) : ( page == "CreateUserScreen" ? (
-        <CreateUserScreen setCheckCreds={setCheckCreds} setPage={setPage}/>
-      ) : ( page == "Reset" ? (
-        <ResetScreen setPage={setPage}/>
-      ) : <FirstScreen setCheckCreds={setCheckCreds} setPage={setPage}/>
-      )))}
+      ) : page == "LoginPageStub" ? (
+        <LoginPageStub setCheckCreds={setCheckCreds} setPage={setPage} />
+      ) : page == "CreateUserScreen" ? (
+        <CreateUserScreen setCheckCreds={setCheckCreds} setPage={setPage} />
+      ) : page == "Reset" ? (
+        <ResetScreen setPage={setPage} />
+      ) : (
+        <FirstScreen setCheckCreds={setCheckCreds} setPage={setPage} />
+      )}
     </>
   );
 };
 
 export default LoginOrApp;
-
 
 // loadingCreds ? (
 //   <Text>Loading</Text>
