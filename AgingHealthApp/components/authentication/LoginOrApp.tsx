@@ -4,15 +4,18 @@ import { getUserGivenToken } from "../../functions/apiCalls";
 import { useAuthWithoutToken } from "./AuthProvider";
 import { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../types/RootStack";
+import NavigationMenu from "../navigation/NavigationMenu";
+import FirstScreen from "./FirstScreen";
+import LoginPageStub from "./LoginPageStub";
+import CreateUserScreen from "./CreateUserScreen";
+import ResetScreen from "./ResetScreen";
 
-type Props = NativeStackScreenProps<RootStackParamList, "LoginOrApp">;
 
-const LoginOrApp = ({ navigation } : Props) => {
+const LoginOrApp = () => {
   const auth = useAuthWithoutToken();
   const [checkCreds, setCheckCreds] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [page, setPage] = useState("FirstScreen");
   // const [loadingCreds, setLoadingCreds] = useState(true);
   // const { DarkTheme } = adaptNavigationTheme({
   //   reactNavigationDark: NavigationTheme,
@@ -55,14 +58,15 @@ const LoginOrApp = ({ navigation } : Props) => {
   return (
     <>
       { isAuthorized && auth.authToken ? (
-        // <NavigationContainer theme={DarkTheme}>
-        //   <NavigationMenu />
-        // </NavigationContainer>
-        navigation.navigate("NavigationMenu")
-      ) : (
-        navigation.navigate("FirstScreen")
-        // <LoginPageStub setCheckCreds={setCheckCreds} />
-      )}
+        <NavigationMenu />
+      ) : ( page == "LoginPageStub" ? (
+        <LoginPageStub setCheckCreds={setCheckCreds} setPage={setPage}/>
+      ) : ( page == "CreateUserScreen" ? (
+        <CreateUserScreen setCheckCreds={setCheckCreds} setPage={setPage}/>
+      ) : ( page == "Reset" ? (
+        <ResetScreen setPage={setPage}/>
+      ) : <FirstScreen setCheckCreds={setCheckCreds} setPage={setPage}/>
+      )))}
     </>
   );
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { commonStyles } from "../../style/CommonStyles";
 import { Button, Text, TextInput } from "react-native-paper";
-import {   StyleSheet } from "react-native";
+import {   StyleSheet, TouchableOpacity } from "react-native";
 import {
   // createUser,
   getToken,
@@ -12,17 +12,15 @@ import { useState } from "react";
 // import { useAuthWithoutToken } from "./AuthProvider";
 import * as SecureStore from "expo-secure-store";
 import { AxiosError } from "axios";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../types/RootStack";
 
-// type Props = {
-//   setCheckCreds: React.Dispatch<React.SetStateAction<boolean>>;
-// };
-
-type NavigationProps = NativeStackScreenProps<RootStackParamList, "LoginPageStub">;
 
 // temporary login page -- should be removed after actual login page is created
-const LoginPageStub = (/*{ setCheckCreds }: Props,*/ { navigation } : NavigationProps) => {
+type Props = {
+  setCheckCreds: React.Dispatch<React.SetStateAction<boolean>>;
+  setPage: React.Dispatch<React.SetStateAction<string>>;
+};
+// temporary login page -- should be removed after actual login page is created
+const LoginPageStub = ( {setCheckCreds, setPage} : Props) => {
   const [pass, setPass] = useState("");
   const [user, setUser] = useState("");
   
@@ -46,7 +44,7 @@ const LoginPageStub = (/*{ setCheckCreds }: Props,*/ { navigation } : Navigation
     getToken(user, pass)
       .then(({ data: tkn }) => {
         SecureStore.setItemAsync("token", tkn.token).then(() => {
-          navigation.navigate("NavigationMenu");
+          setCheckCreds(true);
         });
       })
       .catch((err: AxiosError) => {
@@ -71,24 +69,15 @@ const LoginPageStub = (/*{ setCheckCreds }: Props,*/ { navigation } : Navigation
   // };
 
   return (
-    // <SafeAreaView style={commonStyles.safeAreaView}>
-    //   <View style={{ backgroundColor: "#000", ...commonStyles.centerStack }}>
-    //     <Title>Login Page</Title>
-    //     <Text>{`Api res: ${apiRes}`}</Text>
-    //     <Button onPress={getUserWithToken}>User with token</Button>
-    //     <Button onPress={loginUsingCreds}>Login using creds</Button>
-    //     <Button onPress={createUserPressed}>Create user</Button>
-    //   </View>
-    // </SafeAreaView>
     <SafeAreaView style={styles.container}>
-      <Button style={style2.container} mode="contained" onPress={() => navigation.navigate("FirstScreen")}>
+      <Button style={styles.container2} mode="contained" onPress={() => setPage("FirstScreen")}>
               Back
       </Button>
       <Text variant="displayMedium">Logo</Text>
       <Text>Welcome Back</Text>
       <TextInput
         mode ="outlined"
-        label="Username"
+        label="Email"
         value={user}
         onChangeText={user => setUser(user)}
       >    
@@ -101,6 +90,9 @@ const LoginPageStub = (/*{ setCheckCreds }: Props,*/ { navigation } : Navigation
         secureTextEntry = {true}
       >    
       </TextInput>
+      <TouchableOpacity>
+        <Text style={styles.forgot} onPress={() => setPage("Reset")}>Forgot Your Password</Text>
+      </TouchableOpacity>
       <Button mode="contained" onPress={() => {
         console.log({user, pass});
         loginUsingCreds();
@@ -120,15 +112,16 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(29, 27, 30)",
     justifyContent: "center",
   },
-});
-
-const style2 = StyleSheet.create({
-  container: {
+  container2: {
     position: "absolute",
     top: 30,
     left: 10,
     backgroundColor: "rgb(29, 27, 30)",
   },
+  forgot: {
+    fontSize: 13,
+    alignItems: "flex-end",
+  }
 });
 
 export default LoginPageStub;
