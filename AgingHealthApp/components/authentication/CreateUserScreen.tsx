@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexWrap: "wrap",
+    alignContent: "center",
     gap: 30,
     alignItems: "center",
     backgroundColor: "rgb(29, 27, 30)",

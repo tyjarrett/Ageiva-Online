@@ -83,6 +83,7 @@ const LoginPageStub = ( {setCheckCreds, setPage} : Props) => {
       >    
       </TextInput>
       <TextInput
+        style={styles.container3}
         mode ="outlined"
         label="Password"
         value={pass}
@@ -105,6 +106,8 @@ const LoginPageStub = ( {setCheckCreds, setPage} : Props) => {
 
 const styles = StyleSheet.create({
   container: {
+    display: "flex",
+    alignContent: "center",
     flex: 1,
     flexWrap: "wrap",
     gap: 30,
@@ -117,6 +120,10 @@ const styles = StyleSheet.create({
     top: 30,
     left: 10,
     backgroundColor: "rgb(29, 27, 30)",
+  },
+  container3: {
+    alignContent: "stretch",
+    alightItems: "stretch"
   },
   forgot: {
     fontSize: 13,

@@ -24,12 +24,15 @@ const FirstScreen = ( {setPage} : Props) => {
 
 const styles = StyleSheet.create({
   container: {
+    display: "flex",
     flex: 1,
+    width: "100%",
     flexWrap: "wrap",
     gap: 30,
     alignItems: "center",
     backgroundColor: "rgb(29, 27, 30)",
     justifyContent: "center",
+    alignContent: "center",
   },
 });
 
