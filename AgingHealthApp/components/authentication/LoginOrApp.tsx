@@ -15,10 +15,6 @@ const LoginOrApp = () => {
   const [checkCreds, setCheckCreds] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [page, setPage] = useState("FirstScreen");
-  // const [loadingCreds, setLoadingCreds] = useState(true);
-  // const { DarkTheme } = adaptNavigationTheme({
-  //   reactNavigationDark: NavigationTheme,
-  // });
 
   useEffect(() => {
     setIsAuthorized(false);
