@@ -2,7 +2,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { commonStyles } from "../../style/CommonStyles";
 import { Button, Text, TextInput } from "react-native-paper";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   // createUser,
   getToken,
@@ -24,6 +24,7 @@ const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
   const [user, setUser] = useState("");
   const [isloading, setLoading] = useState(false);
   const [errText, setErrText] = useState("");
+  const [style, setStyle] = useState(false);
 
   const loginUsingCreds = () => {
     getToken(user, pass)
@@ -36,6 +37,7 @@ const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
         console.log(err.message);
         setErrText("Incorrect Username or Password");
         setLoading(false);
+        setStyle(true);
         // probably incorrect creds, but need to do more error validation
       });
 
@@ -53,25 +55,27 @@ const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
       </Button>
       <Text variant="displayMedium">Logo</Text>
       <Text>Welcome Back</Text>
-      <TextInput
-        mode="outlined"
-        label="Email"
-        value={user}
-        onChangeText={(user) => setUser(user)}
-      ></TextInput>
-      <TextInput
-        style={styles.container3}
-        mode="outlined"
-        label="Password"
-        value={pass}
-        onChangeText={(pass) => setPass(pass)}
-        secureTextEntry={true}
-      ></TextInput>
-      <TouchableOpacity>
-        <Text style={styles.forgot} onPress={() => setPage("Reset")}>
-          Forgot Your Password
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.container3}>
+        {style ? <Text style={styles.error}>{errText}</Text> : <></>}
+        <TextInput
+          mode="outlined"
+          label="Email"
+          value={user}
+          onChangeText={(user) => setUser(user)}
+        ></TextInput>
+        <TextInput
+          mode="outlined"
+          label="Password"
+          value={pass}
+          onChangeText={(pass) => setPass(pass)}
+          secureTextEntry={true}
+        ></TextInput>
+      </View>
+      <View style={styles.forgot}>
+        <TouchableOpacity>
+          <Text onPress={() => setPage("Reset")}>Forgot Your Password</Text>
+        </TouchableOpacity>
+      </View>
       <Button
         mode="contained"
         loading={isloading}
@@ -82,7 +86,6 @@ const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
       >
         Login
       </Button>
-      <Text>{errText}</Text>
     </SafeAreaView>
   );
 };
@@ -93,10 +96,11 @@ const styles = StyleSheet.create({
     alignContent: "center",
     flex: 1,
     flexWrap: "wrap",
-    gap: 30,
+    gap: 25,
     alignItems: "center",
     backgroundColor: "rgb(29, 27, 30)",
     justifyContent: "center",
+    paddingBottom: 75,
   },
   container2: {
     position: "absolute",
@@ -105,12 +109,20 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(29, 27, 30)",
   },
   container3: {
-    alignContent: "stretch",
-    alightItems: "stretch",
+    width: 250,
+    gap: 25,
   },
   forgot: {
-    fontSize: 13,
+    fontSize: 20,
+    marginTop: -15,
+    width: 250,
     alignItems: "flex-end",
+    alignContent: "flex-end",
+  },
+  error: {
+    color: "rgb(255, 90, 80)",
+    marginBottom: -20,
+    width: 250,
   },
 });
 
