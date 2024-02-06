@@ -46,13 +46,6 @@ const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Button
-        style={styles.container2}
-        mode="contained"
-        onPress={() => setPage("FirstScreen")}
-      >
-        Back
-      </Button>
       <Text variant="displayMedium">Logo</Text>
       <Text>Welcome Back</Text>
       <View style={styles.container3}>
@@ -80,12 +73,20 @@ const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
         mode="contained"
         loading={isloading}
         onPress={() => {
+          if (!isloading) {
+            loginUsingCreds();
+          }
           setLoading(true);
-          loginUsingCreds();
         }}
       >
         Login
       </Button>
+      <TouchableOpacity onPress={() => setPage("CreateUserScreen")}>
+        <View style={styles.inLine}>
+          <Text>Dont have an Account? </Text>
+          <Text style={styles.bold}>Sign Up</Text>
+        </View>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -102,12 +103,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingBottom: 75,
   },
-  container2: {
-    position: "absolute",
-    top: 30,
-    left: 10,
-    backgroundColor: "rgb(29, 27, 30)",
-  },
   container3: {
     width: 250,
     gap: 25,
@@ -123,6 +118,13 @@ const styles = StyleSheet.create({
     color: "rgb(255, 90, 80)",
     marginBottom: -20,
     width: 250,
+  },
+  inLine: {
+    flexDirection: "row",
+  },
+  bold: {
+    fontWeight: "bold",
+    color: "rgb(220, 184, 255)",
   },
 });
 
