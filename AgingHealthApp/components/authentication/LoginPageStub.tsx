@@ -22,6 +22,8 @@ type Props = {
 const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
   const [pass, setPass] = useState("");
   const [user, setUser] = useState("");
+  const [isloading, setLoading] = useState(false);
+  const [errText, setErrText] = useState("");
 
   const loginUsingCreds = () => {
     getToken(user, pass)
@@ -32,6 +34,8 @@ const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
       })
       .catch((err: AxiosError) => {
         console.log(err.message);
+        setErrText("Incorrect Username or Password");
+        setLoading(false);
         // probably incorrect creds, but need to do more error validation
       });
 
@@ -70,12 +74,15 @@ const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
       </TouchableOpacity>
       <Button
         mode="contained"
+        loading={isloading}
         onPress={() => {
+          setLoading(true);
           loginUsingCreds();
         }}
       >
         Login
       </Button>
+      <Text>{errText}</Text>
     </SafeAreaView>
   );
 };
