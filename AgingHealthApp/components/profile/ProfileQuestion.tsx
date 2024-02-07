@@ -1,20 +1,26 @@
-import { Button, Text, TextInput } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import { ProfileSurveyQuestion } from "../../types/Profile";
 import { StyleSheet } from "react-native";
-import { useState } from "react";
 import MultipleChoice from "./MultipleChoice";
+import { SetState } from "../../types/General";
+import { useEffect } from "react";
 
 type Props = {
   question: ProfileSurveyQuestion;
+  currentChoice: string;
+  setCurrentChoice: SetState<string>;
+  quantitative: boolean;
 };
 
-const ProfileQuestion = ({ question }: Props) => {
-  const [quantitative, setQuantitative] = useState(question.hasQuantitative);
-  const [choice, setChoice] = useState("");
-
-  const canSwitchMode = quantitative
-    ? question.qualitativeOptions.length > 0
-    : question.hasQuantitative;
+const ProfileQuestion = ({
+  question,
+  currentChoice,
+  setCurrentChoice,
+  quantitative,
+}: Props) => {
+  useEffect(() => {
+    setCurrentChoice("");
+  }, [quantitative]);
 
   return (
     <>
@@ -23,30 +29,21 @@ const ProfileQuestion = ({ question }: Props) => {
         {question.unit && quantitative ? `(${question.unit})` : ""}:
       </Text>
       {quantitative ? (
-        <TextInput style={styles.textInput} />
+        <TextInput
+          style={styles.textInput}
+          value={currentChoice}
+          onChangeText={(text) => setCurrentChoice(text)}
+        />
       ) : (
         <MultipleChoice
           choices={question.qualitativeOptions.map((choice, index) => ({
             text: choice,
             id: index.toString(),
           }))}
-          choice={choice}
-          setChoice={setChoice}
+          choice={currentChoice}
+          setChoice={setCurrentChoice}
         />
       )}
-      {canSwitchMode && (
-        <Button
-          mode="contained"
-          style={styles.next}
-          onPress={() => setQuantitative((prev) => !prev)}
-        >
-          Provide {quantitative ? "estimate" : "exact value"} instead
-        </Button>
-      )}
-
-      <Button mode="contained" style={styles.next}>
-        Next
-      </Button>
     </>
   );
 };

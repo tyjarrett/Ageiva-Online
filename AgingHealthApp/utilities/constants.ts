@@ -6,13 +6,26 @@ export const API_URL =
 
 export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
-    questionId: "grpdom",
+    variableId: "grip dom",
     question: "your grip strength of your dominant hand",
     hasQuantitative: true,
     unit: "lbs",
     qualitativeOptions: [
       "Very weak",
-      "Eeak",
+      "Weak",
+      "Average",
+      "Strong",
+      "Very strong",
+    ],
+  },
+  {
+    variableId: "grip ndom",
+    question: "your grip strength of your non-dominant hand",
+    hasQuantitative: true,
+    unit: "lbs",
+    qualitativeOptions: [
+      "Very weak",
+      "Weak",
       "Average",
       "Strong",
       "Very strong",
