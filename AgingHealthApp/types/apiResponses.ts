@@ -1,8 +1,8 @@
-type GetTokenResponse = {
+export type GetTokenResponse = {
   token: string;
 };
 
-type CreateUserResponse = {
+export type CreateUserResponse = {
   username: string;
   token: string;
 };

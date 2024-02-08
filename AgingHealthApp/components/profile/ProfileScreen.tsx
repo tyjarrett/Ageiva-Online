@@ -1,25 +1,32 @@
-import React from "react";
-import { SafeAreaView, View } from "react-native";
-import { Button, Text, Title } from "react-native-paper";
-import { commonStyles } from "../../style/CommonStyles";
-import { useAuth } from "../authentication/AuthProvider";
+import React, { useState } from "react";
+import { Appbar } from "react-native-paper";
+import ProfileSurvey from "./ProfileSurvey";
+import ProfileView from "./ProfileView";
+import { ProfileScreenName } from "../../types/Profile";
 
 const ProfileScreen = () => {
-  const auth = useAuth();
-
-  const logout = () => {
-    auth.clearAuth();
-    // should do some loading here bc clearAuth is an async call
-  };
+  const [currentScreen, setCurrentScreen] = useState(
+    "Profile" as ProfileScreenName
+  );
 
   return (
-    <SafeAreaView style={commonStyles.safeAreaView}>
-      <View style={commonStyles.centerStack}>
-        <Title>profile</Title>
-        <Text>{auth.currentUser.username}</Text>
-        <Button onPress={logout}>Logout</Button>
-      </View>
-    </SafeAreaView>
+    <>
+      <Appbar.Header>
+        {currentScreen !== "Profile" && (
+          <Appbar.BackAction
+            onPress={() => {
+              setCurrentScreen("Profile");
+            }}
+          />
+        )}
+        <Appbar.Content title={currentScreen} />
+      </Appbar.Header>
+      {currentScreen === "Profile" ? (
+        <ProfileView setCurrentScreen={setCurrentScreen} />
+      ) : (
+        <ProfileSurvey setCurrentScreen={setCurrentScreen} />
+      )}
+    </>
   );
 };
 
