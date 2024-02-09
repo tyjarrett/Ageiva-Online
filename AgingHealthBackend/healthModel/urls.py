@@ -2,5 +2,5 @@ from healthModel import views
 from django.urls import path
 
 urlpatterns = [
-    # path("", views.UserView.as_view()),
+    path("", views.HealthDataView.as_view()),
 ]

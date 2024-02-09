@@ -3,9 +3,37 @@ from users.models import User
 from django.core.validators import MinValueValidator
 
 # Create your models here.
+
+# only one per user
+class BackgroundData(models.Model):
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  date = models.DateField(auto_now_add=True)
+  age = models.IntegerField(validators=[MinValueValidator(18)])
+  BP_med = models.IntegerField(null=True, blank=True)
+  anticoagulant_med = models.IntegerField(null=True, blank=True)
+  chol_med = models.IntegerField(null=True, blank=True)
+  hipknee_treat = models.IntegerField(null=True, blank=True)
+  lungasthma_med = models.IntegerField(null=True, blank=True)
+  longill = models.IntegerField(null=True, blank=True)
+  limitact = models.IntegerField(null=True, blank=True)
+  effort = models.IntegerField(null=True, blank=True)
+  smkevr = models.IntegerField(null=True, blank=True)
+  smknow = models.IntegerField(null=True, blank=True)
+  mobility = models.IntegerField(null=True, blank=True)
+  country = models.IntegerField(null=True, blank=True)
+  alcohol = models.IntegerField(null=True, blank=True)
+  jointrep = models.IntegerField(null=True, blank=True)
+  fractures = models.IntegerField(null=True, blank=True)
+  height = models.FloatField(null=True, blank=True)
+  bmi = models.FloatField(null=True, blank=True)
+  ethnicity = models.IntegerField(null=True, blank=True)
+  sex = models.IntegerField(null=True, blank=True)
+
+# potentially many per user
 class HealthData(models.Model):
-  userId = models.ForeignKey(User, on_delete=models.CASCADE)
-  date = models.DateField(unique_for_month=True, auto_now_add=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  background = models.ForeignKey(BackgroundData, on_delete=models.CASCADE)
+  date = models.DateField(auto_now_add=True)
   age = models.IntegerField(validators=[MinValueValidator(18)])
   gait_speed = models.FloatField(null=True, blank=True)
   grip_dom = models.FloatField(null=True, blank=True)
@@ -36,26 +64,4 @@ class HealthData(models.Model):
   mch = models.FloatField(null=True, blank=True)
   hba1c = models.FloatField(null=True, blank=True)
   vitd = models.FloatField(null=True, blank=True)
-  BP_med = models.IntegerField(null=True, blank=True)
-  anticoagulant_med = models.IntegerField(null=True, blank=True)
-  chol_med = models.IntegerField(null=True, blank=True)
-  hipknee_treat = models.IntegerField(null=True, blank=True)
-  lungasthma_med = models.IntegerField(null=True, blank=True)
-  longill = models.IntegerField(null=True, blank=True)
-  limitact = models.IntegerField(null=True, blank=True)
-  effort = models.IntegerField(null=True, blank=True)
-  smkevr = models.IntegerField(null=True, blank=True)
-  smknow = models.IntegerField(null=True, blank=True)
-  mobility = models.IntegerField(null=True, blank=True)
-  country = models.IntegerField(null=True, blank=True)
-  alcohol = models.IntegerField(null=True, blank=True)
-  jointrep = models.IntegerField(null=True, blank=True)
-  fractures = models.IntegerField(null=True, blank=True)
-  height = models.FloatField(null=True, blank=True)
-  bmi = models.FloatField(null=True, blank=True)
-  ethnicity = models.IntegerField(null=True, blank=True)
-  sex = models.IntegerField(null=True, blank=True)
-
-
-
 
