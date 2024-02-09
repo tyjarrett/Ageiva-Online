@@ -6,6 +6,7 @@ from healthModel import serializers, models
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 from healthModel import constants
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 class HealthDataView(APIView):
@@ -49,4 +50,12 @@ class HealthDataView(APIView):
     health_data.save()
 
     return Response(status=status.HTTP_201_CREATED)
+  
+  def get(self, request):
+    background = get_object_or_404(models.BackgroundData, user=request.user)
+    health_data = models.HealthData.objects.filter(user=request.user).order_by("date")
+    ser_background = serializers.BackgroundDataSerializer(background)
+    ser_health_data = serializers.HealthDataSerializer(health_data, many=True)
+    response = {"background": ser_background.data, "health_data": ser_health_data.data}
+    return Response(response)
     

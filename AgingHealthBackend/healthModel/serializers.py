@@ -1,11 +1,15 @@
 from rest_framework import serializers
-from healthModel.models import HealthData
+from healthModel import models
+
+class BackgroundDataSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = models.BackgroundData
+    fields = "__all__"
 
 class HealthDataSerializer(serializers.ModelSerializer):
   class Meta:
-    model = HealthData
+    model = models.HealthData
     fields = "__all__"
-
 
 class VariableContentSerializer(serializers.Serializer):
   response = serializers.FloatField()
