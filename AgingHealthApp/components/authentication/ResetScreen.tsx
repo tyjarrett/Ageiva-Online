@@ -4,28 +4,32 @@ import { useState } from "react";
 import React from "react";
 
 type Props = {
-    setPage: React.Dispatch<React.SetStateAction<string>>;
-  };
+  setPage: React.Dispatch<React.SetStateAction<string>>;
+};
 
-const ResetScreen = ( {setPage} : Props) => {
+const ResetScreen = ({ setPage }: Props) => {
   const [email, setEmail] = useState("");
-  
+
   return (
     <SafeAreaView style={styles.container}>
-      <Button style={styles.container2} mode="contained" onPress={() => setPage("LoginPageStub")}>
-              Back
+      <Button
+        style={styles.container2}
+        mode="contained"
+        onPress={() => setPage("LoginPageStub")}
+      >
+        Back
       </Button>
       <Text variant="displayMedium">Logo</Text>
       <Text>Enter Email for Password Verification Form</Text>
-      <TextInput 
-        mode ="outlined"
-        label="Password"
+      <TextInput
+        style={styles.container3}
+        mode="outlined"
+        label="Email"
         value={email}
-        onChangeText={email => setEmail(email)}
-      >    
-      </TextInput>
+        onChangeText={(email) => setEmail(email)}
+      ></TextInput>
       <Button mode="contained" onPress={() => setPage("LoginPageStub")}>
-                  Send
+        Send
       </Button>
     </SafeAreaView>
   );
@@ -33,10 +37,11 @@ const ResetScreen = ( {setPage} : Props) => {
 
 const styles = StyleSheet.create({
   container: {
+    display: "flex",
+    alignContent: "center",
     flex: 1,
     flexWrap: "wrap",
-    gap: 30,
-    alignContent: "center",
+    gap: 25,
     alignItems: "center",
     backgroundColor: "rgb(29, 27, 30)",
     justifyContent: "center",
@@ -46,6 +51,10 @@ const styles = StyleSheet.create({
     top: 30,
     left: 10,
     backgroundColor: "rgb(29, 27, 30)",
+  },
+  container3: {
+    width: 250,
+    gap: 25,
   },
 });
 export default ResetScreen;

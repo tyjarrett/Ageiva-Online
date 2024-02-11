@@ -5,7 +5,7 @@ import { useAuthWithoutToken } from "./AuthProvider";
 import { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
 import NavigationMenu from "../navigation/NavigationMenu";
-import FirstScreen from "./FirstScreen";
+
 import LoginPageStub from "./LoginPageStub";
 import CreateUserScreen from "./CreateUserScreen";
 import ResetScreen from "./ResetScreen";
@@ -58,7 +58,7 @@ const LoginOrApp = () => {
       ) : page == "Reset" ? (
         <ResetScreen setPage={setPage} />
       ) : (
-        <FirstScreen setCheckCreds={setCheckCreds} setPage={setPage} />
+        <LoginPageStub setCheckCreds={setCheckCreds} setPage={setPage} />
       )}
     </>
   );
