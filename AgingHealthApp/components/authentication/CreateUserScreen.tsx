@@ -86,7 +86,7 @@ const CreateUserScreen = ({ setPage }: Props) => {
         ></TextInput>
         <TextInput
           mode="outlined"
-          label="Password"
+          label="Confirm Password"
           value={pass2}
           onChangeText={(pass2) => setPass2(pass2)}
           secureTextEntry={true}
