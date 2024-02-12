@@ -54,10 +54,10 @@ class HealthDataView(APIView):
   def get(self, request):
     query = request.GET.get("vars", "")
     vars = query.split(",") if query else []
+    vars = list(filter(lambda var: var in constants.background_variables + constants.health_variables, vars))
     background = get_object_or_404(models.BackgroundData, user=request.user)
     health_data = models.HealthData.objects.filter(user=request.user).order_by("date")
-    
-    
+
     if len(vars) == 0:
       ser_background = serializers.BackgroundDataSerializer(background)
       ser_health_data = serializers.HealthDataSerializer(health_data, many=True)
