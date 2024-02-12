@@ -171,7 +171,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"{{email}}111\",\n    \"password\": \"{{password}}\"\n}",
+							"raw": "{\n    \"username\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -261,16 +261,32 @@
 				{
 					"name": "Get Health Data",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseurl}}/healthmodel/",
+							"raw": "{{baseurl}}/healthmodel/?vars=gait_speed,grip_dom",
 							"host": [
 								"{{baseurl}}"
 							],
 							"path": [
 								"healthmodel",
 								""
+							],
+							"query": [
+								{
+									"key": "vars",
+									"value": "gait_speed,grip_dom"
+								}
 							]
 						}
 					},
