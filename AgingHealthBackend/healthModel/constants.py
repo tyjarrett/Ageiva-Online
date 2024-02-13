@@ -6,6 +6,8 @@ health_variables = ['gait_speed', 'grip_dom', 'grip_ndom', 'FI_ADL', 'FI_IADL', 
                     'full_tandem', 'srh', 'eye', 'hear', 'func', 'dias', 'sys', 'pulse', 'trig', 'crp',
                     'hdl','ldl','glucose','igf1','hgb','fib','fer', 'chol', 'wbc', 'mch', 'hba1c', 'vitd']
 
+quarter_months = { month: [((month-1)//3)*3+1+i for i in range(3)] for month in range(1, 13) }
+
 qual_to_quant = {
   "gait_speed": {
     0: 10,

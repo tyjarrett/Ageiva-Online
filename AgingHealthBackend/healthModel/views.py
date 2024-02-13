@@ -26,11 +26,12 @@ class HealthDataView(APIView):
 
     today = datetime.now().date()
     new_age = today.year-background.date.year+background.age
+    current_quarter_months = constants.quarter_months[today.month]
 
     # This will overwrite any previous entries for this month
     try: 
-      health_data = models.HealthData.objects.get(date__year=today.year, date__month=today.month)
-    except models.HealthData.DoesNotExist:
+      health_data = models.HealthData.objects.get(date__year=today.year, date__month__in=current_quarter_months)
+    except models.HealthData.DoesNotExist:\
       health_data = models.HealthData.objects.create(user=request.user, age=new_age, background=background)
 
     for variable, content in serializer.validated_data.items():
