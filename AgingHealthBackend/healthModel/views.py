@@ -41,7 +41,8 @@ class HealthDataView(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
       if var_serializer.validated_data["type"] == "qualitative":
         # need to convert into quantitative
-        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+        # return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+        pass
       if variable in constants.background_variables:
         setattr(background, variable, var_serializer.validated_data["response"])
       if variable in constants.health_variables:
