@@ -39,14 +39,20 @@ class HealthDataView(APIView):
       var_serializer = serializers.VariableContentSerializer(data=content)
       if not var_serializer.is_valid():
         return Response(status=status.HTTP_400_BAD_REQUEST)
-      if var_serializer.validated_data["type"] == "qualitative":
-        # need to convert into quantitative
-        # return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
-        pass
+      
+      qualitative = var_serializer.validated_data["type"] == "qualitative"
+      data = var_serializer.validated_data["response"]
+      if qualitative and variable in constants.qual_to_quant.keys():
+        if data not in range(0,5):
+          return Response(status=status.HTTP_400_BAD_REQUEST)
+        value_to_set = constants.qual_to_quant[variable][data]
+      else:
+        value_to_set = data
+
       if variable in constants.background_variables:
-        setattr(background, variable, var_serializer.validated_data["response"])
+        setattr(background, variable, value_to_set)
       if variable in constants.health_variables:
-        setattr(health_data, variable, var_serializer.validated_data["response"])
+        setattr(health_data, variable, value_to_set)
     background.save()
     health_data.save()
 
