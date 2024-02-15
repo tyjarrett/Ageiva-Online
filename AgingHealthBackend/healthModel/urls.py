@@ -3,4 +3,5 @@ from django.urls import path
 
 urlpatterns = [
     path("", views.HealthDataView.as_view()),
+    path("save/", views.SaveHealthDataView.as_view()),
 ]

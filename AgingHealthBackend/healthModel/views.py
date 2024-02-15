@@ -15,7 +15,6 @@ class HealthDataView(APIView):
   def post(self, request):
     serializer = serializers.PostHealthDataSerializer(data=request.data)
     if not serializer.is_valid():
-      print(serializer.errors)
       return Response(status=status.HTTP_400_BAD_REQUEST)
     try:
       background = models.BackgroundData.objects.get(user=request.user)
@@ -78,8 +77,38 @@ class HealthDataView(APIView):
         res_health_data.append({var: getattr(d, var) for var in fields_to_include + vars if var in fields_to_include + constants.health_variables})
 
       response = { "background": res_background, "health_data": res_health_data }
-
-
-
     return Response(response)
     
+class SaveHealthDataView(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def post(self, request):
+    serializer = serializers.PostSaveHealthDataSerializer(data=request.data)
+    if not serializer.is_valid():
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+    # serializer not working for some reason
+    print(serializer.validated_data)
+    save_data, created = models.SaveData.objects.get_or_create(user=request.user)
+    variables = models.SavedResponse.objects.filter(save_model=save_data)
+    to_save = serializer.validated_data["to_save"]
+
+    for variable in variables:
+      if variable.variable_id not in to_save:
+        variable.delete()
+    for var_to_save, var_content in to_save.items():
+      saved_response, created = models.SavedResponse.objects.get_or_create(save_model=save_data, 
+                                                                  variable_id=var_to_save, 
+                                                                  defaults={ "response": -1, "type": "quantiative" })
+      saved_response.response = var_content["response"]
+      saved_response.type = var_content["type"]
+      saved_response.save()
+    save_data.last_question = serializer.validated_data["last_question_number"]
+    save_data.save()
+    return Response(status=status.HTTP_201_CREATED)
+    
+  def get(self, request):
+    save_data = get_object_or_404(models.SaveData, user=request.user)
+    saved_responses = models.SavedResponse.objects.filter(save_model=save_data)
+    serialized_responses = serializers.SavedResponseSerializer(saved_responses, many=True)
+    response = {"user": save_data.user.pk, "last_question": save_data.last_question, "saved_data": serialized_responses.data}
+    return Response(response)

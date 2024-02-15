@@ -65,3 +65,12 @@ class HealthData(models.Model):
   hba1c = models.FloatField(null=True, blank=True)
   vitd = models.FloatField(null=True, blank=True)
 
+class SaveData(models.Model):
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  last_question = models.IntegerField(default=0)
+
+class SavedResponse(models.Model):
+  save_model = models.ForeignKey(SaveData, on_delete=models.CASCADE)
+  variable_id = models.CharField(max_length=20)
+  response = models.FloatField()
+  type = models.CharField(max_length=12)

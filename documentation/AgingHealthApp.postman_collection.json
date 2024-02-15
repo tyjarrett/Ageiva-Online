@@ -238,7 +238,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"age\": 50,\n    \"limitact\": {\n        \"response\": 1,\n        \"type\": \"quantitative\" \n    },\n    \"grip_dom\": {\n        \"response\": 99.0,\n        \"type\": \"quantitative\"\n    }\n}",
+							"raw": "{\n    \"age\": 50,\n    \"limitact\": {\n        \"response\": 1,\n        \"type\": \"quantitative\" \n    },\n    \"grip_dom\": {\n        \"response\": 99.0,\n        \"type\": \"quantitative\"\n    },\n    \"chair\": {\n        \"response\": 2,\n        \"type\": \"qualitative\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -287,6 +287,73 @@
 									"key": "vars",
 									"value": "gait_speed,grip_dom"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Responses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"last_question_number\": 10,\n    \"to_save\": {\n        \"gait_speed\": {\n            \"response\": 100.1,\n            \"type\": \"quantitative\"\n        },\n        \"grip_dom\": {\n            \"response\": 40,\n            \"type\": \"quantitative\"\n        }\n    } \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/healthmodel/save/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"healthmodel",
+								"save",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Saved Responses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/healthmodel/save/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"healthmodel",
+								"save",
+								""
 							]
 						}
 					},

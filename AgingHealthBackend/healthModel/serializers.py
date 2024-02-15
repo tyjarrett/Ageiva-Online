@@ -68,3 +68,12 @@ class PostHealthDataSerializer(serializers.Serializer):
   mch = VariableContentSerializer(required=False)
   hba1c = VariableContentSerializer(required=False)
   vitd = VariableContentSerializer(required=False)
+
+class PostSaveHealthDataSerializer(serializers.Serializer):
+  last_question_number = serializers.IntegerField()
+  to_save = PostHealthDataSerializer()
+
+class SavedResponseSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = models.SavedResponse
+    exclude = ["id", "save_model"]
