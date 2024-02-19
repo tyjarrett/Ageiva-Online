@@ -190,6 +190,15 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     }
   };
 
+  const ignorePress = () => {
+    // for (const [key, entry] of Object.entries(responseRecord)) {
+    //   if (entry.response === "") {
+    //     delete responseRecord[key]
+    //   }
+    setCurrentScreen("Profile");
+    console.log(responseRecord);
+  };
+
   const backPressed = () => {
     const newQ = currentQ - 1;
     setCurrentQ(newQ);
@@ -281,14 +290,7 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
             >
               Back
             </Button>
-            <Button
-              onPress={() => {
-                setCurrentScreen("Profile");
-                console.log(responseRecord);
-              }}
-            >
-              Ignore
-            </Button>
+            <Button onPress={ignorePress}>Ignore</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

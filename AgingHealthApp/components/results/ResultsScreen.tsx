@@ -10,6 +10,10 @@ import {
   Dialog,
 } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
+import { LineChart } from "react-native-chart-kit";
+import { Dimensions } from "react-native";
+
+const screenWidth = Dimensions.get("window").width;
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
@@ -24,6 +28,17 @@ const ResultsScreen = () => {
   const logout = () => {
     auth.clearAuth();
     // should do some loading here bc clearAuth is an async call
+  };
+
+  const readData = {
+    labels: [2024, 2034, 2045, 2055, 2065],
+    datasets: [
+      {
+        data: [120, 110, 130, 100, 95],
+        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+        strokeWidth: 2,
+      },
+    ],
   };
 
   return (
@@ -99,6 +114,43 @@ const ResultsScreen = () => {
         {testChecked ? <Text>test</Text> : <></>}
         {fooChecked ? <Text>foo</Text> : <></>}
         {barChecked ? <Text>bar</Text> : <></>}
+        <LineChart
+          data={{
+            labels: ["January", "February", "March", "April", "May", "June"],
+            datasets: [
+              {
+                data: [
+                  Math.random() * 100,
+                  Math.random() * 100,
+                  Math.random() * 100,
+                  Math.random() * 100,
+                  Math.random() * 100,
+                  Math.random() * 100,
+                ],
+              },
+            ],
+          }}
+          width={screenWidth * 0.85}
+          height={256}
+          verticalLabelRotation={30}
+          chartConfig={{
+            backgroundColor: "#e26a00",
+            backgroundGradientFrom: "#fb8c00",
+            backgroundGradientTo: "#ffa726",
+            decimalPlaces: 2, // optional, defaults to 2dp
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+            propsForDots: {
+              r: "6",
+              strokeWidth: "2",
+              stroke: "#ffa726",
+            },
+          }}
+          bezier
+        />
       </View>
     </>
   );
