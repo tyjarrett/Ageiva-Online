@@ -45,8 +45,7 @@ const CreateUserScreen = ({ setPage }: Props) => {
           .then(({ data }) => {
             auth.setAuthToken(data.token);
             console.log("user created");
-            // setCheckCreds(true);
-            // navigation.navigate("NavigationMenu");
+            setPage("LoginPageStub");
           })
           .catch((err: AxiosError) => {
             // possible username conflict error
@@ -68,7 +67,7 @@ const CreateUserScreen = ({ setPage }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text variant="displayMedium">Logo</Text>
-      <Text>Welcome Back</Text>
+      <Text>Welcome</Text>
       <View style={styles.container3}>
         {style ? <Text style={styles.error}>{errText}</Text> : <></>}
         <TextInput
