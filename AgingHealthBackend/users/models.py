@@ -7,7 +7,6 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError("Users must have an email address")
         nemail = self.normalize_email(email)
-        print(nemail)
         user = self.model(
             email=nemail,
             username=nemail,
