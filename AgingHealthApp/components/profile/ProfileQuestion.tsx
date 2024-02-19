@@ -18,10 +18,6 @@ const ProfileQuestion = ({
   setCurrentChoice,
   quantitative,
 }: Props) => {
-  useEffect(() => {
-    setCurrentChoice("");
-  }, [quantitative]);
-
   return (
     <>
       <Text style={styles.question}>

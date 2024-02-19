@@ -1,13 +1,22 @@
 import React, { useState } from "react";
-import { Appbar } from "react-native-paper";
+import { Appbar, Button } from "react-native-paper";
+import { StyleSheet } from "react-native";
 import ProfileSurvey from "./ProfileSurvey";
 import ProfileView from "./ProfileView";
 import { ProfileScreenName } from "../../types/Profile";
+import { useAuth } from "../authentication/AuthProvider";
 
 const ProfileScreen = () => {
   const [currentScreen, setCurrentScreen] = useState(
     "Profile" as ProfileScreenName
   );
+
+  const auth = useAuth();
+
+  const logout = () => {
+    auth.clearAuth();
+    // should do some loading here bc clearAuth is an async call
+  };
 
   return (
     <>
@@ -20,6 +29,13 @@ const ProfileScreen = () => {
           />
         )}
         <Appbar.Content title={currentScreen} />
+        {currentScreen === "Profile" ? (
+          <Button onPress={logout} style={styles.logout}>
+            Logout
+          </Button>
+        ) : (
+          <></>
+        )}
       </Appbar.Header>
       {currentScreen === "Profile" ? (
         <ProfileView setCurrentScreen={setCurrentScreen} />
@@ -30,4 +46,11 @@ const ProfileScreen = () => {
   );
 };
 
+const styles = StyleSheet.create({
+  logout: {
+    position: "relative",
+    top: "0%",
+    right: "5%",
+  },
+});
 export default ProfileScreen;
