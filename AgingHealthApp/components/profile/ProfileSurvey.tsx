@@ -208,7 +208,7 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
   return (
     <View style={styles.container}>
       <ProgressBar
-        progress={currentQ / (Object.keys(responseRecord).length + 12)}
+        progress={currentQ / (Object.keys(responseRecord).length + 20)}
         style={{ ...styles.progress }}
       />
       {currentQ < Object.keys(responseRecord).length ? (
@@ -298,7 +298,7 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
+    width: "100%",
     alignSelf: "center",
     gap: 20,
   },
