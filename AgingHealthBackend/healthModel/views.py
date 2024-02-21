@@ -21,7 +21,7 @@ class HealthDataView(APIView):
     except models.BackgroundData.DoesNotExist:
       if "age" not in serializer.validated_data:
         return Response({"error": "age must be included in first post"}, status=status.HTTP_400_BAD_REQUEST)
-      background = models.BackgroundData.objects.create(user=request.user, age=serializer.validated_data["age"])
+      background = models.BackgroundData.objects.create(user=request.user, age=serializer.validated_data["age"]["response"])
 
     today = datetime.now().date()
     new_age = today.year-background.date.year+background.age
@@ -29,8 +29,8 @@ class HealthDataView(APIView):
 
     # This will overwrite any previous entries for this month
     try: 
-      health_data = models.HealthData.objects.get(date__year=today.year, date__month__in=current_quarter_months)
-    except models.HealthData.DoesNotExist:\
+      health_data = models.HealthData.objects.get(user=request.user, date__year=today.year, date__month__in=current_quarter_months)
+    except models.HealthData.DoesNotExist:
       health_data = models.HealthData.objects.create(user=request.user, age=new_age, background=background)
 
     for variable, content in serializer.validated_data.items():
@@ -87,7 +87,6 @@ class SaveHealthDataView(APIView):
     if not serializer.is_valid():
       return Response(status=status.HTTP_400_BAD_REQUEST)
     # serializer not working for some reason
-    print(serializer.validated_data)
     save_data, created = models.SaveData.objects.get_or_create(user=request.user)
     variables = models.SavedResponse.objects.filter(save_model=save_data)
     to_save = serializer.validated_data["to_save"]
