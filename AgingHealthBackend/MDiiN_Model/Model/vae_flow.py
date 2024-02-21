@@ -39,12 +39,6 @@ class VAEImputeFlows(nn.Module):
         )
     
     def forward(self, t, x, m, env, med):
-        print("vae")
-        print(t.size())
-        print(x.size())
-        print(m.size())
-        print(env.size())
-        print(med.size())
         
         y = torch.cat((x, m, t, env, med),dim=-1)
         

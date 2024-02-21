@@ -44,13 +44,6 @@ class Model(nn.Module):
     
     def forward(self, data): 
         batch_size = 1
-        print(data['y0'].shape)
-        print(data['t0'].shape)
-        print(data['mask'].shape)
-        print(data['env'].shape)
-        print(data['med0'].shape)
-        print(data['predict_missing'].shape)
-        print(data['pop_std'].shape)
 
         # unpack data
         y0_ = data['y0'].to(self.device)
@@ -61,7 +54,7 @@ class Model(nn.Module):
         predict_missing = data['predict_missing'].to(self.device)
         pop_std = data['pop_std'].to(self.device)
 
-        trans_t0 = (t0 - self.mean_T)/self.std_T
+        trans_t0 = (t0.unsqueeze(-1) - self.mean_T)/self.std_T
         
         # fill in missing for input
         y0 = mask*(y0_) \
@@ -69,12 +62,11 @@ class Model(nn.Module):
 
         #sample VAE
         sample0, z_sample, mu0, logvar0, prior_entropy, log_det = self.impute(trans_t0, y0, mask, env, med0)
-
         # impute
         recon_mean_x0 = self.impute.decoder(torch.cat((z_sample, trans_t0, env, med0), dim=-1))
         
         # baseline state
-        x0 = mask[:,0,:] * (y0_ ) + (1 - mask[:,0,:]) * recon_mean_x0
+        x0 = mask * (y0_ ) + (1 - mask) * recon_mean_x0
         
         # compute context
         context = torch.cat((env, med0), dim = -1)
