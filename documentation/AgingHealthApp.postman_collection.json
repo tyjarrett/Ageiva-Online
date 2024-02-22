@@ -238,7 +238,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"age\": 50,\n    \"limitact\": {\n        \"response\": 1,\n        \"type\": \"quantitative\" \n    },\n    \"grip_dom\": {\n        \"response\": 99.0,\n        \"type\": \"quantitative\"\n    },\n    \"chair\": {\n        \"response\": 2,\n        \"type\": \"qualitative\"\n    }\n}",
+							"raw": "{\n    \"age\": {\n        \"response\": 52,\n        \"type\": \"quantitative\"\n    },\n    \"grip_dom\": {\n        \"response\": 34.66,\n        \"type\": \"quantitative\"\n    },\n    \"grip_ndom\": {\n        \"response\": 31.0,\n        \"type\": \"quantitative\"\n    },\n    \"FI_ADL\": {\n        \"response\": 0.6,\n        \"type\": \"quantitative\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -353,6 +353,35 @@
 							"path": [
 								"healthmodel",
 								"save",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Predict Health Data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/healthmodel/predict/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"healthmodel",
+								"predict",
 								""
 							]
 						}
