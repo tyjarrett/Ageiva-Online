@@ -17,7 +17,7 @@ class VariableContentSerializer(serializers.Serializer):
 
 class PostHealthDataSerializer(serializers.Serializer):
   # background
-  age = serializers.IntegerField(required=False)
+  age = VariableContentSerializer(required=False)
   BP_med = VariableContentSerializer(required=False)
   anticoagulant_med = VariableContentSerializer(required=False)
   chol_med = VariableContentSerializer(required=False)
