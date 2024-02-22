@@ -7,6 +7,13 @@ from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 from healthModel import constants
 from django.shortcuts import get_object_or_404
+import pandas as pd
+import os
+import math
+
+dir = os.path.dirname(os.path.realpath(__file__))
+mean_deficits = pd.read_csv(f"{dir}/../MDiiN_Model/Averages/mean_deficits.txt", index_col=0)
+std_deficits = pd.read_csv(f"{dir}/../MDiiN_Model/Averages/std_deficits.txt", index_col=0)
 
 # Create your views here.
 class HealthDataView(APIView):
@@ -49,10 +56,18 @@ class HealthDataView(APIView):
       else:
         value_to_set = data
 
+      # get log for variables that have big ranges of possible values
+      if variable in constants.log_scale_vars:
+        value_to_set = math.log(value_to_set)
+
+      mean = mean_deficits.loc[variable.replace('_', ' ')].iat[0]
+      std = std_deficits.loc[variable.replace('_', ' ')].iat[0]
+      z = (value_to_set - mean) / std
+
       if variable in constants.background_variables:
-        setattr(background, variable, value_to_set)
+        setattr(background, variable, z)
       if variable in constants.health_variables:
-        setattr(health_data, variable, value_to_set)
+        setattr(health_data, variable, z)
     background.save()
     health_data.save()
 
