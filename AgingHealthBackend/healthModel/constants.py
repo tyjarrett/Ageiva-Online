@@ -6,6 +6,8 @@ health_variables = ['gait_speed', 'grip_dom', 'grip_ndom', 'FI_ADL', 'FI_IADL', 
                     'full_tandem', 'srh', 'eye', 'hear', 'func', 'dias', 'sys', 'pulse', 'trig', 'crp',
                     'hdl','ldl','glucose','igf1','hgb','fib','fer', 'chol', 'wbc', 'mch', 'hba1c', 'vitd']
 
+log_scale_vars = ['fer','trig','crp', 'wbc', 'mch', 'vitd', 'dheas', 'leg_raise', 'full_tandem']
+
 quarter_months = { month: [((month-1)//3)*3+1+i for i in range(3)] for month in range(1, 13) }
 
 qual_to_quant = {
@@ -184,4 +186,33 @@ qual_to_quant = {
     3: 30,
     4: 40
   },
+  # purely qual variables should be normalized
+  'srh': {
+    0: 0.0,
+    1: .25,
+    2: .5,
+    3: .75,
+    4: 1.0
+  }, 
+  'eye': {
+    0: 0.0,
+    1: .2,
+    2: .4,
+    3: .6,
+    4: .8,
+    5: 1.0
+  }, 
+  'hear': {
+    0: 0.0,
+    1: .25,
+    2: .5,
+    3: .75,
+    4: 1.0,
+  }, 
+  'fun': {
+    0: 0.0,
+    1: 1/3,
+    2: 2/3,
+    4: 1.0
+  }
 }
