@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 import pandas as pd
 import os
 import math
+from MDiiN_Model.run_model import run_model
 
 dir = os.path.dirname(os.path.realpath(__file__))
 mean_deficits = pd.read_csv(f"{dir}/../MDiiN_Model/Averages/mean_deficits.txt", index_col=0)
@@ -125,4 +126,21 @@ class SaveHealthDataView(APIView):
     saved_responses = models.SavedResponse.objects.filter(save_model=save_data)
     serialized_responses = serializers.SavedResponseSerializer(saved_responses, many=True)
     response = {"user": save_data.user.pk, "last_question": save_data.last_question, "saved_data": serialized_responses.data}
+    return Response(response)
+  
+class PredictHealthDataView(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def get(self, request):
+    background = get_object_or_404(models.BackgroundData, user=request.user)
+    health_data = models.HealthData.objects.filter(user=request.user).order_by("-date")[0]
+    data = {}
+    for variable in constants.background_variables + constants.health_variables:
+      obj = background if variable in constants.background_variables else health_data
+      value = getattr(obj, variable)
+      data[variable.replace('_', ' ')] = value if value else -1000
+    health_prediction, survival_prediction = run_model(data)
+    
+    response = {"health": health_prediction, "survival": survival_prediction}
+    
     return Response(response)

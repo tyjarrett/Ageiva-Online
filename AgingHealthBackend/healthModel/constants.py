@@ -1,6 +1,6 @@
 background_variables = ['longill', 'limitact', 'effort', 'smkevr', 'smknow', 'mobility', 'country',
                         'alcohol', 'jointrep', 'fractures' , 'height', 'bmi', 'ethnicity','sex',
-                        'BP med', 'anticoagulent med', 'chol med', 'hip/knee treat', 'lung/asthma med']
+                        'BP_med', 'anticoagulant_med', 'chol_med', 'hipknee_treat', 'lungasthma_med']
 
 health_variables = ['gait_speed', 'grip_dom', 'grip_ndom', 'FI_ADL', 'FI_IADL', 'chair','leg_raise', 
                     'full_tandem', 'srh', 'eye', 'hear', 'func', 'dias', 'sys', 'pulse', 'trig', 'crp',
