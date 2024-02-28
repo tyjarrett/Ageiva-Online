@@ -7,6 +7,14 @@ from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 from healthModel import constants
 from django.shortcuts import get_object_or_404
+import pandas as pd
+import os
+import math
+from MDiiN_Model.run_model import run_model
+
+dir = os.path.dirname(os.path.realpath(__file__))
+mean_deficits = pd.read_csv(f"{dir}/../MDiiN_Model/Averages/mean_deficits.txt", index_col=0)
+std_deficits = pd.read_csv(f"{dir}/../MDiiN_Model/Averages/std_deficits.txt", index_col=0)
 
 # Create your views here.
 class HealthDataView(APIView):
@@ -27,7 +35,7 @@ class HealthDataView(APIView):
     new_age = today.year-background.date.year+background.age
     current_quarter_months = constants.quarter_months[today.month]
 
-    # This will overwrite any previous entries for this month
+    # This will overwrite any previous entries for this quarter
     try: 
       health_data = models.HealthData.objects.get(user=request.user, date__year=today.year, date__month__in=current_quarter_months)
     except models.HealthData.DoesNotExist:
@@ -48,11 +56,23 @@ class HealthDataView(APIView):
         value_to_set = constants.qual_to_quant[variable][data]
       else:
         value_to_set = data
+      
+      # get log for variables that have big ranges of possible values
+      if variable in constants.log_scale_vars:
+        value_to_set = math.log(value_to_set)
+
+      formatted_var = variable.replace('_', ' ')
+      if formatted_var in mean_deficits.index:
+        mean = mean_deficits.loc[formatted_var].iat[0]
+        std = std_deficits.loc[formatted_var].iat[0]
+        z = (value_to_set - mean) / std
+      else:
+        z = value_to_set
 
       if variable in constants.background_variables:
-        setattr(background, variable, value_to_set)
+        setattr(background, variable, z)
       if variable in constants.health_variables:
-        setattr(health_data, variable, value_to_set)
+        setattr(health_data, variable, z)
     background.save()
     health_data.save()
 
@@ -86,7 +106,6 @@ class SaveHealthDataView(APIView):
     serializer = serializers.PostSaveHealthDataSerializer(data=request.data)
     if not serializer.is_valid():
       return Response(status=status.HTTP_400_BAD_REQUEST)
-    # serializer not working for some reason
     save_data, created = models.SaveData.objects.get_or_create(user=request.user)
     variables = models.SavedResponse.objects.filter(save_model=save_data)
     to_save = serializer.validated_data["to_save"]
@@ -110,4 +129,34 @@ class SaveHealthDataView(APIView):
     saved_responses = models.SavedResponse.objects.filter(save_model=save_data)
     serialized_responses = serializers.SavedResponseSerializer(saved_responses, many=True)
     response = {"user": save_data.user.pk, "last_question": save_data.last_question, "saved_data": serialized_responses.data}
+    return Response(response)
+
+def z_score_to_actual(health_data):
+  res = {}
+  for var, z in health_data.items():
+    if var in mean_deficits.index:
+      mean = mean_deficits.loc[var].iat[0]
+      std = std_deficits.loc[var].iat[0]
+      actual = z * std + mean
+    else:
+      actual = z
+    res[var.replace(' ', '_')] = actual
+  return res
+
+class PredictHealthDataView(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def get(self, request):
+    background = get_object_or_404(models.BackgroundData, user=request.user)
+    health_data = models.HealthData.objects.filter(user=request.user).order_by("-date")[0]
+    data = {}
+    for variable in constants.background_variables + constants.health_variables:
+      obj = background if variable in constants.background_variables else health_data
+      value = getattr(obj, variable)
+      data[variable.replace('_', ' ')] = value if value else -1000
+    health_prediction, survival_prediction = run_model(data)
+    actual_health_pred = list(map(z_score_to_actual, health_prediction))
+
+    response = {"health": actual_health_pred, "survival": survival_prediction}
+    
     return Response(response)
