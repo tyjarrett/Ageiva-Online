@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { API_URL } from "../utilities/constants";
 
 export const apiGet = (path: string, token?: string) => {
+  console.log(`${API_URL}/${path}`);
   return axios.get(`${API_URL}/${path}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -11,35 +12,40 @@ export const apiGet = (path: string, token?: string) => {
 
 export const apiPost = (
   path: string,
-  body: Record<string, string | Blob>,
-  token?: string,
-  contentType = "json" as "json" | "form"
+  body: Record<string, string | object>,
+  token?: string
 ) => {
   console.log(`${API_URL}/${path}`);
   const authHeader = token ? { Authorization: `Bearer ${token}` } : null;
   const url = `${API_URL}/${path}`;
-  if (contentType === "json") {
-    // JSON request
-    const jsonBody = JSON.stringify(body);
-    return axios.post(url, jsonBody, {
-      headers: {
-        ...authHeader,
-        "Content-Type": "application/json",
-      },
-    });
-  } else {
-    // form-data request
-    const formBody = new FormData();
-    for (const key in body) {
-      formBody.append(key, body[key]);
-    }
-    return axios.post(url, formBody, {
-      headers: {
-        ...authHeader,
-        "Content-Type": "multipart/form-data",
-      },
-    });
+  // JSON request
+  const jsonBody = JSON.stringify(body);
+  return axios.post(url, jsonBody, {
+    headers: {
+      ...authHeader,
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+export const apiPostForm = (
+  path: string,
+  body: Record<string, Blob>,
+  token?: string
+) => {
+  console.log(`${API_URL}/${path}`);
+  const authHeader = token ? { Authorization: `Bearer ${token}` } : null;
+  const url = `${API_URL}/${path}`;
+  const formBody = new FormData();
+  for (const key in body) {
+    formBody.append(key, body[key]);
   }
+  return axios.post(url, formBody, {
+    headers: {
+      ...authHeader,
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 export const apiPut = (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   Button,
@@ -12,6 +12,8 @@ import {
 import { useAuth } from "../authentication/AuthProvider";
 import { LineChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
+import { getHealthData } from "../../functions/apiCalls";
+import { AxiosError } from "axios";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -20,15 +22,50 @@ const ResultsScreen = () => {
   const [visable, setVisible] = useState(false);
   const [search, setSearch] = useState("");
   const [testChecked, setTestChecked] = useState(true);
-  const [fooChecked, setFooChecked] = useState(false);
-  const [barChecked, setBarChecked] = useState(false);
+  const [checkArray, setCheckArray] = useState({} as Record<string, boolean>);
+  let newCheckArray = {} as Record<string, boolean>;
 
   const auth = useAuth();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const [dataRecord, setDataRecord] = useState({} as Record<string, string>);
+  const newDataRecord = {} as Record<string, string>;
 
   const logout = () => {
     auth.clearAuth();
     // should do some loading here bc clearAuth is an async call
   };
+
+  async function fetchData() {
+    getHealthData(auth.authToken)
+      .then(({ data: res }) => {
+        console.log(res.health_data[0]);
+        for (const [key, entry] of Object.entries(res.health_data[0])) {
+          if (
+            entry !== null &&
+            key !== "age" &&
+            key !== "background" &&
+            key !== "date" &&
+            key !== "id" &&
+            key !== "user"
+          ) {
+            console.log(key);
+            newDataRecord[key] = entry;
+            newCheckArray[key + "Check"] = false;
+          }
+        }
+        setDataRecord(newDataRecord);
+        setCheckArray(newCheckArray);
+      })
+      .catch((err: AxiosError) => {
+        // possibly invalid token, but should do more error validation
+        console.log(err.message);
+        // setLoadingCreds(false);
+      });
+  }
 
   const readData = {
     labels: [2024, 2034, 2045, 2055, 2065],
@@ -73,24 +110,21 @@ const ResultsScreen = () => {
                   setTestChecked(!testChecked);
                 }}
               />
-              <Checkbox.Item
-                style={styles.search}
-                label="foo"
-                mode="android"
-                status={fooChecked ? "checked" : "unchecked"}
-                onPress={() => {
-                  setFooChecked(!fooChecked);
-                }}
-              />
-              <Checkbox.Item
-                style={styles.search}
-                label="bar"
-                mode="android"
-                status={barChecked ? "checked" : "unchecked"}
-                onPress={() => {
-                  setBarChecked(!barChecked);
-                }}
-              />
+              {Object.keys(dataRecord).map((data) => (
+                <Checkbox.Item
+                  key={data}
+                  style={styles.search}
+                  label={data}
+                  mode="android"
+                  status={checkArray[data + "Check"] ? "checked" : "unchecked"}
+                  onPress={() => {
+                    newCheckArray = { ...checkArray };
+                    newCheckArray[data + "Check"] =
+                      !newCheckArray[data + "Check"];
+                    setCheckArray(newCheckArray);
+                  }}
+                />
+              ))}
               <Button
                 mode="contained"
                 onPress={() => {
@@ -112,8 +146,9 @@ const ResultsScreen = () => {
           Filter
         </Button>
         {testChecked ? <Text>test</Text> : <></>}
-        {fooChecked ? <Text>foo</Text> : <></>}
-        {barChecked ? <Text>bar</Text> : <></>}
+        {Object.keys(checkArray).map((data) =>
+          checkArray[data] ? <Text key={data}>{data}</Text> : <></>
+        )}
         <LineChart
           data={{
             labels: ["January", "February", "March", "April", "May", "June"],
@@ -163,7 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignContent: "center",
     width: "100%",
-    gap: 100,
+    // gap: 100,
   },
   logout: {
     position: "relative",

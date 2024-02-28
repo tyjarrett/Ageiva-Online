@@ -1,14 +1,14 @@
 export type ProfileScreenName = "Profile" | "Survey";
 
 const variableIds = [
-  "gait speed",
-  "grip dom",
-  "grip ndom",
-  "FI ADL",
-  "FI IADL",
+  "gait_speed",
+  "grip_dom",
+  "grip_ndom",
+  "FI_ADL",
+  "FI_IADL",
   "chair",
-  "leg raise",
-  "full tandem",
+  "leg_raise",
+  "full_tandem",
   "srh",
   "eye",
   "hear",
@@ -21,6 +21,7 @@ const variableIds = [
   "hdl",
   "ldl",
   "glucose",
+  "age",
   // "igf1",
   // "hgb",
   // "fib",
@@ -59,10 +60,16 @@ export type ProfileSurveyQuestion = {
   unit: string | undefined;
   hasQuantitative: boolean;
   qualitativeOptions: Array<string>;
+  required: boolean;
 };
 
 export type QuestionAndResponse = {
   variableId: VariableId;
+  type: "quantitative" | "qualitative";
+  response: string;
+};
+
+export type PResponse = {
   type: "quantitative" | "qualitative";
   response: string;
 };
