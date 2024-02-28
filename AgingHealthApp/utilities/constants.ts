@@ -6,7 +6,7 @@ export const API_URL =
 
 export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
-    variableId: "gait speed",
+    variableId: "gait_speed",
     question: "gait speed averaged between two timed walks",
     hasQuantitative: true,
     unit: "m/s",
@@ -18,9 +18,10 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "fast",
       "extremely fast",
     ],
+    required: false,
   },
   {
-    variableId: "grip dom",
+    variableId: "grip_dom",
     question: "your grip strength of your dominant hand",
     hasQuantitative: true,
     unit: "lbs",
@@ -31,9 +32,10 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Strong",
       "Very strong",
     ],
+    required: false,
   },
   {
-    variableId: "grip ndom",
+    variableId: "grip_ndom",
     question: "your grip strength of your non-dominant hand",
     hasQuantitative: true,
     unit: "lbs",
@@ -44,22 +46,25 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Strong",
       "Very strong",
     ],
+    required: false,
   },
   {
-    variableId: "FI ADL",
+    variableId: "FI_ADL",
     question:
       "Any difficulty in the last 3 months because of physical, mental, emotional, or memory problems: (a) dressing (including putting on shoes and socks), (b) eating (such as cutting up your food), (c) using the toilet (including getting up and down), (d) bathing and showering, (e) getting in and out of bed, and (f) walking across a room",
     hasQuantitative: false,
     unit: "sum",
     qualitativeOptions: ["1", "2", "3", "4", "5", "6"],
+    required: false,
   },
   {
-    variableId: "FI IADL",
+    variableId: "FI_IADL",
     question:
       "Any difficulty in the last 3 months because of physical, mental, emotional, or memory problems: (a) preparing a hot meal, (b) shopping for groceries, (c) making telephone calls, (d) taking medications, and (e) managing your money, such as paying your bills and keeping track of expenses",
     hasQuantitative: false,
     unit: "sum",
     qualitativeOptions: ["1", "2", "3", "4", "5"],
+    required: false,
   },
   {
     variableId: "chair",
@@ -74,9 +79,10 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "fast",
       "extremely fast",
     ],
+    required: false,
   },
   {
-    variableId: "leg raise",
+    variableId: "leg_raise",
     question:
       "Try to stand on one leg, whichever one you want, and raise the other leg off the ground a few inches. Stand for as long as you can - I will stop you at 30 seconds. You may use your arms, bend your knees, or move your body to maintain your balance, but try not to move your feet. Try to hold this position until I tell you to stop. You may support yourself on a chair, table or wall while getting into position.",
     hasQuantitative: true,
@@ -86,9 +92,10 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "more than half duration",
       "full duration",
     ],
+    required: false,
   },
   {
-    variableId: "full tandem",
+    variableId: "full_tandem",
     question:
       "Tandem stance: stand side by side with their feet together: Ages 50-69 were asked to hold for 30 seconds, 70+ for 10 seconds. Stopwatch was stopped when the participant steps out of position or grabs the nurses arm.",
     hasQuantitative: true,
@@ -98,6 +105,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "more than half duration",
       "full duration",
     ],
+    required: false,
   },
   {
     variableId: "srh",
@@ -105,6 +113,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     hasQuantitative: false,
     unit: "sec",
     qualitativeOptions: ["excellent", "very good", "good", "fair", "poor"],
+    required: false,
   },
   {
     variableId: "eye",
@@ -119,6 +128,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "poor",
       "registered/legally blind",
     ],
+    required: false,
   },
   {
     variableId: "hear",
@@ -126,6 +136,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     hasQuantitative: false,
     unit: "sec",
     qualitativeOptions: ["excellent", "very good", "good", "fair", "poor"],
+    required: false,
   },
   {
     variableId: "func",
@@ -139,6 +150,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "much difficulty",
       "unable",
     ],
+    required: false,
   },
   {
     variableId: "dias",
@@ -152,6 +164,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "high",
       "extremely high",
     ],
+    required: false,
   },
   {
     variableId: "sys",
@@ -165,6 +178,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "high",
       "extremely high",
     ],
+    required: false,
   },
   {
     variableId: "pulse",
@@ -178,6 +192,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "high",
       "extremely high",
     ],
+    required: false,
   },
   {
     variableId: "trig",
@@ -191,6 +206,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "High: 200 to 499 mg/dL (2.26 to 5.64 mmol/L)",
       "Very high: 500 mg/dL or above (5.65 mmol/L)",
     ],
+    required: false,
   },
   {
     variableId: "crp",
@@ -205,6 +221,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Marked elevation: More than 10.0 mg/dL",
       "Severe elevation: More than 50.0 mg/dL",
     ],
+    required: false,
   },
   {
     variableId: "hdl",
@@ -217,6 +234,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Average: 40-59 mg/dL (1-1.5 mmol/L)",
       "Low: less than 40 mg/dL (1.03 mmol/L)",
     ],
+    required: false,
   },
   {
     variableId: "ldl",
@@ -231,6 +249,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Optimal: Below 100 mg/dL (Below 2.6 mmol/L)",
       "Best: Below 70 mg/dL (Below 1.8 mmol/L)",
     ],
+    required: false,
   },
   {
     variableId: "glucose",
@@ -245,5 +264,14 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Optimal: Below 100 mg/dL (Below 2.6 mmol/L)",
       "Best: Below 70 mg/dL (Below 1.8 mmol/L)",
     ],
+    required: false,
+  },
+  {
+    variableId: "age",
+    question: "How old are you?",
+    hasQuantitative: true,
+    unit: "years",
+    qualitativeOptions: [],
+    required: true,
   },
 ];
