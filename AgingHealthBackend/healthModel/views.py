@@ -63,8 +63,8 @@ class HealthDataView(APIView):
 
       formatted_var = variable.replace('_', ' ')
       if formatted_var in mean_deficits.index:
-        mean = mean_deficits.loc[variable.replace('_', ' ')].iat[0]
-        std = std_deficits.loc[variable.replace('_', ' ')].iat[0]
+        mean = mean_deficits.loc[formatted_var].iat[0]
+        std = std_deficits.loc[formatted_var].iat[0]
         z = (value_to_set - mean) / std
       else:
         z = value_to_set
@@ -130,7 +130,19 @@ class SaveHealthDataView(APIView):
     serialized_responses = serializers.SavedResponseSerializer(saved_responses, many=True)
     response = {"user": save_data.user.pk, "last_question": save_data.last_question, "saved_data": serialized_responses.data}
     return Response(response)
-  
+
+def z_score_to_actual(health_data):
+  res = {}
+  for var, z in health_data.items():
+    if var in mean_deficits.index:
+      mean = mean_deficits.loc[var].iat[0]
+      std = std_deficits.loc[var].iat[0]
+      actual = z * std + mean
+    else:
+      actual = z
+    res[var.replace(' ', '_')] = actual
+  return res
+
 class PredictHealthDataView(APIView):
   permission_classes = [IsAuthenticated]
 
@@ -143,7 +155,8 @@ class PredictHealthDataView(APIView):
       value = getattr(obj, variable)
       data[variable.replace('_', ' ')] = value if value else -1000
     health_prediction, survival_prediction = run_model(data)
-    
-    response = {"health": health_prediction, "survival": survival_prediction}
+    actual_health_pred = list(map(z_score_to_actual, health_prediction))
+
+    response = {"health": actual_health_pred, "survival": survival_prediction}
     
     return Response(response)
