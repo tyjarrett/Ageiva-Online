@@ -16,6 +16,19 @@ dir = os.path.dirname(os.path.realpath(__file__))
 mean_deficits = pd.read_csv(f"{dir}/../MDiiN_Model/Averages/mean_deficits.txt", index_col=0)
 std_deficits = pd.read_csv(f"{dir}/../MDiiN_Model/Averages/std_deficits.txt", index_col=0)
 
+def z_score_to_actual(health_data):
+  res = {}
+  for var, z in health_data.items():
+    formatted_var = var.replace('_', ' ')
+    if formatted_var in mean_deficits.index and z is not None:
+      mean = mean_deficits.loc[formatted_var].iat[0]
+      std = std_deficits.loc[formatted_var].iat[0]
+      actual = z * std + mean
+    else:
+      actual = z
+    res[var.replace(' ', '_')] = actual
+  return res
+
 # Create your views here.
 class HealthDataView(APIView):
   permission_classes = [IsAuthenticated]
@@ -88,15 +101,18 @@ class HealthDataView(APIView):
     if len(vars) == 0:
       ser_background = serializers.BackgroundDataSerializer(background)
       ser_health_data = serializers.HealthDataSerializer(health_data, many=True)
-      response = {"background": ser_background.data, "health_data": ser_health_data.data}
+      res_background = ser_background.data
+      res_health_data = ser_health_data.data
     else:
       fields_to_include = ["id", "date", "age"]
       res_background = {var: getattr(background, var) for var in fields_to_include + vars if var in fields_to_include + constants.background_variables}
       res_health_data = []
       for d in health_data:
         res_health_data.append({var: getattr(d, var) for var in fields_to_include + vars if var in fields_to_include + constants.health_variables})
-
-      response = { "background": res_background, "health_data": res_health_data }
+      
+    res_background_actual = z_score_to_actual(res_background)
+    res_health_data_actual = list(map(z_score_to_actual, res_health_data))
+    response = { "background": res_background_actual, "health_data": res_health_data_actual }
     return Response(response)
     
 class SaveHealthDataView(APIView):
@@ -130,18 +146,6 @@ class SaveHealthDataView(APIView):
     serialized_responses = serializers.SavedResponseSerializer(saved_responses, many=True)
     response = {"user": save_data.user.pk, "last_question": save_data.last_question, "saved_data": serialized_responses.data}
     return Response(response)
-
-def z_score_to_actual(health_data):
-  res = {}
-  for var, z in health_data.items():
-    if var in mean_deficits.index:
-      mean = mean_deficits.loc[var].iat[0]
-      std = std_deficits.loc[var].iat[0]
-      actual = z * std + mean
-    else:
-      actual = z
-    res[var.replace(' ', '_')] = actual
-  return res
 
 class PredictHealthDataView(APIView):
   permission_classes = [IsAuthenticated]
