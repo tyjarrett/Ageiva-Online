@@ -35,7 +35,7 @@ class HealthDataView(APIView):
     new_age = today.year-background.date.year+background.age
     current_quarter_months = constants.quarter_months[today.month]
 
-    # This will overwrite any previous entries for this month
+    # This will overwrite any previous entries for this quarter
     try: 
       health_data = models.HealthData.objects.get(user=request.user, date__year=today.year, date__month__in=current_quarter_months)
     except models.HealthData.DoesNotExist:
@@ -56,14 +56,18 @@ class HealthDataView(APIView):
         value_to_set = constants.qual_to_quant[variable][data]
       else:
         value_to_set = data
-
+      
       # get log for variables that have big ranges of possible values
       if variable in constants.log_scale_vars:
         value_to_set = math.log(value_to_set)
 
-      mean = mean_deficits.loc[variable.replace('_', ' ')].iat[0]
-      std = std_deficits.loc[variable.replace('_', ' ')].iat[0]
-      z = (value_to_set - mean) / std
+      formatted_var = variable.replace('_', ' ')
+      if formatted_var in mean_deficits.index:
+        mean = mean_deficits.loc[variable.replace('_', ' ')].iat[0]
+        std = std_deficits.loc[variable.replace('_', ' ')].iat[0]
+        z = (value_to_set - mean) / std
+      else:
+        z = value_to_set
 
       if variable in constants.background_variables:
         setattr(background, variable, z)
@@ -102,7 +106,6 @@ class SaveHealthDataView(APIView):
     serializer = serializers.PostSaveHealthDataSerializer(data=request.data)
     if not serializer.is_valid():
       return Response(status=status.HTTP_400_BAD_REQUEST)
-    # serializer not working for some reason
     save_data, created = models.SaveData.objects.get_or_create(user=request.user)
     variables = models.SavedResponse.objects.filter(save_model=save_data)
     to_save = serializer.validated_data["to_save"]
