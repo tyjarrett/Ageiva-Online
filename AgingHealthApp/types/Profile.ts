@@ -1,3 +1,5 @@
+import { Float } from "react-native/Libraries/Types/CodegenTypes";
+
 export type ProfileScreenName = "Profile" | "Survey";
 
 const variableIds = [
@@ -61,6 +63,8 @@ export type ProfileSurveyQuestion = {
   hasQuantitative: boolean;
   qualitativeOptions: Array<string>;
   required: boolean;
+  mean: Float;
+  stdev: Float;
 };
 
 export type QuestionAndResponse = {

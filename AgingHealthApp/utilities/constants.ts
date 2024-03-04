@@ -19,6 +19,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "extremely fast",
     ],
     required: false,
+    mean: 0.853874057544418,
+    stdev: 0.28451581955254013,
   },
   {
     variableId: "grip_dom",
@@ -33,6 +35,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Very strong",
     ],
     required: false,
+    mean: 28.436364178481274,
+    stdev: 11.308967992782993,
   },
   {
     variableId: "grip_ndom",
@@ -47,6 +51,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Very strong",
     ],
     required: false,
+    mean: 26.07880308937994,
+    stdev: 10.5158958288211,
   },
   {
     variableId: "FI_ADL",
@@ -56,6 +62,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     unit: "sum",
     qualitativeOptions: ["1", "2", "3", "4", "5", "6"],
     required: false,
+    mean: 0.20268848442975199,
+    stdev: 0.26173694862441804,
   },
   {
     variableId: "FI_IADL",
@@ -65,6 +73,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     unit: "sum",
     qualitativeOptions: ["1", "2", "3", "4", "5"],
     required: false,
+    mean: 0.06808106625950425,
+    stdev: 0.1567108755355969,
   },
   {
     variableId: "chair",
@@ -80,6 +90,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "extremely fast",
     ],
     required: false,
+    mean: 11.535945600583949,
+    stdev: 4.220377324322096,
   },
   {
     variableId: "leg_raise",
@@ -93,6 +105,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "full duration",
     ],
     required: false,
+    mean: 2.2808316018437944,
+    stdev: 0.8216907575280872,
   },
   {
     variableId: "full_tandem",
@@ -106,6 +120,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "full duration",
     ],
     required: false,
+    mean: 2.070456640118188,
+    stdev: 0.7301471469371483,
   },
   {
     variableId: "srh",
@@ -114,6 +130,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     unit: "sec",
     qualitativeOptions: ["excellent", "very good", "good", "fair", "poor"],
     required: false,
+    mean: 0.4033145172962802,
+    stdev: 0.27757305612048716,
   },
   {
     variableId: "eye",
@@ -129,6 +147,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "registered/legally blind",
     ],
     required: false,
+    mean: 0.31634668892617235,
+    stdev: 0.20057904741917865,
   },
   {
     variableId: "hear",
@@ -137,6 +157,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     unit: "sec",
     qualitativeOptions: ["excellent", "very good", "good", "fair", "poor"],
     required: false,
+    mean: 0.4104753227242377,
+    stdev: 0.2797723245182508,
   },
   {
     variableId: "func",
@@ -151,6 +173,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "unable",
     ],
     required: false,
+    mean: 0.1959890102227365,
+    stdev: 0.3391606567006017,
   },
   {
     variableId: "dias",
@@ -165,6 +189,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "extremely high",
     ],
     required: false,
+    mean: 75.76050022511951,
+    stdev: 12.704728759608257,
   },
   {
     variableId: "sys",
@@ -179,6 +205,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "extremely high",
     ],
     required: false,
+    mean: 137.76928908123554,
+    stdev: 20.270871864472632,
   },
   {
     variableId: "pulse",
@@ -193,6 +221,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "extremely high",
     ],
     required: false,
+    mean: 68.42104803653973,
+    stdev: 11.285062475935565,
   },
   {
     variableId: "trig",
@@ -207,6 +237,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Very high: 500 mg/dL or above (5.65 mmol/L)",
     ],
     required: false,
+    mean: 0.37934330777806136,
+    stdev: 0.5011242623973755,
   },
   {
     variableId: "crp",
@@ -222,6 +254,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Severe elevation: More than 50.0 mg/dL",
     ],
     required: false,
+    mean: 0.6397056535068669,
+    stdev: 1.1353660719205658,
   },
   {
     variableId: "hdl",
@@ -235,6 +269,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Low: less than 40 mg/dL (1.03 mmol/L)",
     ],
     required: false,
+    mean: 1.5468664148351616,
+    stdev: 0.44133941424915846,
   },
   {
     variableId: "ldl",
@@ -250,6 +286,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Best: Below 70 mg/dL (Below 1.8 mmol/L)",
     ],
     required: false,
+    mean: 3.300098459399978,
+    stdev: 1.0527448115035516,
   },
   {
     variableId: "glucose",
@@ -265,6 +303,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Best: Below 70 mg/dL (Below 1.8 mmol/L)",
     ],
     required: false,
+    mean: 5.088684834123225,
+    stdev: 0.9870697209153416,
   },
   {
     variableId: "age",
@@ -273,5 +313,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     unit: "years",
     qualitativeOptions: [],
     required: true,
+    mean: 50,
+    stdev: 15,
   },
 ];
