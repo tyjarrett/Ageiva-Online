@@ -2,7 +2,7 @@ import { ProfileSurveyQuestion } from "../types/Profile";
 
 // need to change for production
 export const API_URL =
-  "http://aging-health-v23.eba-maarhpvk.us-east-2.elasticbeanstalk.com/api/";
+  "http://aging-health-v23.eba-maarhpvk.us-east-2.elasticbeanstalk.com/api";
 
 export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
