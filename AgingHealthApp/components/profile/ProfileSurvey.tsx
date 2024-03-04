@@ -41,6 +41,7 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         : surveyQuestions[currentQ].hasQuantitative)
   );
   const [required, setRequired] = useState(false);
+  const [range, setRange] = useState([0.000326598886798, 1.70742148]);
 
   async function fetchData() {
     getHealthData(auth.authToken)
@@ -77,10 +78,27 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     const pushRecord = {} as Record<VariableId, PResponse>;
     for (const [key, entry] of Object.entries(testRecord)) {
       if (entry.response !== "") {
-        pushRecord[entry.variableId] = {
-          type: entry.type,
-          response: entry.response,
-        };
+        if (entry.type == "qualitative") {
+          let i = 0;
+          for (const index in surveyQuestions) {
+            if (surveyQuestions[index].variableId == key) {
+              i = parseInt(index);
+              break;
+            }
+          }
+          pushRecord[entry.variableId] = {
+            type: "quantitative",
+            response: (
+              parseInt(entry.response) * surveyQuestions[i].stdev +
+              surveyQuestions[i].mean
+            ).toString(),
+          };
+        } else {
+          pushRecord[entry.variableId] = {
+            type: entry.type,
+            response: entry.response,
+          };
+        }
       }
     }
     console.log(pushRecord);
@@ -112,20 +130,32 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
 
   const nextPressed = () => {
     if (required) {
-      errorCheck = /^[0-9]+$/.test(currentChoice);
+      errorCheck =
+        /^\d+\.\d+$/.test(currentChoice) || /^\d+$/.test(currentChoice);
     } else {
-      errorCheck = /^[0-9]+$/.test(currentChoice) || currentChoice === "";
+      errorCheck =
+        /^\d+\.\d+$/.test(currentChoice) ||
+        /^\d+$/.test(currentChoice) ||
+        currentChoice === "";
     }
     if (!errorCheck) {
       setErrorText("Please enter only numbers");
     }
+    const res = {
+      variableId: surveyQuestions[currentQ].variableId,
+      type: quantitative ? "quantitative" : "qualitative",
+      response: currentChoice,
+    } as QuestionAndResponse;
+    if (
+      (parseFloat(res.response) > range[1] ||
+        parseFloat(res.response) < range[0]) &&
+      res.type === "quantitative"
+    ) {
+      setErrorText("Enter numbers inside the range");
+      errorCheck = false;
+    }
     if (errorCheck) {
       setErrorText("");
-      const res = {
-        variableId: surveyQuestions[currentQ].variableId,
-        type: quantitative ? "quantitative" : "qualitative",
-        response: currentChoice,
-      } as QuestionAndResponse;
       testRecord[res.variableId] = res;
       console.log(testRecord[res.variableId]);
       const newQ = currentQ + 1;
@@ -151,6 +181,10 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
             ? surveyQuestions[newQ].qualitativeOptions.length > 0
             : surveyQuestions[newQ].hasQuantitative
         );
+        setRange([
+          surveyQuestions[newQ].mean - surveyQuestions[newQ].stdev * 3,
+          surveyQuestions[newQ].mean + surveyQuestions[newQ].stdev * 3,
+        ]);
       }
     }
   };
@@ -175,6 +209,10 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     setCurrentChoice(testRecord[surveyQuestions[newQ].variableId].response);
     setRequired(surveyQuestions[newQ].required);
     setErrorText("");
+    setRange([
+      surveyQuestions[newQ].mean - surveyQuestions[newQ].stdev * 3,
+      surveyQuestions[newQ].mean + surveyQuestions[newQ].stdev * 3,
+    ]);
   };
 
   return (
