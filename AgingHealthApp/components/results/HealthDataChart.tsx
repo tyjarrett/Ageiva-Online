@@ -1,29 +1,42 @@
-import { LineChart } from "react-native-chart-kit";
 import { DateAndValue } from "../../types/Results";
-import { VictoryChart, VictoryLine, VictoryTheme } from "victory-native";
+import {
+  VictoryChart,
+  VictoryLine,
+  VictoryTheme,
+  VictoryAxis,
+} from "victory-native";
+import { StyleSheet } from "react-native";
 
 type Props = {
   label: string;
   data: DateAndValue[];
+  numPoints: number;
 };
 
-const HealthDataChart = ({ label, data }: Props) => {
-  const dataPoints = data.map((datum) => ({
+const HealthDataChart = ({ label, data, numPoints }: Props) => {
+  const dataPoints = data.slice(0, numPoints).map((datum) => ({
     x: datum.date,
     y: datum.value,
   }));
-  const labels = data.map((datum) => datum.date.toDateString());
-  const DATA = {
-    labels,
-    datasets: [{ data: dataPoints }],
-    label,
-  };
+  if (label === "grip_dom") {
+    console.log(dataPoints[1].y);
+  }
 
   return (
     <VictoryChart theme={VictoryTheme.material}>
       <VictoryLine data={dataPoints} />
+      <VictoryAxis
+        scale="time"
+        label={label}
+        orientation="bottom"
+        style={{ axisLabel: { padding: 30, fontSize: 20 } }}
+        tickFormat={(x) => new Date(x).getFullYear()}
+      />
+      <VictoryAxis dependentAxis />
     </VictoryChart>
   );
 };
+
+const styles = StyleSheet.create({});
 
 export default HealthDataChart;

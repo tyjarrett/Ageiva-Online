@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import {
   Button,
   Appbar,
@@ -27,7 +27,7 @@ const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
   const [filterVisible, setFilterVisible] = useState(false);
   const [search, setSearch] = useState("");
-  const [testChecked, setTestChecked] = useState(true);
+  const [survivalChecked, setSurvivalChecked] = useState(true);
   const [checkArray, setCheckArray] = useState(
     {} as Record<VariableId, boolean>
   );
@@ -43,6 +43,9 @@ const ResultsScreen = () => {
     predictionData: [],
     survivalData: [],
   } as GraphData);
+
+  const [numRealDates, setNumRealDates] = useState(0);
+  const [numYears, setNumYears] = useState(10);
 
   const logout = () => {
     auth.clearAuth();
@@ -66,6 +69,7 @@ const ResultsScreen = () => {
           }
           return newDataPoint;
         });
+        setNumRealDates(res.health_data.length);
         setCheckArray(newCheckArray);
 
         makePrediction(auth.authToken)
@@ -113,7 +117,7 @@ const ResultsScreen = () => {
         </Button>
       </Appbar.Header>
 
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         {loading ? (
           <ActivityIndicator animating={true} />
         ) : (
@@ -134,11 +138,11 @@ const ResultsScreen = () => {
                   />
                   <Checkbox.Item
                     style={styles.search}
-                    label="test"
+                    label="survival"
                     mode="android"
-                    status={testChecked ? "checked" : "unchecked"}
+                    status={survivalChecked ? "checked" : "unchecked"}
                     onPress={() => {
-                      setTestChecked(!testChecked);
+                      setSurvivalChecked(!survivalChecked);
                     }}
                   />
                   {Object.keys(
@@ -185,7 +189,16 @@ const ResultsScreen = () => {
             >
               Filter
             </Button>
-            {testChecked ? <Text>test</Text> : <></>}
+            {survivalChecked ? (
+              <HealthDataChart
+                key="survival"
+                label="survival"
+                data={dataRecord.survivalData}
+                numPoints={numRealDates + numYears / PRED_DT}
+              />
+            ) : (
+              <></>
+            )}
             {Object.keys(checkArray).map((variableId) =>
               isVariableId(variableId) && checkArray[variableId] ? (
                 <HealthDataChart
@@ -195,6 +208,7 @@ const ResultsScreen = () => {
                     ...dp,
                     value: dp.data[variableId],
                   }))}
+                  numPoints={numRealDates + numYears / PRED_DT}
                 />
               ) : (
                 <React.Fragment key={variableId} />
@@ -202,19 +216,18 @@ const ResultsScreen = () => {
             )}
           </>
         )}
-      </View>
+      </ScrollView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
     alignContent: "center",
     width: "100%",
-    // gap: 100,
+    paddingBottom: 10,
   },
   logout: {
     position: "relative",
