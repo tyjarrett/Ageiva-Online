@@ -1,3 +1,5 @@
+import { VariableId } from "./Profile";
+
 export type GetTokenResponse = {
   token: string;
 };
@@ -7,7 +9,19 @@ export type CreateUserResponse = {
   token: string;
 };
 
+export type HealthDataPoint = {
+  id: number;
+  age: number;
+  date: string;
+  data: Record<VariableId, number>;
+};
+
 export type HealthData = {
   background: string;
-  health_data: [object];
+  health_data: HealthDataPoint[];
+};
+
+export type PredictionResponse = {
+  health: Record<VariableId, number>[];
+  survival: number[];
 };

@@ -8,22 +8,30 @@ import {
   Checkbox,
   Portal,
   Dialog,
+  ActivityIndicator,
 } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
-import { LineChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
-import { getHealthData } from "../../functions/apiCalls";
+import { getHealthData, makePrediction } from "../../functions/apiCalls";
 import { AxiosError } from "axios";
+import { VariableId, isVariableId } from "../../types/Profile";
+import { filter_data_object } from "../../functions/helpers";
+import moment from "moment";
+import { PRED_DT } from "../../utilities/constants";
+import { GraphData, PredictionData, DateAndValue } from "../../types/Results";
+import HealthDataChart from "./HealthDataChart";
 
 const screenWidth = Dimensions.get("window").width;
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
-  const [visable, setVisible] = useState(false);
+  const [filterVisible, setFilterVisible] = useState(false);
   const [search, setSearch] = useState("");
   const [testChecked, setTestChecked] = useState(true);
-  const [checkArray, setCheckArray] = useState({} as Record<string, boolean>);
-  let newCheckArray = {} as Record<string, boolean>;
+  const [checkArray, setCheckArray] = useState(
+    {} as Record<VariableId, boolean>
+  );
+  const [loading, setLoading] = useState(true);
 
   const auth = useAuth();
 
@@ -31,8 +39,10 @@ const ResultsScreen = () => {
     fetchData();
   }, []);
 
-  const [dataRecord, setDataRecord] = useState({} as Record<string, string>);
-  const newDataRecord = {} as Record<string, string>;
+  const [dataRecord, setDataRecord] = useState({
+    predictionData: [],
+    survivalData: [],
+  } as GraphData);
 
   const logout = () => {
     auth.clearAuth();
@@ -42,41 +52,57 @@ const ResultsScreen = () => {
   async function fetchData() {
     getHealthData(auth.authToken)
       .then(({ data: res }) => {
-        console.log(res.health_data[0]);
-        for (const [key, entry] of Object.entries(res.health_data[0])) {
-          if (
-            entry !== null &&
-            key !== "age" &&
-            key !== "background" &&
-            key !== "date" &&
-            key !== "id" &&
-            key !== "user"
-          ) {
-            console.log(key);
-            newDataRecord[key] = entry;
-            newCheckArray[key + "Check"] = false;
+        const newCheckArray = {} as Record<VariableId, boolean>;
+        const newUserData = res.health_data.map((dataPoint) => {
+          const newDataPoint = {
+            date: new Date(dataPoint.date),
+            data: {},
+          } as PredictionData;
+          for (const [key, entry] of Object.entries(dataPoint.data)) {
+            if (key !== "age" && isVariableId(key) && entry !== null) {
+              newDataPoint.data[key] = entry;
+              newCheckArray[key] = false;
+            }
           }
-        }
-        setDataRecord(newDataRecord);
+          return newDataPoint;
+        });
         setCheckArray(newCheckArray);
+
+        makePrediction(auth.authToken)
+          .then(({ data: res }) => {
+            let last_date = moment(newUserData[newUserData.length - 1].date);
+            const survivalData = [] as DateAndValue[];
+            const healthPred = res.health.slice(1).map((dp, i) => {
+              const filteredData = filter_data_object(dp, (k) =>
+                Object.keys(newUserData[newUserData.length - 1].data).includes(
+                  k
+                )
+              );
+              last_date = last_date.add(PRED_DT * 12, "months");
+              const formattedDate = last_date.toDate();
+
+              survivalData.push({
+                date: formattedDate,
+                value: res.survival[i + 1],
+              });
+
+              return { date: formattedDate, data: filteredData };
+            });
+
+            setDataRecord({
+              predictionData: newUserData.concat(healthPred),
+              survivalData,
+            });
+            setLoading(false);
+          })
+          .catch((err: AxiosError) => {
+            console.log(err.message);
+          });
       })
       .catch((err: AxiosError) => {
-        // possibly invalid token, but should do more error validation
         console.log(err.message);
-        // setLoadingCreds(false);
       });
   }
-
-  const readData = {
-    labels: [2024, 2034, 2045, 2055, 2065],
-    datasets: [
-      {
-        data: [120, 110, 130, 100, 95],
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-        strokeWidth: 2,
-      },
-    ],
-  };
 
   return (
     <>
@@ -86,106 +112,96 @@ const ResultsScreen = () => {
           Logout
         </Button>
       </Appbar.Header>
+
       <View style={styles.container}>
-        <Portal>
-          <Dialog
-            visible={visable}
-            onDismiss={() => {
-              setVisible(false);
-            }}
-          >
-            <Dialog.Content>
-              <Searchbar
-                style={styles.search}
-                placeholder="Filter "
-                value={search}
-                onChangeText={setSearch}
-              />
-              <Checkbox.Item
-                style={styles.search}
-                label="test"
-                mode="android"
-                status={testChecked ? "checked" : "unchecked"}
-                onPress={() => {
-                  setTestChecked(!testChecked);
-                }}
-              />
-              {Object.keys(dataRecord).map((data) => (
-                <Checkbox.Item
-                  key={data}
-                  style={styles.search}
-                  label={data}
-                  mode="android"
-                  status={checkArray[data + "Check"] ? "checked" : "unchecked"}
-                  onPress={() => {
-                    newCheckArray = { ...checkArray };
-                    newCheckArray[data + "Check"] =
-                      !newCheckArray[data + "Check"];
-                    setCheckArray(newCheckArray);
-                  }}
-                />
-              ))}
-              <Button
-                mode="contained"
-                onPress={() => {
-                  setVisible(false);
+        {loading ? (
+          <ActivityIndicator animating={true} />
+        ) : (
+          <>
+            <Portal>
+              <Dialog
+                visible={filterVisible}
+                onDismiss={() => {
+                  setFilterVisible(false);
                 }}
               >
-                Close
-              </Button>
-            </Dialog.Content>
-          </Dialog>
-        </Portal>
-        <Button
-          mode="contained"
-          style={styles.filter}
-          onPress={() => {
-            setVisible(true);
-          }}
-        >
-          Filter
-        </Button>
-        {testChecked ? <Text>test</Text> : <></>}
-        {Object.keys(checkArray).map((data) =>
-          checkArray[data] ? <Text key={data}>{data}</Text> : <></>
+                <Dialog.Content>
+                  <Searchbar
+                    style={styles.search}
+                    placeholder="Filter "
+                    value={search}
+                    onChangeText={setSearch}
+                  />
+                  <Checkbox.Item
+                    style={styles.search}
+                    label="test"
+                    mode="android"
+                    status={testChecked ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setTestChecked(!testChecked);
+                    }}
+                  />
+                  {Object.keys(
+                    dataRecord.predictionData[
+                      dataRecord.predictionData.length - 1
+                    ].data
+                  ).map((variableId) => (
+                    <Checkbox.Item
+                      key={variableId}
+                      style={styles.search}
+                      label={variableId}
+                      mode="android"
+                      status={
+                        isVariableId(variableId) && checkArray[variableId]
+                          ? "checked"
+                          : "unchecked"
+                      }
+                      onPress={() =>
+                        setCheckArray((prev) => ({
+                          ...prev,
+                          [variableId]:
+                            isVariableId(variableId) && !prev[variableId],
+                        }))
+                      }
+                    />
+                  ))}
+                  <Button
+                    mode="contained"
+                    onPress={() => {
+                      setFilterVisible(false);
+                    }}
+                  >
+                    Close
+                  </Button>
+                </Dialog.Content>
+              </Dialog>
+            </Portal>
+            <Button
+              mode="contained"
+              style={styles.filter}
+              onPress={() => {
+                setFilterVisible(true);
+              }}
+            >
+              Filter
+            </Button>
+            {testChecked ? <Text>test</Text> : <></>}
+            {Object.keys(checkArray).map((variableId) =>
+              isVariableId(variableId) && checkArray[variableId] ? (
+                <HealthDataChart
+                  key={variableId}
+                  label={variableId}
+                  data={dataRecord.predictionData.map((dp) => ({
+                    ...dp,
+                    value: dp.data[variableId],
+                  }))}
+                />
+              ) : (
+                <React.Fragment key={variableId} />
+              )
+            )}
+          </>
         )}
-        <LineChart
-          data={{
-            labels: ["January", "February", "March", "April", "May", "June"],
-            datasets: [
-              {
-                data: [
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                ],
-              },
-            ],
-          }}
-          width={screenWidth * 0.85}
-          height={256}
-          verticalLabelRotation={30}
-          chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: "6",
-              strokeWidth: "2",
-              stroke: "#ffa726",
-            },
-          }}
-          bezier
-        />
       </View>
     </>
   );
