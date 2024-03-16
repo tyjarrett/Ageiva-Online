@@ -18,9 +18,6 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
     x: datum.date,
     y: datum.value,
   }));
-  if (label === "grip_dom") {
-    console.log(dataPoints[1].y);
-  }
 
   return (
     <VictoryChart theme={VictoryTheme.material}>
@@ -36,7 +33,5 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
     </VictoryChart>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default HealthDataChart;

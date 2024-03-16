@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
 } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
-import { Dimensions } from "react-native";
 import { getHealthData, makePrediction } from "../../functions/apiCalls";
 import { AxiosError } from "axios";
 import { VariableId, isVariableId } from "../../types/Profile";
@@ -20,12 +19,12 @@ import moment from "moment";
 import { PRED_DT } from "../../utilities/constants";
 import { GraphData, PredictionData, DateAndValue } from "../../types/Results";
 import HealthDataChart from "./HealthDataChart";
-
-const screenWidth = Dimensions.get("window").width;
+import { Slider } from "@miblanchard/react-native-slider";
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
   const [filterVisible, setFilterVisible] = useState(false);
+  const [numPredYears, setNumPredYears] = useState(20);
   const [search, setSearch] = useState("");
   const [survivalChecked, setSurvivalChecked] = useState(true);
   const [checkArray, setCheckArray] = useState(
@@ -45,7 +44,6 @@ const ResultsScreen = () => {
   } as GraphData);
 
   const [numRealDates, setNumRealDates] = useState(0);
-  const [numYears, setNumYears] = useState(10);
 
   const logout = () => {
     auth.clearAuth();
@@ -189,12 +187,21 @@ const ResultsScreen = () => {
             >
               Filter
             </Button>
+            <Text>Number of years to predict: {numPredYears}</Text>
+            <View style={styles.slider}>
+              <Slider
+                minimumValue={1}
+                maximumValue={dataRecord.survivalData.length * PRED_DT + 1}
+                value={numPredYears}
+                onSlidingComplete={(val) => setNumPredYears(Math.floor(val[0]))}
+              />
+            </View>
             {survivalChecked ? (
               <HealthDataChart
                 key="survival"
                 label="survival"
                 data={dataRecord.survivalData}
-                numPoints={numRealDates + numYears / PRED_DT}
+                numPoints={numRealDates + numPredYears / PRED_DT}
               />
             ) : (
               <></>
@@ -208,7 +215,7 @@ const ResultsScreen = () => {
                     ...dp,
                     value: dp.data[variableId],
                   }))}
-                  numPoints={numRealDates + numYears / PRED_DT}
+                  numPoints={numRealDates + numPredYears / PRED_DT}
                 />
               ) : (
                 <React.Fragment key={variableId} />
@@ -243,6 +250,12 @@ const styles = StyleSheet.create({
   filter: {
     width: 250,
     marginTop: "20%",
+  },
+  slider: {
+    flex: 1,
+    alignItems: "stretch",
+    justifyContent: "center",
+    width: "80%",
   },
 });
 
