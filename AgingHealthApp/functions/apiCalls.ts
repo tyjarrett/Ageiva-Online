@@ -1,6 +1,11 @@
 import { AxiosResponse } from "axios";
 import { apiGet, apiPost } from "./apiUtils";
-import { CreateUserResponse, GetTokenResponse } from "../types/apiResponses";
+import {
+  CreateUserResponse,
+  GetTokenResponse,
+  HealthData,
+} from "../types/apiResponses";
+import { PResponse, VariableId } from "../types/Profile";
 
 export function getUserGivenToken(token: string): Promise<AxiosResponse<User>> {
   return apiGet("users/me/", token);
@@ -21,4 +26,17 @@ export function createUser(
   password: string
 ): Promise<AxiosResponse<CreateUserResponse>> {
   return apiPost("users/", { username, password });
+}
+
+export function createDataPoint(
+  record: Record<VariableId, PResponse>,
+  token: string
+): Promise<AxiosResponse<string>> {
+  return apiPost("healthmodel/", record, token);
+}
+
+export function getHealthData(
+  token: string
+): Promise<AxiosResponse<HealthData>> {
+  return apiGet("healthmodel/", token);
 }

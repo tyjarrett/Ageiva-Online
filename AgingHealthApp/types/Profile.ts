@@ -1,14 +1,16 @@
+import { Float } from "react-native/Libraries/Types/CodegenTypes";
+
 export type ProfileScreenName = "Profile" | "Survey";
 
-const variableIds = [
-  "gait speed",
-  "grip dom",
-  "grip ndom",
-  "FI ADL",
-  "FI IADL",
+export const variableIds = [
+  "gait_speed",
+  "grip_dom",
+  "grip_ndom",
+  "FI_ADL",
+  "FI_IADL",
   "chair",
-  "leg raise",
-  "full tandem",
+  "leg_raise",
+  "full_tandem",
   "srh",
   "eye",
   "hear",
@@ -21,6 +23,7 @@ const variableIds = [
   "hdl",
   "ldl",
   "glucose",
+  "age",
   // "igf1",
   // "hgb",
   // "fib",
@@ -53,16 +56,28 @@ const variableIds = [
 
 export type VariableId = (typeof variableIds)[number];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isVariableId = (x: any): x is VariableId =>
+  variableIds.includes(x);
+
 export type ProfileSurveyQuestion = {
   variableId: VariableId;
   question: string;
   unit: string | undefined;
   hasQuantitative: boolean;
   qualitativeOptions: Array<string>;
+  required: boolean;
+  mean: Float;
+  stdev: Float;
 };
 
 export type QuestionAndResponse = {
   variableId: VariableId;
+  type: "quantitative" | "qualitative";
+  response: string;
+};
+
+export type PResponse = {
   type: "quantitative" | "qualitative";
   response: string;
 };

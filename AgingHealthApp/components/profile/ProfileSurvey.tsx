@@ -1,123 +1,31 @@
 import { Button, Dialog, Portal, ProgressBar, Text } from "react-native-paper";
 import { SetState } from "../../types/General";
 import {
+  PResponse,
   ProfileScreenName,
   QuestionAndResponse,
   VariableId,
 } from "../../types/Profile";
 import { StyleSheet, View } from "react-native";
 import { surveyQuestions } from "../../utilities/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileQuestion from "./ProfileQuestion";
+import { createDataPoint, getHealthData } from "../../functions/apiCalls";
+import { useAuth } from "../authentication/AuthProvider";
+import { AxiosError } from "axios";
 
 type Props = {
   setCurrentScreen: SetState<ProfileScreenName>;
 };
 
-const responseRecord: Record<VariableId, QuestionAndResponse> = {
-  "gait speed": {
-    variableId: "gait speed",
-    type: "quantitative",
-    response: "",
-  },
-  "grip dom": {
-    variableId: "grip dom",
-    type: "quantitative",
-    response: "",
-  },
-  "grip ndom": {
-    variableId: "grip ndom",
-    type: "quantitative",
-    response: "",
-  },
-  "FI ADL": {
-    variableId: "FI ADL",
-    type: "quantitative",
-    response: "",
-  },
-  "FI IADL": {
-    variableId: "FI IADL",
-    type: "quantitative",
-    response: "",
-  },
-  chair: {
-    variableId: "chair",
-    type: "quantitative",
-    response: "",
-  },
-  "leg raise": {
-    variableId: "leg raise",
-    type: "quantitative",
-    response: "",
-  },
-  "full tandem": {
-    variableId: "full tandem",
-    type: "quantitative",
-    response: "",
-  },
-  srh: {
-    variableId: "srh",
-    type: "quantitative",
-    response: "",
-  },
-  eye: {
-    variableId: "eye",
-    type: "quantitative",
-    response: "",
-  },
-  hear: {
-    variableId: "hear",
-    type: "quantitative",
-    response: "",
-  },
-  func: {
-    variableId: "func",
-    type: "quantitative",
-    response: "",
-  },
-  dias: {
-    variableId: "dias",
-    type: "quantitative",
-    response: "",
-  },
-  sys: {
-    variableId: "sys",
-    type: "quantitative",
-    response: "",
-  },
-  pulse: {
-    variableId: "pulse",
-    type: "quantitative",
-    response: "",
-  },
-  trig: {
-    variableId: "trig",
-    type: "quantitative",
-    response: "",
-  },
-  crp: {
-    variableId: "crp",
-    type: "quantitative",
-    response: "",
-  },
-  hdl: {
-    variableId: "hdl",
-    type: "quantitative",
-    response: "",
-  },
-  ldl: {
-    variableId: "ldl",
-    type: "quantitative",
-    response: "",
-  },
-  glucose: {
-    variableId: "glucose",
-    type: "quantitative",
-    response: "",
-  },
-};
-
+const testRecord = {} as Record<VariableId, QuestionAndResponse>;
 const ProfileSurvey = ({ setCurrentScreen }: Props) => {
+  const auth = useAuth();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const [visible, setVisible] = useState(false);
   const [currentQ, setCurrentQ] = useState(0);
   let errorCheck = true;
@@ -132,10 +40,80 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         ? surveyQuestions[currentQ].qualitativeOptions.length > 0
         : surveyQuestions[currentQ].hasQuantitative)
   );
+  const [required, setRequired] = useState(false);
+  const [range, setRange] = useState([0.000326598886798, 1.70742148]);
+
+  async function fetchData() {
+    getHealthData(auth.authToken)
+      .then(({ data: res }) => {
+        console.log(res.health_data[0]);
+        for (const [key, entry] of Object.entries(res.health_data[0])) {
+          if (
+            key !== "background" &&
+            key !== "date" &&
+            key !== "id" &&
+            key !== "user"
+          ) {
+            const resp = {} as QuestionAndResponse;
+            resp.variableId = key as VariableId;
+            resp.type = "quantitative";
+            if (entry != null) {
+              resp.response = entry.toString();
+            } else {
+              resp.response = "";
+            }
+            testRecord[key as VariableId] = resp;
+          }
+        }
+        console.log(testRecord);
+      })
+      .catch((err: AxiosError) => {
+        // possibly invalid token, but should do more error validation
+        console.log(err.message);
+        // setLoadingCreds(false);
+      });
+  }
+
+  const postRecord = () => {
+    const pushRecord = {} as Record<VariableId, PResponse>;
+    for (const [key, entry] of Object.entries(testRecord)) {
+      if (entry.response !== "") {
+        if (entry.type == "qualitative") {
+          let i = 0;
+          for (const index in surveyQuestions) {
+            if (surveyQuestions[index].variableId == key) {
+              i = parseInt(index);
+              break;
+            }
+          }
+          pushRecord[entry.variableId] = {
+            type: "quantitative",
+            response: (
+              parseInt(entry.response) * surveyQuestions[i].stdev +
+              surveyQuestions[i].mean
+            ).toString(),
+          };
+        } else {
+          pushRecord[entry.variableId] = {
+            type: entry.type,
+            response: entry.response,
+          };
+        }
+      }
+    }
+    console.log(pushRecord);
+    createDataPoint(pushRecord, auth.authToken)
+      .then(() => {
+        console.log("sent");
+      })
+      .catch((err: AxiosError) => {
+        console.log(err.message);
+      });
+  };
 
   const checkResponses = () => {
     let check = false;
-    for (const [key, entry] of Object.entries(responseRecord)) {
+    for (const [key, entry] of Object.entries(testRecord)) {
       if (entry.response === "") {
         console.log(entry);
         check = true;
@@ -145,40 +123,57 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     if (check) {
       setVisible(true);
     } else {
-      console.log(responseRecord);
+      postRecord();
       setCurrentScreen("Profile");
     }
   };
 
   const nextPressed = () => {
+    if (required) {
+      errorCheck =
+        /^\d+\.\d+$/.test(currentChoice) || /^\d+$/.test(currentChoice);
+    } else {
+      errorCheck =
+        /^\d+\.\d+$/.test(currentChoice) ||
+        /^\d+$/.test(currentChoice) ||
+        currentChoice === "";
+    }
     if (!errorCheck) {
       setErrorText("Please enter only numbers");
     }
+    const res = {
+      variableId: surveyQuestions[currentQ].variableId,
+      type: quantitative ? "quantitative" : "qualitative",
+      response: currentChoice,
+    } as QuestionAndResponse;
+    if (
+      (parseFloat(res.response) > range[1] ||
+        parseFloat(res.response) < range[0]) &&
+      res.type === "quantitative"
+    ) {
+      setErrorText("Enter numbers inside the range");
+      errorCheck = false;
+    }
     if (errorCheck) {
       setErrorText("");
-      const res = {
-        variableId: surveyQuestions[currentQ].variableId,
-        type: quantitative ? "quantitative" : "qualitative",
-        response: currentChoice,
-      };
-      responseRecord[res.variableId].response = currentChoice;
-      responseRecord[res.variableId].type = quantitative
-        ? "quantitative"
-        : "qualitative";
-      responseRecord[res.variableId].variableId =
-        surveyQuestions[currentQ].variableId;
-      console.log(responseRecord[res.variableId]);
+      testRecord[res.variableId] = res;
+      console.log(testRecord[res.variableId]);
       const newQ = currentQ + 1;
       setCurrentQ(newQ);
-      if (newQ < Object.keys(responseRecord).length) {
+      if (newQ < Object.keys(surveyQuestions).length) {
+        setRequired(surveyQuestions[newQ].required);
         setCurrentChoice(
-          responseRecord[surveyQuestions[newQ].variableId].response
+          testRecord[surveyQuestions[newQ].variableId]
+            ? testRecord[surveyQuestions[newQ].variableId].response
+            : ""
         );
         const newQuantitative = surveyQuestions[newQ].hasQuantitative;
         setQuantitative(
-          newQuantitative
-            ? responseRecord[surveyQuestions[newQ].variableId].type ==
+          surveyQuestions[newQ].variableId in testRecord
+            ? newQuantitative
+              ? testRecord[surveyQuestions[newQ].variableId].type ==
                 "quantitative"
+              : newQuantitative
             : newQuantitative
         );
         setSwitchModeEnabled(
@@ -186,17 +181,17 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
             ? surveyQuestions[newQ].qualitativeOptions.length > 0
             : surveyQuestions[newQ].hasQuantitative
         );
+        setRange([
+          surveyQuestions[newQ].mean - surveyQuestions[newQ].stdev * 3,
+          surveyQuestions[newQ].mean + surveyQuestions[newQ].stdev * 3,
+        ]);
       }
     }
   };
 
   const ignorePress = () => {
-    // for (const [key, entry] of Object.entries(responseRecord)) {
-    //   if (entry.response === "") {
-    //     delete responseRecord[key]
-    //   }
+    postRecord();
     setCurrentScreen("Profile");
-    console.log(responseRecord);
   };
 
   const backPressed = () => {
@@ -209,19 +204,26 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         : surveyQuestions[newQ].hasQuantitative
     );
     const newQuestionType =
-      responseRecord[surveyQuestions[newQ].variableId].type == "quantitative";
+      testRecord[surveyQuestions[newQ].variableId].type == "quantitative";
     setQuantitative(newQuestionType);
-    setCurrentChoice(responseRecord[surveyQuestions[newQ].variableId].response);
+    setCurrentChoice(testRecord[surveyQuestions[newQ].variableId].response);
+    setRequired(surveyQuestions[newQ].required);
+    setErrorText("");
+    setRange([
+      surveyQuestions[newQ].mean - surveyQuestions[newQ].stdev * 3,
+      surveyQuestions[newQ].mean + surveyQuestions[newQ].stdev * 3,
+    ]);
   };
 
   return (
     <View style={styles.container}>
       <ProgressBar
-        progress={currentQ / (Object.keys(responseRecord).length + 20)}
+        progress={currentQ / (Object.keys(surveyQuestions).length + 20)}
         style={{ ...styles.progress }}
       />
-      {currentQ < Object.keys(responseRecord).length ? (
+      {currentQ < Object.keys(surveyQuestions).length ? (
         <>
+          {required ? <Text>* this field is required</Text> : <></>}
           {errorText != "" ? (
             <Text style={styles.error}>{errorText}</Text>
           ) : (
@@ -248,8 +250,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
           <Button
             mode="contained"
             onPress={() => {
-              errorCheck =
-                /^[0-9]+$/.test(currentChoice) || currentChoice === "";
               nextPressed();
             }}
           >
