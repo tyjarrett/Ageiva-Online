@@ -44,6 +44,7 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
   const [range, setRange] = useState([0.000326598886798, 1.70742148]);
 
   async function fetchData() {
+    firstQuestion();
     getHealthData(auth.authToken)
       .then(({ data: res }) => {
         console.log(res.health_data[0]);
@@ -128,6 +129,33 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     }
   };
 
+  const firstQuestion = () => {
+    const newQ = currentQ;
+    setRequired(surveyQuestions[newQ].required);
+    setCurrentChoice(
+      testRecord[surveyQuestions[newQ].variableId]
+        ? testRecord[surveyQuestions[newQ].variableId].response
+        : ""
+    );
+    const newQuantitative = surveyQuestions[newQ].hasQuantitative;
+    setQuantitative(
+      surveyQuestions[newQ].variableId in testRecord
+        ? newQuantitative
+          ? testRecord[surveyQuestions[newQ].variableId].type == "quantitative"
+          : newQuantitative
+        : newQuantitative
+    );
+    setSwitchModeEnabled(
+      newQuantitative
+        ? surveyQuestions[newQ].qualitativeOptions.length > 0
+        : surveyQuestions[newQ].hasQuantitative
+    );
+    setRange([
+      surveyQuestions[newQ].mean - surveyQuestions[newQ].stdev * 3,
+      surveyQuestions[newQ].mean + surveyQuestions[newQ].stdev * 3,
+    ]);
+  };
+
   const nextPressed = () => {
     if (required) {
       errorCheck =
@@ -151,7 +179,19 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         parseFloat(res.response) < range[0]) &&
       res.type === "quantitative"
     ) {
-      setErrorText("Enter numbers inside the range");
+      const errortext =
+        "Enter numbers inside the range (" +
+        (
+          surveyQuestions[currentQ].mean -
+          surveyQuestions[currentQ].stdev * 3
+        ).toFixed(3) +
+        " to " +
+        (
+          surveyQuestions[currentQ].mean +
+          surveyQuestions[currentQ].stdev * 3
+        ).toFixed(3) +
+        ")";
+      setErrorText(errorText);
       errorCheck = false;
     }
     if (errorCheck) {
@@ -223,6 +263,25 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
       />
       {currentQ < Object.keys(surveyQuestions).length ? (
         <>
+          <View style={{ flexDirection: "row" }}>
+            {currentQ != 0 ? (
+              <Button mode="contained" onPress={backPressed} icon="arrow-left">
+                Back
+              </Button>
+            ) : (
+              <></>
+            )}
+            <Button
+              mode="contained"
+              style={{ marginLeft: "auto", marginRight: 0 }}
+              onPress={() => {
+                nextPressed();
+              }}
+              icon="arrow-right"
+            >
+              Next
+            </Button>
+          </View>
           {required ? <Text>* this field is required</Text> : <></>}
           {errorText != "" ? (
             <Text style={styles.error}>{errorText}</Text>
@@ -246,15 +305,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
               Provide {quantitative ? "estimate" : "exact value"} instead
             </Button>
           )}
-
-          <Button
-            mode="contained"
-            onPress={() => {
-              nextPressed();
-            }}
-          >
-            Next
-          </Button>
         </>
       ) : (
         <View style={styles.complete}>
