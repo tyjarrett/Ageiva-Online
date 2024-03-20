@@ -2,7 +2,7 @@ import { Float } from "react-native/Libraries/Types/CodegenTypes";
 
 export type ProfileScreenName = "Profile" | "Survey";
 
-const variableIds = [
+export const variableIds = [
   "gait_speed",
   "grip_dom",
   "grip_ndom",
@@ -55,6 +55,10 @@ const variableIds = [
 ] as const;
 
 export type VariableId = (typeof variableIds)[number];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isVariableId = (x: any): x is VariableId =>
+  variableIds.includes(x);
 
 export type ProfileSurveyQuestion = {
   variableId: VariableId;

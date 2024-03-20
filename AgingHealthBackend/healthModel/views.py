@@ -99,20 +99,19 @@ class HealthDataView(APIView):
     health_data = models.HealthData.objects.filter(user=request.user).order_by("date")
 
     if len(vars) == 0:
-      ser_background = serializers.BackgroundDataSerializer(background)
-      ser_health_data = serializers.HealthDataSerializer(health_data, many=True)
-      res_background = ser_background.data
-      res_health_data = ser_health_data.data
-    else:
-      fields_to_include = ["id", "date", "age"]
-      res_background = {var: getattr(background, var) for var in fields_to_include + vars if var in fields_to_include + constants.background_variables}
-      res_health_data = []
-      for d in health_data:
-        res_health_data.append({var: getattr(d, var) for var in fields_to_include + vars if var in fields_to_include + constants.health_variables})
-      
-    res_background_actual = z_score_to_actual(res_background)
-    res_health_data_actual = list(map(z_score_to_actual, res_health_data))
-    response = { "background": res_background_actual, "health_data": res_health_data_actual }
+      vars = constants.background_variables + constants.health_variables
+    fields_to_include = ["id", "date", "age"]
+    res_background = z_score_to_actual({var: getattr(background, var) for var in fields_to_include + vars if var in fields_to_include + constants.background_variables})
+    res_health_data = []
+    for d in health_data:
+      res_health_data.append({
+        "id": d.id,
+        "date": d.date,
+        "age": d.age,
+        "data": z_score_to_actual({ var: getattr(d, var) for var in vars if var in constants.health_variables })
+      })
+
+    response = { "background": res_background, "health_data": res_health_data }
     return Response(response)
     
 class SaveHealthDataView(APIView):

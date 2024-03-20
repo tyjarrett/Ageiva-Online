@@ -317,3 +317,5 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     stdev: 15,
   },
 ];
+
+export const PRED_DT = 0.5;
