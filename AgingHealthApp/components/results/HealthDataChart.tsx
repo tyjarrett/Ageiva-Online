@@ -2,49 +2,18 @@ import { DateAndValue } from "../../types/Results";
 import {
   VictoryChart,
   VictoryLine,
-  VictoryTheme,
   VictoryAxis,
   VictoryLegend,
+  VictoryScatter,
 } from "victory-native";
-import { VictoryThemeDefinition } from "victory-core";
 import { surveyQuestions } from "../../utilities/constants";
+import { graphColors, graphTheme } from "../../style/GraphStyles";
 
 type Props = {
   label: string;
   data: DateAndValue[];
   numPoints: number;
 };
-
-const varColor = "#005AB5";
-const meanColor = "#DC3220";
-const graphColor = "#FFFFFF";
-
-const graphTheme: VictoryThemeDefinition = {
-  ...VictoryTheme.grayscale,
-  axis: {
-    style: {
-      axis: { stroke: graphColor, strokeWidth: 0.5 },
-      ticks: { stroke: graphColor },
-      tickLabels: { fill: graphColor },
-      axisLabel: { fill: graphColor },
-    },
-  },
-  legend: {
-    ...VictoryTheme.grayscale.legend,
-    style: {
-      ...VictoryTheme.grayscale.legend?.style,
-      labels: {
-        fill: graphColor,
-        fontFamily: "sans-serif",
-        fontSize: 12,
-        letterSpacing: "normal",
-        padding: 10,
-        stroke: "transparent",
-      },
-    },
-  },
-};
-console.log(VictoryTheme.grayscale.legend?.style?.labels);
 
 const HealthDataChart = ({ label, data, numPoints }: Props) => {
   const dataPoints = data.slice(0, numPoints).map((datum) => ({
@@ -61,32 +30,38 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
     : [];
 
   return (
-    <VictoryChart theme={graphTheme}>
+    <VictoryChart
+      theme={graphTheme}
+      // events={[{ childName: "cursor", target: "data", eventHandlers: {} }]}
+    >
       <VictoryLegend
         data={[{ name: label }].concat(
           variableMean ? [{ name: "Population Mean" }] : []
         )}
-        colorScale={[varColor, meanColor]}
+        colorScale={[graphColors.var, graphColors.mean]}
         x={200}
         y={40}
       />
       <VictoryLine
         data={dataPoints}
         style={{
-          data: { stroke: varColor, strokeWidth: 2 },
+          data: { stroke: graphColors.var },
         }}
       />
       <VictoryLine
         data={meanLine}
         style={{
-          data: { stroke: meanColor, strokeWidth: 2, strokeDasharray: 5 },
+          data: {
+            stroke: graphColors.mean,
+            strokeDasharray: 5,
+          },
         }}
       />
+      <VictoryScatter data={[dataPoints[5]]} size={5} />
       <VictoryAxis
         scale="time"
         label={label}
         orientation="bottom"
-        style={{ axisLabel: { padding: 30, fontSize: 20 } }}
         tickFormat={(x) => new Date(x).getFullYear()}
       />
       <VictoryAxis dependentAxis />
