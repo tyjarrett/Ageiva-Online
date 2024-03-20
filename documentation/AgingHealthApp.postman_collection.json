@@ -7,187 +7,388 @@
 	},
 	"item": [
 		{
-			"name": "Create User",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{baseurl}}/users/",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"users",
-						""
-					]
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"newPass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/user/{{userId}}/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"user",
+								"{{userId}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User (with userId)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/users/user/{{userId}}/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"user",
+								"{{userId}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/users/user/{{userId}}/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"user",
+								"{{userId}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User (with token)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/users/me/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"me",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/users/token/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"token",
+								""
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get User (with userId)",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
+			"name": "Root",
+			"item": [
+				{
+					"name": "Root",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								""
+							]
 						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseurl}}/users/user/{{userId}}/",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"users",
-						"user",
-						"{{userId}}",
-						""
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Update User",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
+			"name": "healthmodel",
+			"item": [
+				{
+					"name": "Create Data Point",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"age\": {\n        \"response\": 52,\n        \"type\": \"quantitative\"\n    },\n    \"grip_dom\": {\n        \"response\": 34.66,\n        \"type\": \"quantitative\"\n    },\n    \"grip_ndom\": {\n        \"response\": 31.0,\n        \"type\": \"quantitative\"\n    },\n    \"FI_ADL\": {\n        \"response\": 0.6,\n        \"type\": \"quantitative\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/healthmodel/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"healthmodel",
+								""
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"password\": \"newPass\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Get Health Data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/healthmodel/?vars=gait_speed,grip_dom",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"healthmodel",
+								""
+							],
+							"query": [
+								{
+									"key": "vars",
+									"value": "gait_speed,grip_dom"
+								}
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{baseurl}}/users/user/{{userId}}/",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"users",
-						"user",
-						"{{userId}}",
-						""
-					]
+				{
+					"name": "Save Responses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"last_question_number\": 10,\n    \"to_save\": {\n        \"gait_speed\": {\n            \"response\": 100.1,\n            \"type\": \"quantitative\"\n        },\n        \"grip_dom\": {\n            \"response\": 40,\n            \"type\": \"quantitative\"\n        }\n    } \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/healthmodel/save/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"healthmodel",
+								"save",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Saved Responses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/healthmodel/save/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"healthmodel",
+								"save",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Predict Health Data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/healthmodel/predict/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"healthmodel",
+								"predict",
+								""
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete User",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{baseurl}}/users/user/{{username}}/",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"users",
-						"user",
-						"{{username}}",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get User (with token)",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseurl}}/users/me/",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"users",
-						"me",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Token",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseurl}}/users/token/",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"users",
-						"token",
-						""
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	]
 }

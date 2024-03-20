@@ -4,6 +4,7 @@ import {
   CreateUserResponse,
   GetTokenResponse,
   HealthData,
+  PredictionResponse,
 } from "../types/apiResponses";
 import { PResponse, VariableId } from "../types/Profile";
 
@@ -39,4 +40,10 @@ export function getHealthData(
   token: string
 ): Promise<AxiosResponse<HealthData>> {
   return apiGet("healthmodel/", token);
+}
+
+export function makePrediction(
+  token: string
+): Promise<AxiosResponse<PredictionResponse>> {
+  return apiGet("healthmodel/predict/", token);
 }

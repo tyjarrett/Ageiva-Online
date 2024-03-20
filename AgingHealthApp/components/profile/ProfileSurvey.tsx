@@ -305,6 +305,7 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
               Provide {quantitative ? "estimate" : "exact value"} instead
             </Button>
           )}
+
         </>
       ) : (
         <View style={styles.complete}>
