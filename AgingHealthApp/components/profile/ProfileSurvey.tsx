@@ -18,7 +18,6 @@ type Props = {
   setCurrentScreen: SetState<ProfileScreenName>;
 };
 
-const testRecord = {} as Record<VariableId, QuestionAndResponse>;
 const ProfileSurvey = ({ setCurrentScreen }: Props) => {
   const auth = useAuth();
 
@@ -26,6 +25,17 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (testRecord[surveyQuestions[currentQ].variableId]) {
+      setCurrentChoice(
+        testRecord[surveyQuestions[currentQ].variableId].response
+      );
+    }
+  });
+
+  const [testRecord, setTestRecord] = useState(
+    {} as Record<VariableId, QuestionAndResponse>
+  );
   const [visible, setVisible] = useState(false);
   const [currentQ, setCurrentQ] = useState(0);
   let errorCheck = true;
@@ -41,38 +51,34 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         : surveyQuestions[currentQ].hasQuantitative)
   );
   const [required, setRequired] = useState(false);
-  const [range, setRange] = useState([0.000326598886798, 1.70742148]);
+  const [range, setRange] = useState([0, 0]);
 
   async function fetchData() {
-    firstQuestion();
     getHealthData(auth.authToken)
       .then(({ data: res }) => {
         console.log(res.health_data[0]);
-        for (const [key, entry] of Object.entries(res.health_data[0])) {
-          if (
-            key !== "background" &&
-            key !== "date" &&
-            key !== "id" &&
-            key !== "user"
-          ) {
-            const resp = {} as QuestionAndResponse;
-            resp.variableId = key as VariableId;
-            resp.type = "quantitative";
-            if (entry != null) {
-              resp.response = entry.toString();
-            } else {
-              resp.response = "";
-            }
-            testRecord[key as VariableId] = resp;
+        for (const [key, entry] of Object.entries(res.health_data[0].data)) {
+          const resp = {} as QuestionAndResponse;
+          resp.variableId = key as VariableId;
+          resp.type = "quantitative";
+          if (entry != null) {
+            resp.response = entry.toString();
+          } else {
+            resp.response = "";
           }
+          setTestRecord((prev) => ({
+            ...prev,
+            [key as VariableId]: resp,
+          }));
         }
-        console.log(testRecord);
       })
       .catch((err: AxiosError) => {
         // possibly invalid token, but should do more error validation
         console.log(err.message);
         // setLoadingCreds(false);
       });
+    console.log(testRecord);
+    firstQuestion();
   }
 
   const postRecord = () => {
@@ -132,11 +138,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
   const firstQuestion = () => {
     const newQ = currentQ;
     setRequired(surveyQuestions[newQ].required);
-    setCurrentChoice(
-      testRecord[surveyQuestions[newQ].variableId]
-        ? testRecord[surveyQuestions[newQ].variableId].response
-        : ""
-    );
     const newQuantitative = surveyQuestions[newQ].hasQuantitative;
     setQuantitative(
       surveyQuestions[newQ].variableId in testRecord
@@ -191,12 +192,15 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
           surveyQuestions[currentQ].stdev * 3
         ).toFixed(3) +
         ")";
-      setErrorText(errorText);
+      setErrorText(errortext);
       errorCheck = false;
     }
     if (errorCheck) {
       setErrorText("");
-      testRecord[res.variableId] = res;
+      setTestRecord((prev) => ({
+        ...prev,
+        [res.variableId]: res,
+      }));
       console.log(testRecord[res.variableId]);
       const newQ = currentQ + 1;
       setCurrentQ(newQ);
@@ -261,27 +265,31 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         progress={currentQ / (Object.keys(surveyQuestions).length + 20)}
         style={{ ...styles.progress }}
       />
+      <View style={{ flexDirection: "row" }}>
+        {currentQ != 0 ? (
+          <Button mode="contained" onPress={backPressed} icon="arrow-left">
+            Back
+          </Button>
+        ) : (
+          <></>
+        )}
+        {currentQ < Object.keys(surveyQuestions).length ? (
+          <Button
+            mode="contained"
+            style={{ marginLeft: "auto", marginRight: 0 }}
+            onPress={() => {
+              nextPressed();
+            }}
+            icon="arrow-right"
+          >
+            Next
+          </Button>
+        ) : (
+          <></>
+        )}
+      </View>
       {currentQ < Object.keys(surveyQuestions).length ? (
         <>
-          <View style={{ flexDirection: "row" }}>
-            {currentQ != 0 ? (
-              <Button mode="contained" onPress={backPressed} icon="arrow-left">
-                Back
-              </Button>
-            ) : (
-              <></>
-            )}
-            <Button
-              mode="contained"
-              style={{ marginLeft: "auto", marginRight: 0 }}
-              onPress={() => {
-                nextPressed();
-              }}
-              icon="arrow-right"
-            >
-              Next
-            </Button>
-          </View>
           {required ? <Text>* this field is required</Text> : <></>}
           {errorText != "" ? (
             <Text style={styles.error}>{errorText}</Text>
@@ -305,22 +313,11 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
               Provide {quantitative ? "estimate" : "exact value"} instead
             </Button>
           )}
-
         </>
       ) : (
         <View style={styles.complete}>
           <Text variant="displayMedium">Quiz Complete</Text>
-          <Button mode="contained" onPress={checkResponses}>
-            Save and Complete
-          </Button>
         </View>
-      )}
-      {currentQ != 0 ? (
-        <Button mode="contained" onPress={backPressed}>
-          Back
-        </Button>
-      ) : (
-        <></>
       )}
       <Portal>
         <Dialog visible={visible} onDismiss={() => setCurrentScreen("Profile")}>
@@ -345,6 +342,9 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
+      <Button mode="contained" onPress={checkResponses}>
+        Save and Complete
+      </Button>
     </View>
   );
 };
