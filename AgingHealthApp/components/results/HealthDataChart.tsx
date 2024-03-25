@@ -1,13 +1,15 @@
 import { DateAndValue } from "../../types/Results";
-import {
-  VictoryChart,
-  VictoryLine,
-  VictoryAxis,
-  VictoryLegend,
-  VictoryScatter,
-} from "victory-native";
+import { CartesianChart, Line, useChartPressState } from "victory-native";
 import { surveyQuestions } from "../../utilities/constants";
-import { graphColors, graphTheme } from "../../style/GraphStyles";
+import { StyleSheet, View } from "react-native";
+import { Circle, useFont } from "@shopify/react-native-skia";
+import { graphColors } from "../../style/GraphStyles";
+import inter from "../../assets/Inter-Medium.ttf";
+import { useEffect, useState } from "react";
+import * as Haptics from "expo-haptics";
+import { Text } from "react-native-paper";
+import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
+import Legend from "./Legend";
 
 type Props = {
   label: string;
@@ -16,57 +18,132 @@ type Props = {
 };
 
 const HealthDataChart = ({ label, data, numPoints }: Props) => {
-  const dataPoints = data.slice(0, numPoints).map((datum) => ({
-    x: datum.date,
-    y: datum.value,
-  }));
+  const [tooltip, setToolTip] = useState({ x: -1, y: -1 });
   const variableQuery = surveyQuestions.filter((v) => v.variableId === label);
   const variableMean = variableQuery.length > 0 ? variableQuery[0].mean : null;
-  const meanLine = variableMean
-    ? [
-        { x: dataPoints[0].x, y: variableMean },
-        { x: dataPoints[dataPoints.length - 1].x, y: variableMean },
-      ]
-    : [];
+
+  const dataPoints = data.slice(0, numPoints).map((datum) => ({
+    date: datum.date.valueOf(),
+    value: datum.value,
+    mean: variableMean || -1,
+  }));
+  const font = useFont(inter, 12);
+  const { isActive: chartPressActive, state: chartPressState } =
+    useChartPressState({
+      x: dataPoints[0].date,
+      y: {
+        value: dataPoints[0].value,
+        mean: variableMean || -1,
+      },
+    });
+
+  const formatDate = (dateValue: number) => {
+    const date = new Date(dateValue);
+    return `${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
+  useEffect(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  }, [chartPressActive]);
+
+  useAnimatedReaction(
+    () => {
+      return {
+        x: chartPressState.x.value.value,
+        y: chartPressState.y.value.value.value,
+      };
+    },
+    ({ x, y }) => {
+      runOnJS(setToolTip)({ x, y });
+    },
+
+    [chartPressState.x, chartPressState.y]
+  );
 
   return (
-    <VictoryChart
-      theme={graphTheme}
-      // events={[{ childName: "cursor", target: "data", eventHandlers: {} }]}
-    >
-      <VictoryLegend
-        data={[{ name: label }].concat(
-          variableMean ? [{ name: "Population Mean" }] : []
+    <>
+      <View style={styles.container}>
+        {chartPressActive ? (
+          <Text>
+            {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)}
+          </Text>
+        ) : (
+          <></>
         )}
-        colorScale={[graphColors.var, graphColors.mean]}
-        x={200}
-        y={40}
-      />
-      <VictoryLine
-        data={dataPoints}
-        style={{
-          data: { stroke: graphColors.var },
-        }}
-      />
-      <VictoryLine
-        data={meanLine}
-        style={{
-          data: {
-            stroke: graphColors.mean,
-            strokeDasharray: 5,
-          },
-        }}
-      />
-      <VictoryScatter data={[dataPoints[5]]} size={5} />
-      <VictoryAxis
-        scale="time"
-        label={label}
-        orientation="bottom"
-        tickFormat={(x) => new Date(x).getFullYear()}
-      />
-      <VictoryAxis dependentAxis />
-    </VictoryChart>
+        <Text style={styles.chartTitle}>{label}</Text>
+        <View style={styles.chartContainer}>
+          <CartesianChart
+            data={dataPoints}
+            xKey="date"
+            yKeys={["value", "mean"]}
+            axisOptions={{
+              font,
+              formatXLabel: formatDate,
+              lineColor: graphColors.axes,
+              labelColor: graphColors.axes,
+              tickCount: {
+                x: 4,
+                y: 5,
+              },
+            }}
+            chartPressState={chartPressState}
+          >
+            {({ points }) => (
+              <>
+                <Line
+                  points={points.value}
+                  color={graphColors.var}
+                  strokeWidth={3}
+                />
+                {variableMean && (
+                  <Line
+                    points={points.mean}
+                    color={graphColors.mean}
+                    strokeWidth={3}
+                  />
+                )}
+
+                {chartPressActive ? (
+                  <>
+                    <Circle
+                      cx={chartPressState.x.position}
+                      cy={chartPressState.y.value.position}
+                      r={8}
+                      color={graphColors.var}
+                    />
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
+          </CartesianChart>
+        </View>
+
+        <Legend
+          labels={[
+            { label, color: graphColors.var },
+            ...(variableMean
+              ? [{ label: "Population Mean", color: graphColors.mean }]
+              : []),
+          ]}
+        />
+      </View>
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: "70%",
+  },
+  chartContainer: {
+    height: 200,
+  },
+  chartTitle: {
+    alignSelf: "center",
+    fontSize: 24,
+  },
+});
 
 export default HealthDataChart;
