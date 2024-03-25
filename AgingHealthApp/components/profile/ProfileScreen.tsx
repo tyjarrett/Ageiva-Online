@@ -3,6 +3,7 @@ import { Appbar, Button } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import ProfileSurvey from "./ProfileSurvey";
 import ProfileView from "./ProfileView";
+import ProfileCheck from "./ProfileCheck";
 import { ProfileScreenName } from "../../types/Profile";
 import { useAuth } from "../authentication/AuthProvider";
 
@@ -10,6 +11,8 @@ const ProfileScreen = () => {
   const [currentScreen, setCurrentScreen] = useState(
     "Profile" as ProfileScreenName
   );
+
+  const [dateCheck, setDateCheck] = useState("");
 
   const auth = useAuth();
 
@@ -38,9 +41,17 @@ const ProfileScreen = () => {
         )}
       </Appbar.Header>
       {currentScreen === "Profile" ? (
-        <ProfileView setCurrentScreen={setCurrentScreen} />
-      ) : (
+        <ProfileView
+          setCurrentScreen={setCurrentScreen}
+          setDateCheck={setDateCheck}
+        />
+      ) : currentScreen === "Survey" ? (
         <ProfileSurvey setCurrentScreen={setCurrentScreen} />
+      ) : (
+        <ProfileCheck
+          setCurrentScreen={setCurrentScreen}
+          dateCheck={dateCheck}
+        />
       )}
     </>
   );

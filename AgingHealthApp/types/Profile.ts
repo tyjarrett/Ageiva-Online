@@ -1,6 +1,6 @@
 import { Float } from "react-native/Libraries/Types/CodegenTypes";
 
-export type ProfileScreenName = "Profile" | "Survey";
+export type ProfileScreenName = "Profile" | "Survey" | "Check";
 
 export const variableIds = [
   "gait_speed",
