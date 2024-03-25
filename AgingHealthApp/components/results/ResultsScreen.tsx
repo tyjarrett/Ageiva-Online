@@ -20,7 +20,6 @@ import { PRED_DT } from "../../utilities/constants";
 import { GraphData, PredictionData, DateAndValue } from "../../types/Results";
 import HealthDataChart from "./HealthDataChart";
 import { Slider } from "@miblanchard/react-native-slider";
-import NewHealthDataChart from "./NewHealthDataChart";
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
@@ -34,7 +33,6 @@ const ResultsScreen = () => {
   const [loading, setLoading] = useState(true);
 
   const auth = useAuth();
-
   useEffect(() => {
     fetchData();
   }, []);
