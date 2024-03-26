@@ -20,12 +20,12 @@ type Props = {
 const HealthDataChart = ({ label, data, numPoints }: Props) => {
   const [tooltip, setToolTip] = useState({ x: -1, y: -1 });
   const variableQuery = surveyQuestions.filter((v) => v.variableId === label);
-  const variableMean = variableQuery.length > 0 ? variableQuery[0].mean : null;
+  const variable = variableQuery.length > 0 ? variableQuery[0] : null;
 
   const dataPoints = data.slice(0, numPoints).map((datum) => ({
     date: datum.date.valueOf(),
     value: datum.value,
-    mean: variableMean || -1,
+    mean: variable?.mean || -1,
   }));
   const font = useFont(inter, 12);
   const { isActive: chartPressActive, state: chartPressState } =
@@ -33,13 +33,21 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
       x: dataPoints[0].date,
       y: {
         value: dataPoints[0].value,
-        mean: variableMean || -1,
+        mean: variable?.mean || -1,
       },
     });
 
   const formatDate = (dateValue: number) => {
     const date = new Date(dateValue);
     return `${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
+  const toQualitative = (value: number) => {
+    if (!variable) {
+      return "";
+    }
+
+    const z = (value - variable.mean) / variable.stdev;
   };
 
   useEffect(() => {
@@ -95,7 +103,7 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
                   color={graphColors.var}
                   strokeWidth={3}
                 />
-                {variableMean && (
+                {variable && (
                   <Line
                     points={points.mean}
                     color={graphColors.mean}
@@ -123,7 +131,7 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
         <Legend
           labels={[
             { label, color: graphColors.var },
-            ...(variableMean
+            ...(variable
               ? [{ label: "Population Mean", color: graphColors.mean }]
               : []),
           ]}
