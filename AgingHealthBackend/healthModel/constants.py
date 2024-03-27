@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import math
 
 background_variables = ['longill', 'limitact', 'effort', 'smkevr', 'smknow', 'mobility', 'country',
                         'alcohol', 'jointrep', 'fractures' , 'height', 'bmi', 'ethnicity','sex',
@@ -41,100 +42,90 @@ def normalize_qual(num_options):
   return {i : i/(num_options-1) for i in range(num_options)}
 
 # for variables where values are in ascending order with baseline in the first index
-def increasing_qual_to_quant(variable_name, num_options):
-  formatted_var = variable_name.replace('_', ' ') 
+def sequential_qual_to_quant(variable_name, num_options, reverse=False):
+  formatted_var = variable_name.replace('_', ' ')
   mean = mean_deficits.loc[formatted_var].iat[0]
   std = std_deficits.loc[formatted_var].iat[0]
-  return {i : mean+i*std for i in range(num_options)}
+  order = range(num_options) if not reverse else range(num_options-1, -1, -1)
+  return {i : mean+i*std for i in order}
 
-
+# hard-coded values are gotten from design doc, other values are derived from the population mean and std
 qual_to_quant = {
   "gait_speed": standard_qual_to_quant("gait_speed", 5),
   "grip_dom": standard_qual_to_quant("grip_dom", 5),
   "grip_ndom": standard_qual_to_quant("grip_ndom", 5),
   "chair": standard_qual_to_quant("chair", 5),
-  "leg_raise": { #****
-    0: 10,
-    1: 20,
-    2: 30,
+  "leg_raise": {
+    0: math.log(10),
+    1: math.log(20),
+    2: math.log(30),
   },
-  "full_tandem": { #****
-    0: 10,
-    1: 20,
-    2: 30,
+  "full_tandem": {
+    0: math.log(10),
+    1: math.log(20),
+    2: math.log(30),
   },
   "dias": standard_qual_to_quant("dias", 5),
   "sys": standard_qual_to_quant("sys", 5),
   "pulse": standard_qual_to_quant("pulse", 5),
-  "trig": increasing_qual_to_quant("trig", 4), 
-  "crp": increasing_qual_to_quant("crp", 5),
-  "hdl": standard_qual_to_quant("hdl", 3, reverse=True),
+  "trig": {
+    0: math.log(1.4),
+    1: math.log(1.8),
+    2: math.log(2.4),
+    3: math.log(5.6)
+  }, 
+  "crp": {
+    0: .3,
+    1: 1.0,
+    2: 10.0,
+    3: 25.0,
+    4: 50.0,
+  },
+  "hdl": {
+    0: 1.5,
+    1: 1.25,
+    2: 1.0
+  },
   "ldl": {
-    0: 10,
-    1: 20,
-    2: 30,
-    3: 30,
-    4: 40
-  }, #****
-  "glucose": increasing_qual_to_quant("glucose", 3),
-  "igf1": {
-    0: 10,
-    1: 20,
-    2: 30,
-    3: 30,
-    4: 40
-  }, #****
-  "hgb": {
-    0: 10,
-    1: 20,
-    2: 30,
-    3: 30,
-    4: 40
+    0: 5.0,
+    1: 4.0,
+    2: 3.0,
+    3: 2.0,
+    4: 1.0
   },
-  "fib": {
-    0: 10,
-    1: 20,
-    2: 30,
-    3: 30,
-    4: 40
+  "glucose": {
+    5.6,
+    6.2,
+    7.2
   },
-  "fer": {
-    0: 10,
-    1: 20,
-    2: 30,
-    3: 30,
-    4: 40
+  "igf1": standard_qual_to_quant("igf1", 5), #****
+  "hgb": standard_qual_to_quant("hgb", 5), #****
+  "fib": standard_qual_to_quant("fib", 5), #****
+  "fer": standard_qual_to_quant("fer", 5), #****
+  "chol": {
+    0: 5.0,
+    1: 6.0,
+    2: 7.0
   },
-  "chol": increasing_qual_to_quant("chol", 3),
-  "wbc": {
-    0: 10,
-    1: 20,
-    2: 30,
-    3: 30,
-    4: 40
+  "wbc": standard_qual_to_quant("wbc", 5), #****
+  "mch": standard_qual_to_quant("mch", 5), #****
+  "hba1c": {
+    0: 5.0,
+    1: 6.0,
+    2: 7.0
   },
-  "mch": {
-    0: 10,
-    1: 20,
-    2: 30,
-    3: 30,
-    4: 40
+  "vitd": {
+    math.log(20),
+    math.log(40),
+    math.log(80),
+    math.log(160)
   },
-  "hba1c": increasing_qual_to_quant("hba1c", 3),
-  "vitd": standard_qual_to_quant("vitd", 3),
-  "height": {
-    0: 10,
-    1: 20,
-    2: 30,
-    3: 30,
-    4: 40
-  },
+  "height": standard_qual_to_quant("height", 5),
   "bmi": {
-    0: 10,
-    1: 20,
-    2: 30,
-    3: 30,
-    4: 40
+    17.5,
+    22.0,
+    27.0,
+    31.0
   },
   # purely qual variables should be normalized
   'srh': normalize_qual(5), 
