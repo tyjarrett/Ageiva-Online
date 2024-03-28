@@ -11,7 +11,11 @@ import {
   ActivityIndicator,
 } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
-import { getHealthData, makePrediction } from "../../functions/apiCalls";
+import {
+  getHealthData,
+  getQualToQuant,
+  makePrediction,
+} from "../../functions/apiCalls";
 import { AxiosError } from "axios";
 import { VariableId, isVariableId } from "../../types/Profile";
 import { filter_data_object } from "../../functions/helpers";
@@ -20,6 +24,7 @@ import { PRED_DT } from "../../utilities/constants";
 import { GraphData, PredictionData, DateAndValue } from "../../types/Results";
 import HealthDataChart from "./HealthDataChart";
 import { Slider } from "@miblanchard/react-native-slider";
+import { QualToQuantResponse } from "../../types/apiResponses";
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
@@ -31,6 +36,7 @@ const ResultsScreen = () => {
     {} as Record<VariableId, boolean>
   );
   const [loading, setLoading] = useState(true);
+  const [qualToQuant, setQualToQuant] = useState({} as QualToQuantResponse);
 
   const auth = useAuth();
   useEffect(() => {
@@ -94,7 +100,14 @@ const ResultsScreen = () => {
               predictionData: newUserData.concat(healthPred),
               survivalData,
             });
-            setLoading(false);
+            getQualToQuant(auth.authToken)
+              .then(({ data: q2q }) => {
+                setQualToQuant(q2q);
+                setLoading(false);
+              })
+              .catch((err: AxiosError) => {
+                console.log(err);
+              });
           })
           .catch((err: AxiosError) => {
             console.log(err.message);
@@ -201,6 +214,7 @@ const ResultsScreen = () => {
                 label="survival"
                 data={dataRecord.survivalData}
                 numPoints={numRealDates + numPredYears / PRED_DT}
+                qualToQuant={qualToQuant}
               />
             ) : (
               <></>
@@ -215,6 +229,7 @@ const ResultsScreen = () => {
                     value: dp.data[variableId],
                   }))}
                   numPoints={numRealDates + numPredYears / PRED_DT}
+                  qualToQuant={qualToQuant}
                 />
               ) : (
                 <React.Fragment key={variableId} />

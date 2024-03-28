@@ -10,14 +10,17 @@ import * as Haptics from "expo-haptics";
 import { Text } from "react-native-paper";
 import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 import Legend from "./Legend";
+import { QualToQuantResponse } from "../../types/apiResponses";
+import { isVariableId } from "../../types/Profile";
 
 type Props = {
   label: string;
   data: DateAndValue[];
   numPoints: number;
+  qualToQuant: QualToQuantResponse;
 };
 
-const HealthDataChart = ({ label, data, numPoints }: Props) => {
+const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
   const [tooltip, setToolTip] = useState({ x: -1, y: -1 });
   const variableQuery = surveyQuestions.filter((v) => v.variableId === label);
   const variable = variableQuery.length > 0 ? variableQuery[0] : null;
@@ -43,11 +46,20 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
   };
 
   const toQualitative = (value: number) => {
-    if (!variable) {
+    if (!(isVariableId(label) && variable)) {
       return "";
     }
-
-    const z = (value - variable.mean) / variable.stdev;
+    const q2q = qualToQuant[label];
+    let qual = variable.qualitativeOptions[0];
+    for (const i of Object.keys(q2q).sort()) {
+      const index = parseInt(i);
+      const current_quant = q2q[index];
+      if (current_quant > value) {
+        return qual;
+      } else {
+        qual = variable.qualitativeOptions[index];
+      }
+    }
   };
 
   useEffect(() => {
@@ -73,7 +85,8 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
       <View style={styles.container}>
         {chartPressActive ? (
           <Text>
-            {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)}
+            {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)} -{" "}
+            {toQualitative(tooltip.y)}
           </Text>
         ) : (
           <></>

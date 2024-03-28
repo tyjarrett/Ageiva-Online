@@ -159,3 +159,9 @@ class PredictHealthDataView(APIView):
     response = {"health": actual_health_pred, "survival": survival_prediction}
     
     return Response(response)
+  
+class QualToQuantView(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def get(self, request):
+    return Response(constants.qual_to_quant)

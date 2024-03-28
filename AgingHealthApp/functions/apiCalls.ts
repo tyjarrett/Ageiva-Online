@@ -5,6 +5,7 @@ import {
   GetTokenResponse,
   HealthData,
   PredictionResponse,
+  QualToQuantResponse,
 } from "../types/apiResponses";
 import { PResponse, VariableId } from "../types/Profile";
 
@@ -46,4 +47,10 @@ export function makePrediction(
   token: string
 ): Promise<AxiosResponse<PredictionResponse>> {
   return apiGet("healthmodel/predict/", token);
+}
+
+export function getQualToQuant(
+  token: string
+): Promise<AxiosResponse<QualToQuantResponse>> {
+  return apiGet("healthmodel/q2q/", token);
 }
