@@ -3,6 +3,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import ProfileScreen from "../profile/ProfileScreen";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import ResultsScreen from "../results/ResultsScreen";
+import HelpScreen from "../help/HelpScreen";
 const NavigationMenu = () => {
   const Tab = createMaterialBottomTabNavigator();
 
@@ -23,6 +24,15 @@ const NavigationMenu = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="user-alt" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Help"
+        component={HelpScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Entypo name="help" size={24} color={color} />
           ),
         }}
       />

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import {
   Button,
-  Appbar,
   Text,
   Searchbar,
   Checkbox,
@@ -25,6 +24,7 @@ import { GraphData, PredictionData, DateAndValue } from "../../types/Results";
 import HealthDataChart from "./HealthDataChart";
 import { Slider } from "@miblanchard/react-native-slider";
 import { QualToQuantResponse } from "../../types/apiResponses";
+import AppHeader from "../navigation/AppHeader";
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
@@ -49,11 +49,6 @@ const ResultsScreen = () => {
   } as GraphData);
 
   const [numRealDates, setNumRealDates] = useState(0);
-
-  const logout = () => {
-    auth.clearAuth();
-    // should do some loading here bc clearAuth is an async call
-  };
 
   async function fetchData() {
     getHealthData(auth.authToken)
@@ -120,12 +115,7 @@ const ResultsScreen = () => {
 
   return (
     <>
-      <Appbar.Header>
-        <Appbar.Content title={currentScreen} />
-        <Button onPress={logout} style={styles.logout}>
-          Logout
-        </Button>
-      </Appbar.Header>
+      <AppHeader title={currentScreen} />
 
       <ScrollView contentContainerStyle={styles.container}>
         {loading ? (
@@ -249,11 +239,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     width: "100%",
     paddingBottom: 10,
-  },
-  logout: {
-    position: "relative",
-    top: "0%",
-    right: "5%",
   },
   search: {
     width: 250,
