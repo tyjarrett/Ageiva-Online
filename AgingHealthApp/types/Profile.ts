@@ -62,6 +62,7 @@ export const isVariableId = (x: any): x is VariableId =>
 
 export type ProfileSurveyQuestion = {
   variableId: VariableId;
+  prettyName: string;
   question: string;
   unit: string | undefined;
   hasQuantitative: boolean;

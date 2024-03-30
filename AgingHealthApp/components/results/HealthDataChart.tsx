@@ -91,7 +91,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
         ) : (
           <></>
         )}
-        <Text style={styles.chartTitle}>{label}</Text>
+        <Text style={styles.chartTitle}>{variable?.prettyName || label}</Text>
         <View style={styles.chartContainer}>
           <CartesianChart
             data={dataPoints}
@@ -143,7 +143,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
 
         <Legend
           labels={[
-            { label, color: graphColors.var },
+            { label: variable?.prettyName || label, color: graphColors.var },
             ...(variable
               ? [{ label: "Population Mean", color: graphColors.mean }]
               : []),

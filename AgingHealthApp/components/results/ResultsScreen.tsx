@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import {
-  Button,
-  Text,
-  Searchbar,
-  Checkbox,
-  Portal,
-  Dialog,
-  ActivityIndicator,
-} from "react-native-paper";
+import { Button, Text, ActivityIndicator } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
 import {
   getHealthData,
@@ -25,12 +17,12 @@ import HealthDataChart from "./HealthDataChart";
 import { Slider } from "@miblanchard/react-native-slider";
 import { QualToQuantResponse } from "../../types/apiResponses";
 import AppHeader from "../navigation/AppHeader";
+import VariableFilter from "./VariableFilter";
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
   const [filterVisible, setFilterVisible] = useState(false);
   const [numPredYears, setNumPredYears] = useState(20);
-  const [search, setSearch] = useState("");
   const [survivalChecked, setSurvivalChecked] = useState(true);
   const [checkArray, setCheckArray] = useState(
     {} as Record<VariableId, boolean>
@@ -122,64 +114,15 @@ const ResultsScreen = () => {
           <ActivityIndicator animating={true} />
         ) : (
           <>
-            <Portal>
-              <Dialog
-                visible={filterVisible}
-                onDismiss={() => {
-                  setFilterVisible(false);
-                }}
-              >
-                <Dialog.Content>
-                  <Searchbar
-                    style={styles.search}
-                    placeholder="Filter "
-                    value={search}
-                    onChangeText={setSearch}
-                  />
-                  <Checkbox.Item
-                    style={styles.search}
-                    label="survival"
-                    mode="android"
-                    status={survivalChecked ? "checked" : "unchecked"}
-                    onPress={() => {
-                      setSurvivalChecked(!survivalChecked);
-                    }}
-                  />
-                  {Object.keys(
-                    dataRecord.predictionData[
-                      dataRecord.predictionData.length - 1
-                    ].data
-                  ).map((variableId) => (
-                    <Checkbox.Item
-                      key={variableId}
-                      style={styles.search}
-                      label={variableId}
-                      mode="android"
-                      status={
-                        isVariableId(variableId) && checkArray[variableId]
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() =>
-                        setCheckArray((prev) => ({
-                          ...prev,
-                          [variableId]:
-                            isVariableId(variableId) && !prev[variableId],
-                        }))
-                      }
-                    />
-                  ))}
-                  <Button
-                    mode="contained"
-                    onPress={() => {
-                      setFilterVisible(false);
-                    }}
-                  >
-                    Close
-                  </Button>
-                </Dialog.Content>
-              </Dialog>
-            </Portal>
+            <VariableFilter
+              filterVisible={filterVisible}
+              setFilterVisible={setFilterVisible}
+              dataRecord={dataRecord}
+              checkArray={checkArray}
+              setCheckArray={setCheckArray}
+              survivalChecked={survivalChecked}
+              setSurvivalChecked={setSurvivalChecked}
+            />
             <Button
               mode="contained"
               style={styles.filter}
@@ -239,9 +182,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     width: "100%",
     paddingBottom: 10,
-  },
-  search: {
-    width: 250,
   },
   modal: {
     marginTop: "50%",
