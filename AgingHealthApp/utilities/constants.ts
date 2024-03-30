@@ -340,3 +340,5 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
 ];
 
 export const PRED_DT = 0.5;
+
+export const graphDomains = [5, 10, 20, 50];

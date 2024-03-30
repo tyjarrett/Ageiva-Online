@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { Button, Text, ActivityIndicator } from "react-native-paper";
+import { ScrollView, StyleSheet } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
 import {
   getHealthData,
@@ -14,14 +14,13 @@ import moment from "moment";
 import { PRED_DT } from "../../utilities/constants";
 import { GraphData, PredictionData, DateAndValue } from "../../types/Results";
 import HealthDataChart from "./HealthDataChart";
-import { Slider } from "@miblanchard/react-native-slider";
 import { QualToQuantResponse } from "../../types/apiResponses";
 import AppHeader from "../navigation/AppHeader";
 import VariableFilter from "./VariableFilter";
+import DomainSelect from "./DomainSelect";
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
-  const [filterVisible, setFilterVisible] = useState(false);
   const [numPredYears, setNumPredYears] = useState(20);
   const [survivalChecked, setSurvivalChecked] = useState(true);
   const [checkArray, setCheckArray] = useState(
@@ -115,32 +114,17 @@ const ResultsScreen = () => {
         ) : (
           <>
             <VariableFilter
-              filterVisible={filterVisible}
-              setFilterVisible={setFilterVisible}
               dataRecord={dataRecord}
               checkArray={checkArray}
               setCheckArray={setCheckArray}
               survivalChecked={survivalChecked}
               setSurvivalChecked={setSurvivalChecked}
             />
-            <Button
-              mode="contained"
-              style={styles.filter}
-              onPress={() => {
-                setFilterVisible(true);
-              }}
-            >
-              Filter
-            </Button>
-            <Text>Number of years to predict: {numPredYears}</Text>
-            <View style={styles.slider}>
-              <Slider
-                minimumValue={1}
-                maximumValue={dataRecord.survivalData.length * PRED_DT + 1}
-                value={numPredYears}
-                onSlidingComplete={(val) => setNumPredYears(Math.floor(val[0]))}
-              />
-            </View>
+
+            <DomainSelect
+              selectedYear={numPredYears}
+              setSelectedYear={setNumPredYears}
+            />
             {survivalChecked ? (
               <HealthDataChart
                 key="survival"
@@ -182,19 +166,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     width: "100%",
     paddingBottom: 10,
-  },
-  modal: {
-    marginTop: "50%",
-  },
-  filter: {
-    width: 250,
-    marginTop: "20%",
-  },
-  slider: {
-    flex: 1,
-    alignItems: "stretch",
-    justifyContent: "center",
-    width: "80%",
   },
 });
 
