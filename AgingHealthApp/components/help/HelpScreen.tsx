@@ -1,11 +1,15 @@
-import { Text } from "react-native-paper";
+import { Button } from "react-native-paper";
 import AppHeader from "../navigation/AppHeader";
 
-const HelpScreen = () => {
+type Props = {
+  startOnboarding: () => void;
+};
+
+const HelpScreen = ({ startOnboarding }: Props) => {
   return (
     <>
       <AppHeader title="Help" />
-      <Text>hi</Text>
+      <Button onPress={startOnboarding}>Help</Button>
     </>
   );
 };
