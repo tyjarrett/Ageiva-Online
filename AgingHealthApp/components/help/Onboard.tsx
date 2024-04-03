@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { StyleSheet } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 
 type Props = {
@@ -8,13 +9,19 @@ type Props = {
 const Onboard = ({ endOnboarding }: Props) => {
   return (
     <Onboarding
+      imageContainerStyles={{ paddingBottom: 0 }}
       pages={[
         {
           title: "Enter Data",
           subtitle:
             "Answer questions on the profile page to build a health profile",
           backgroundColor: "#AAA",
-          image: <Image source={require("../../assets/icon.png")} />,
+          image: (
+            <Image
+              source={require("../../assets/survey.png")}
+              style={styles.image}
+            />
+          ),
         },
         {
           title: "View Results",
@@ -43,5 +50,7 @@ const Onboard = ({ endOnboarding }: Props) => {
     />
   );
 };
+
+const styles = StyleSheet.create({ image: { width: "50%", height: 400 } });
 
 export default Onboard;
