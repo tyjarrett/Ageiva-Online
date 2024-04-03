@@ -5,4 +5,5 @@ urlpatterns = [
     path("", views.HealthDataView.as_view()),
     path("save/", views.SaveHealthDataView.as_view()),
     path("predict/", views.PredictHealthDataView.as_view()),
+    path("q2q/", views.QualToQuantView.as_view())
 ]

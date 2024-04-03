@@ -1,12 +1,12 @@
 import { ProfileSurveyQuestion } from "../types/Profile";
 
 // need to change for production
-export const API_URL =
-  "146.190.125.251:8000/api";
+export const API_URL = "http://146.190.125.251:8000/api";
 
 export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "gait_speed",
+    prettyName: "Gait Speed",
     question: "gait speed averaged between two timed walks",
     hasQuantitative: true,
     unit: "m/s",
@@ -24,6 +24,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "grip_dom",
+    prettyName: "Dominant Hand Grip Strength",
     question: "your grip strength of your dominant hand",
     hasQuantitative: true,
     unit: "lbs",
@@ -40,6 +41,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "grip_ndom",
+    prettyName: "Non-Dominant Hand Grip Strength",
     question: "your grip strength of your non-dominant hand",
     hasQuantitative: true,
     unit: "lbs",
@@ -56,6 +58,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "FI_ADL",
+    prettyName: "ADL Score",
     question:
       "Any difficulty in the last 3 months because of physical, mental, emotional, or memory problems: (a) dressing (including putting on shoes and socks), (b) eating (such as cutting up your food), (c) using the toilet (including getting up and down), (d) bathing and showering, (e) getting in and out of bed, and (f) walking across a room",
     hasQuantitative: false,
@@ -67,6 +70,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "FI_IADL",
+    prettyName: "IADL Score",
     question:
       "Any difficulty in the last 3 months because of physical, mental, emotional, or memory problems: (a) preparing a hot meal, (b) shopping for groceries, (c) making telephone calls, (d) taking medications, and (e) managing your money, such as paying your bills and keeping track of expenses",
     hasQuantitative: false,
@@ -78,6 +82,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "chair",
+    prettyName: "Chair Raises",
     question:
       "'I want you to try to stand up from a firm straight-backed chair, like a dining chair. First, fold your arms across your chest and sit so that your feet are on the floor; then stand up keeping your arms folded across your chest. repeat 5 times",
     hasQuantitative: true,
@@ -95,6 +100,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "leg_raise",
+    prettyName: "Leg Raise",
     question:
       "Try to stand on one leg, whichever one you want, and raise the other leg off the ground a few inches. Stand for as long as you can - I will stop you at 30 seconds. You may use your arms, bend your knees, or move your body to maintain your balance, but try not to move your feet. Try to hold this position until I tell you to stop. You may support yourself on a chair, table or wall while getting into position.",
     hasQuantitative: true,
@@ -110,6 +116,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "full_tandem",
+    prettyName: "Full Tandem Stance",
     question:
       "Tandem stance: stand side by side with their feet together: Ages 50-69 were asked to hold for 30 seconds, 70+ for 10 seconds. Stopwatch was stopped when the participant steps out of position or grabs the nurses arm.",
     hasQuantitative: true,
@@ -125,6 +132,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "srh",
+    prettyName: "Self-Rated Health",
     question: "How would you say your health is?",
     hasQuantitative: false,
     unit: "sec",
@@ -135,6 +143,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "eye",
+    prettyName: "Self-Rated Eyesight",
     question: "How would you rate your eyesight?",
     hasQuantitative: false,
     unit: "sec",
@@ -152,6 +161,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "hear",
+    prettyName: "Self-Rated Hearing",
     question: "How would you rate your hearing?",
     hasQuantitative: false,
     unit: "sec",
@@ -162,6 +172,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "func",
+    prettyName: "Difficulty Walking",
     question:
       "By yourself and without using any special equipment, how much difficulty do you have walking for a quarter of a mile?",
     hasQuantitative: false,
@@ -178,6 +189,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "dias",
+    prettyName: "Diastolic Blood Pressure",
     question: "diastolic blood pressure from 3 measurements",
     hasQuantitative: true,
     unit: "mmHg",
@@ -194,6 +206,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "sys",
+    prettyName: "Systolic Blood Pressure",
     question: "systolic blood pressure from 3 measurements",
     hasQuantitative: true,
     unit: "mmHg",
@@ -210,6 +223,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "pulse",
+    prettyName: "Pulse",
     question: "pulse",
     hasQuantitative: true,
     unit: "bpm",
@@ -226,6 +240,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "trig",
+    prettyName: "Blood Triglyceride Level",
     question:
       "Together with total and HDL cholesterol, they provide a lipid profile that can give information on the risk of cardiovascular disease.",
     hasQuantitative: true,
@@ -242,6 +257,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "crp",
+    prettyName: "Blood CRP Level",
     question:
       "The level of this protein in the blood gives information on inflammatory activity in the body, and it is also associated with risk of heart disease.",
     hasQuantitative: true,
@@ -259,6 +275,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "hdl",
+    prettyName: "Blood HDL Level",
     question:
       "This is ‘good’ cholesterol, which is protective for heart disease. Triglycerides - Together with total and HDL cholesterol, they provide a lipid profile that can give information on the risk of cardiovascular disease.",
     hasQuantitative: true,
@@ -274,6 +291,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "ldl",
+    prettyName: "Blood LDL Level",
     question:
       "This is ‘bad’ cholesterol; increased levels are associated with atherosclerosis, and thus myocardial infarctions, strokes and peripheral vascular disease.",
     hasQuantitative: true,
@@ -291,6 +309,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "glucose",
+    prettyName: "Blood Glucose Level",
     question:
       "Blood glucose levels indicate the presence or risk of type 2 diabetes, which is associated with an increased risk of heart disease.",
     hasQuantitative: true,
@@ -308,6 +327,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   },
   {
     variableId: "age",
+    prettyName: "Age",
     question: "How old are you?",
     hasQuantitative: true,
     unit: "years",
@@ -319,3 +339,5 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
 ];
 
 export const PRED_DT = 0.5;
+
+export const graphDomains = [5, 10, 20, 50];

@@ -25,3 +25,5 @@ export type PredictionResponse = {
   health: Record<VariableId, number>[];
   survival: number[];
 };
+
+export type QualToQuantResponse = Record<VariableId, Record<number, number>>;

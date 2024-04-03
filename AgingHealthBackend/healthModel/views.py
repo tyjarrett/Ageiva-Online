@@ -12,17 +12,13 @@ import os
 import math
 from MDiiN_Model.run_model import run_model
 
-dir = os.path.dirname(os.path.realpath(__file__))
-mean_deficits = pd.read_csv(f"{dir}/../MDiiN_Model/Averages/mean_deficits.txt", index_col=0)
-std_deficits = pd.read_csv(f"{dir}/../MDiiN_Model/Averages/std_deficits.txt", index_col=0)
-
 def z_score_to_actual(health_data):
   res = {}
   for var, z in health_data.items():
     formatted_var = var.replace('_', ' ')
-    if formatted_var in mean_deficits.index and z is not None:
-      mean = mean_deficits.loc[formatted_var].iat[0]
-      std = std_deficits.loc[formatted_var].iat[0]
+    if formatted_var in constants.mean_deficits.index and z is not None:
+      mean = constants.mean_deficits.loc[formatted_var].iat[0]
+      std = constants.std_deficits.loc[formatted_var].iat[0]
       actual = z * std + mean
     else:
       actual = z
@@ -75,9 +71,9 @@ class HealthDataView(APIView):
         value_to_set = math.log(value_to_set)
 
       formatted_var = variable.replace('_', ' ')
-      if formatted_var in mean_deficits.index:
-        mean = mean_deficits.loc[formatted_var].iat[0]
-        std = std_deficits.loc[formatted_var].iat[0]
+      if formatted_var in constants.mean_deficits.index:
+        mean = constants.mean_deficits.loc[formatted_var].iat[0]
+        std = constants.std_deficits.loc[formatted_var].iat[0]
         z = (value_to_set - mean) / std
       else:
         z = value_to_set
@@ -163,3 +159,9 @@ class PredictHealthDataView(APIView):
     response = {"health": actual_health_pred, "survival": survival_prediction}
     
     return Response(response)
+  
+class QualToQuantView(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def get(self, request):
+    return Response(constants.qual_to_quant)

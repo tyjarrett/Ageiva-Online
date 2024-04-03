@@ -10,22 +10,25 @@ import * as Haptics from "expo-haptics";
 import { Text } from "react-native-paper";
 import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 import Legend from "./Legend";
+import { QualToQuantResponse } from "../../types/apiResponses";
+import { isVariableId } from "../../types/Profile";
 
 type Props = {
   label: string;
   data: DateAndValue[];
   numPoints: number;
+  qualToQuant: QualToQuantResponse;
 };
 
-const HealthDataChart = ({ label, data, numPoints }: Props) => {
+const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
   const [tooltip, setToolTip] = useState({ x: -1, y: -1 });
   const variableQuery = surveyQuestions.filter((v) => v.variableId === label);
-  const variableMean = variableQuery.length > 0 ? variableQuery[0].mean : null;
+  const variable = variableQuery.length > 0 ? variableQuery[0] : null;
 
   const dataPoints = data.slice(0, numPoints).map((datum) => ({
     date: datum.date.valueOf(),
     value: datum.value,
-    mean: variableMean || -1,
+    mean: variable?.mean || -1,
   }));
   const font = useFont(inter, 12);
   const { isActive: chartPressActive, state: chartPressState } =
@@ -33,13 +36,30 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
       x: dataPoints[0].date,
       y: {
         value: dataPoints[0].value,
-        mean: variableMean || -1,
+        mean: variable?.mean || -1,
       },
     });
 
   const formatDate = (dateValue: number) => {
     const date = new Date(dateValue);
     return `${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
+  const toQualitative = (value: number) => {
+    if (!(isVariableId(label) && variable)) {
+      return "";
+    }
+    const q2q = qualToQuant[label];
+    let qual = variable.qualitativeOptions[0];
+    for (const i of Object.keys(q2q).sort()) {
+      const index = parseInt(i);
+      const current_quant = q2q[index];
+      if (current_quant > value) {
+        return qual;
+      } else {
+        qual = variable.qualitativeOptions[index];
+      }
+    }
   };
 
   useEffect(() => {
@@ -65,12 +85,13 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
       <View style={styles.container}>
         {chartPressActive ? (
           <Text>
-            {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)}
+            {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)} -{" "}
+            {toQualitative(tooltip.y)}
           </Text>
         ) : (
           <></>
         )}
-        <Text style={styles.chartTitle}>{label}</Text>
+        <Text style={styles.chartTitle}>{variable?.prettyName || label}</Text>
         <View style={styles.chartContainer}>
           <CartesianChart
             data={dataPoints}
@@ -95,7 +116,7 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
                   color={graphColors.var}
                   strokeWidth={3}
                 />
-                {variableMean && (
+                {variable && (
                   <Line
                     points={points.mean}
                     color={graphColors.mean}
@@ -122,8 +143,8 @@ const HealthDataChart = ({ label, data, numPoints }: Props) => {
 
         <Legend
           labels={[
-            { label, color: graphColors.var },
-            ...(variableMean
+            { label: variable?.prettyName || label, color: graphColors.var },
+            ...(variable
               ? [{ label: "Population Mean", color: graphColors.mean }]
               : []),
           ]}
