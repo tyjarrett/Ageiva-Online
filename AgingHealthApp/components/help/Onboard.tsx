@@ -1,12 +1,11 @@
 import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
+import { useNav } from "../navigation/NavigationProvider";
 
-type Props = {
-  endOnboarding: () => void;
-};
+const Onboard = () => {
+  const nav = useNav();
 
-const Onboard = ({ endOnboarding }: Props) => {
   return (
     <Onboarding
       imageContainerStyles={{ paddingBottom: 0 }}
@@ -45,8 +44,8 @@ const Onboard = ({ endOnboarding }: Props) => {
           image: <Image source={require("../../assets/icon.png")} />,
         },
       ]}
-      onDone={endOnboarding}
-      onSkip={endOnboarding}
+      onDone={nav.stopOnboarding}
+      onSkip={nav.stopOnboarding}
     />
   );
 };

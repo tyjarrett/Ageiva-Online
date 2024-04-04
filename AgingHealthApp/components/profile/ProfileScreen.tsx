@@ -5,11 +5,7 @@ import ProfileCheck from "./ProfileCheck";
 import { ProfileScreenName } from "../../types/Profile";
 import AppHeader from "../navigation/AppHeader";
 
-type Props = {
-  startOnboarding: () => void;
-};
-
-const ProfileScreen = ({ startOnboarding }: Props) => {
+const ProfileScreen = () => {
   const [currentScreen, setCurrentScreen] = useState(
     "Profile" as ProfileScreenName
   );
@@ -23,7 +19,6 @@ const ProfileScreen = ({ startOnboarding }: Props) => {
         onBack={
           currentScreen === "Profile" ? null : () => setCurrentScreen("Profile")
         }
-        startOnboarding={startOnboarding}
       />
       {currentScreen === "Profile" ? (
         <ProfileView

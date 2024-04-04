@@ -9,6 +9,7 @@ import NavigationMenu from "../navigation/NavigationMenu";
 import LoginPageStub from "./LoginPageStub";
 import CreateUserScreen from "./CreateUserScreen";
 import ResetScreen from "./ResetScreen";
+import NavigationProvider from "../navigation/NavigationProvider";
 
 const LoginOrApp = () => {
   const auth = useAuthWithoutToken();
@@ -50,7 +51,9 @@ const LoginOrApp = () => {
   return (
     <>
       {isAuthorized && auth.authToken ? (
-        <NavigationMenu />
+        <NavigationProvider>
+          <NavigationMenu />
+        </NavigationProvider>
       ) : page == "LoginPageStub" ? (
         <LoginPageStub setCheckCreds={setCheckCreds} setPage={setPage} />
       ) : page == "CreateUserScreen" ? (
@@ -65,7 +68,3 @@ const LoginOrApp = () => {
 };
 
 export default LoginOrApp;
-
-// loadingCreds ? (
-//   <Text>Loading</Text>
-// ) :

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, Button } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
 import {
   getHealthData,
@@ -18,12 +18,11 @@ import { QualToQuantResponse } from "../../types/apiResponses";
 import AppHeader from "../navigation/AppHeader";
 import VariableFilter from "./VariableFilter";
 import DomainSelect from "./DomainSelect";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../types/Navigation";
 
-type Props = {
-  startOnboarding: () => void;
-};
-
-const ResultsScreen = ({ startOnboarding }: Props) => {
+const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
   const [numPredYears, setNumPredYears] = useState(20);
   const [survivalChecked, setSurvivalChecked] = useState(true);
@@ -32,6 +31,9 @@ const ResultsScreen = ({ startOnboarding }: Props) => {
   );
   const [loading, setLoading] = useState(true);
   const [qualToQuant, setQualToQuant] = useState({} as QualToQuantResponse);
+  const [noData, setNoData] = useState(false);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const auth = useAuth();
   useEffect(() => {
@@ -104,61 +106,68 @@ const ResultsScreen = ({ startOnboarding }: Props) => {
           });
       })
       .catch((err: AxiosError) => {
-        console.log(err.message);
+        if (err.response?.status === 404) {
+          setNoData(true);
+        } else {
+          console.log(err.message);
+        }
       });
   }
 
   return (
     <>
-      <AppHeader title={currentScreen} startOnboarding={startOnboarding} />
-
-      <ScrollView contentContainerStyle={styles.container}>
-        {loading ? (
-          <ActivityIndicator animating={true} />
-        ) : (
-          <>
-            <VariableFilter
-              dataRecord={dataRecord}
-              checkArray={checkArray}
-              setCheckArray={setCheckArray}
-              survivalChecked={survivalChecked}
-              setSurvivalChecked={setSurvivalChecked}
-            />
-
-            <DomainSelect
-              selectedYear={numPredYears}
-              setSelectedYear={setNumPredYears}
-            />
-            {survivalChecked ? (
-              <HealthDataChart
-                key="survival"
-                label="survival"
-                data={dataRecord.survivalData}
-                numPoints={numRealDates + numPredYears / PRED_DT}
-                qualToQuant={qualToQuant}
+      <AppHeader title={currentScreen} />
+      {noData ? (
+        <Button onPress={() => navigation.navigate("Profile")}>Click</Button>
+      ) : (
+        <ScrollView contentContainerStyle={styles.container}>
+          {loading ? (
+            <ActivityIndicator animating={true} />
+          ) : (
+            <>
+              <VariableFilter
+                dataRecord={dataRecord}
+                checkArray={checkArray}
+                setCheckArray={setCheckArray}
+                survivalChecked={survivalChecked}
+                setSurvivalChecked={setSurvivalChecked}
               />
-            ) : (
-              <></>
-            )}
-            {Object.keys(checkArray).map((variableId) =>
-              isVariableId(variableId) && checkArray[variableId] ? (
+
+              <DomainSelect
+                selectedYear={numPredYears}
+                setSelectedYear={setNumPredYears}
+              />
+              {survivalChecked ? (
                 <HealthDataChart
-                  key={variableId}
-                  label={variableId}
-                  data={dataRecord.predictionData.map((dp) => ({
-                    ...dp,
-                    value: dp.data[variableId],
-                  }))}
+                  key="survival"
+                  label="survival"
+                  data={dataRecord.survivalData}
                   numPoints={numRealDates + numPredYears / PRED_DT}
                   qualToQuant={qualToQuant}
                 />
               ) : (
-                <React.Fragment key={variableId} />
-              )
-            )}
-          </>
-        )}
-      </ScrollView>
+                <></>
+              )}
+              {Object.keys(checkArray).map((variableId) =>
+                isVariableId(variableId) && checkArray[variableId] ? (
+                  <HealthDataChart
+                    key={variableId}
+                    label={variableId}
+                    data={dataRecord.predictionData.map((dp) => ({
+                      ...dp,
+                      value: dp.data[variableId],
+                    }))}
+                    numPoints={numRealDates + numPredYears / PRED_DT}
+                    qualToQuant={qualToQuant}
+                  />
+                ) : (
+                  <React.Fragment key={variableId} />
+                )
+              )}
+            </>
+          )}
+        </ScrollView>
+      )}
     </>
   );
 };

@@ -2,15 +2,16 @@ import { Appbar, IconButton, Menu } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
 import { StyleSheet } from "react-native";
 import { useState } from "react";
+import { useNav } from "./NavigationProvider";
 
 type Props = {
   title: string;
-  startOnboarding: () => void;
   onBack?: (() => void) | null;
 };
 
-const AppHeader = ({ title, startOnboarding, onBack = null }: Props) => {
+const AppHeader = ({ title, onBack = null }: Props) => {
   const auth = useAuth();
+  const nav = useNav();
 
   const [helpMenuVisible, setHelpMenuVisible] = useState(false);
 
@@ -37,7 +38,7 @@ const AppHeader = ({ title, startOnboarding, onBack = null }: Props) => {
         <Menu.Item
           title="App Walkthrough"
           leadingIcon="help"
-          onPress={startOnboarding}
+          onPress={nav.startOnboarding}
         />
         <Menu.Item
           title="Contact Support"
