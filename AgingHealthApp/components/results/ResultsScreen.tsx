@@ -19,7 +19,11 @@ import AppHeader from "../navigation/AppHeader";
 import VariableFilter from "./VariableFilter";
 import DomainSelect from "./DomainSelect";
 
-const ResultsScreen = () => {
+type Props = {
+  startOnboarding: () => void;
+};
+
+const ResultsScreen = ({ startOnboarding }: Props) => {
   const [currentScreen, setCurrentScreen] = useState("Results");
   const [numPredYears, setNumPredYears] = useState(20);
   const [survivalChecked, setSurvivalChecked] = useState(true);
@@ -106,7 +110,7 @@ const ResultsScreen = () => {
 
   return (
     <>
-      <AppHeader title={currentScreen} />
+      <AppHeader title={currentScreen} startOnboarding={startOnboarding} />
 
       <ScrollView contentContainerStyle={styles.container}>
         {loading ? (
