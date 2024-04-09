@@ -16,12 +16,12 @@ export const onboardSlides = [
   },
   {
     title: "Enter Data",
-    text: "If you aren’t sure of the exact value of a health variable, you can click the “Provide an Estimate Instead” button and choose from the options. If you don’t have an estimate. If you don’t have an estimate, you can click “Next” and skip the question.",
+    text: "If you aren’t sure of the exact value of a health variable, you can click the “Provide an Estimate Instead” button and choose from the options. If you don’t have an estimate, you can click “Next” and skip the question.",
     image: require("../assets/help_images/4_.png"),
   },
   {
     title: "Enter Data",
-    text: "At any point, you can click the “Save and Complete” button to leave in the middle of the questions. Note this won’t change your predictions; predictions are updated when you go through all the questions and submit your answers.",
+    text: "At any point, you can click the “Save and Complete” button to leave in the middle of the questions. Note this won’t change your predictions; predictions are only updated when you go through all the questions and submit your answers.",
     image: require("../assets/help_images/5_.png"),
   },
   {
