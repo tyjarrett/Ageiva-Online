@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { ActivityIndicator, Button } from "react-native-paper";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Button, Text } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
 import {
   getHealthData,
@@ -118,7 +118,21 @@ const ResultsScreen = () => {
     <>
       <AppHeader title={currentScreen} />
       {noData ? (
-        <Button onPress={() => navigation.navigate("Profile")}>Click</Button>
+        <View style={styles.noData}>
+          <Text variant="displayMedium" style={styles.centerText}>
+            Your profile is empty
+          </Text>
+          <Text variant="titleSmall">
+            Enter some health data on the profile page so we can start making
+            predictions.
+          </Text>
+          <Button
+            onPress={() => navigation.navigate("Profile")}
+            mode="contained"
+          >
+            Enter Data
+          </Button>
+        </View>
       ) : (
         <ScrollView contentContainerStyle={styles.container}>
           {loading ? (
@@ -179,6 +193,17 @@ const styles = StyleSheet.create({
     alignContent: "center",
     width: "100%",
     paddingBottom: 10,
+  },
+  noData: {
+    width: "80%",
+    alignContent: "center",
+    alignSelf: "center",
+    justifyContent: "center",
+    height: "80%",
+    gap: 10,
+  },
+  centerText: {
+    textAlign: "center",
   },
 });
 
