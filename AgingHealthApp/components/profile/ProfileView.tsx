@@ -17,6 +17,7 @@ const ProfileView = ({ setCurrentScreen, setDateCheck }: Props) => {
   const auth = useAuth();
 
   const [responseDates, setResponseDates] = useState([""]);
+  const [prevResponse, setPrevResponse] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -31,10 +32,13 @@ const ProfileView = ({ setCurrentScreen, setDateCheck }: Props) => {
           dates.push(entry.date);
         }
         setResponseDates(dates);
+        setPrevResponse(true);
       })
       .catch((err: AxiosError) => {
         // possibly invalid token, but should do more error validation
         console.log(err.message);
+        setPrevResponse(false);
+
         // setLoadingCreds(false);
       });
   }
@@ -54,21 +58,27 @@ const ProfileView = ({ setCurrentScreen, setDateCheck }: Props) => {
               Update Health Information
             </Button>
           )}
-          <Text style={{ marginTop: "15%" }}>
-            Check Previous Responses by Date
-          </Text>
-          {Object.entries(responseDates).map((key) => (
-            <Button
-              key={key[1]}
-              mode="contained"
-              onPress={() => {
-                setDateCheck(key[1]);
-                setCurrentScreen("Check");
-              }}
-            >
-              {key[1]}
-            </Button>
-          ))}
+          {prevResponse ? (
+            <View>
+              <Text style={{ marginTop: "15%" }}>
+                Check Previous Responses by Date
+              </Text>
+              {Object.entries(responseDates).map((key) => (
+                <Button
+                  key={key[1]}
+                  mode="contained"
+                  onPress={() => {
+                    setDateCheck(key[1]);
+                    setCurrentScreen("Check");
+                  }}
+                >
+                  {key[1]}
+                </Button>
+              ))}
+            </View>
+          ) : (
+            <></>
+          )}
         </View>
       </View>
     </>

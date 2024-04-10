@@ -48,9 +48,8 @@ const styles = StyleSheet.create({
   },
   container2: {
     position: "absolute",
-    top: 30,
+    top: "10%",
     left: 10,
-    backgroundColor: "rgb(29, 27, 30)",
   },
   container3: {
     width: 250,
