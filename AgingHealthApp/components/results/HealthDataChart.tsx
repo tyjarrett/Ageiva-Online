@@ -7,7 +7,7 @@ import { graphColors } from "../../style/GraphStyles";
 import inter from "../../assets/Inter-Medium.ttf";
 import { useEffect, useState } from "react";
 import * as Haptics from "expo-haptics";
-import { Text } from "react-native-paper";
+import { Button, Dialog, IconButton, Portal, Text } from "react-native-paper";
 import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 import Legend from "./Legend";
 import { QualToQuantResponse } from "../../types/apiResponses";
@@ -24,6 +24,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
   const [tooltip, setToolTip] = useState({ x: -1, y: -1 });
   const variableQuery = surveyQuestions.filter((v) => v.variableId === label);
   const variable = variableQuery.length > 0 ? variableQuery[0] : null;
+  const [visible, setVisible] = useState(false);
 
   const dataPoints = data.slice(0, numPoints).map((datum) => ({
     date: datum.date.valueOf(),
@@ -91,7 +92,14 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
         ) : (
           <></>
         )}
-        <Text style={styles.chartTitle}>{variable?.prettyName || label}</Text>
+        <View style={styles.row}>
+          <Text style={styles.chartTitle}>{variable?.prettyName || label}</Text>
+          <IconButton
+            style={styles.helpButton}
+            icon="help-rhombus"
+            onPress={() => setVisible(true)}
+          ></IconButton>
+        </View>
         <View style={styles.chartContainer}>
           <CartesianChart
             data={dataPoints}
@@ -150,6 +158,17 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
           ]}
         />
       </View>
+      <Portal>
+        <Dialog visible={visible} onDismiss={() => setVisible(false)}>
+          <Dialog.Icon icon="help-rhombus" />
+          <Dialog.Title style={styles.title}>Graph Discription</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">
+              {variable?.prettyName || "survival"}{" "}
+            </Text>
+          </Dialog.Content>
+        </Dialog>
+      </Portal>
     </>
   );
 };
@@ -164,6 +183,18 @@ const styles = StyleSheet.create({
   chartTitle: {
     alignSelf: "center",
     fontSize: 24,
+    justifyContent: "center",
+  },
+  title: {
+    textAlign: "center",
+  },
+  row: {
+    flexDirection: "row",
+    alignContent: "center",
+  },
+  helpButton: {
+    marginRight: 0,
+    marginLeft: "auto",
   },
 });
 
