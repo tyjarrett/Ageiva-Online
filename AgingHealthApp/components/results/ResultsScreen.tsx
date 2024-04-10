@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Button, Text } from "react-native-paper";
 import { useAuth } from "../authentication/AuthProvider";
 import {
   getHealthData,
@@ -18,6 +18,9 @@ import { QualToQuantResponse } from "../../types/apiResponses";
 import AppHeader from "../navigation/AppHeader";
 import VariableFilter from "./VariableFilter";
 import DomainSelect from "./DomainSelect";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../types/Navigation";
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
@@ -28,6 +31,9 @@ const ResultsScreen = () => {
   );
   const [loading, setLoading] = useState(true);
   const [qualToQuant, setQualToQuant] = useState({} as QualToQuantResponse);
+  const [noData, setNoData] = useState(false);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const auth = useAuth();
   useEffect(() => {
@@ -100,61 +106,82 @@ const ResultsScreen = () => {
           });
       })
       .catch((err: AxiosError) => {
-        console.log(err.message);
+        if (err.response?.status === 404) {
+          setNoData(true);
+        } else {
+          console.log(err.message);
+        }
       });
   }
 
   return (
     <>
       <AppHeader title={currentScreen} />
-
-      <ScrollView contentContainerStyle={styles.container}>
-        {loading ? (
-          <ActivityIndicator animating={true} />
-        ) : (
-          <>
-            <VariableFilter
-              dataRecord={dataRecord}
-              checkArray={checkArray}
-              setCheckArray={setCheckArray}
-              survivalChecked={survivalChecked}
-              setSurvivalChecked={setSurvivalChecked}
-            />
-
-            <DomainSelect
-              selectedYear={numPredYears}
-              setSelectedYear={setNumPredYears}
-            />
-            {survivalChecked ? (
-              <HealthDataChart
-                key="survival"
-                label="survival"
-                data={dataRecord.survivalData}
-                numPoints={numRealDates + numPredYears / PRED_DT}
-                qualToQuant={qualToQuant}
+      {noData ? (
+        <View style={styles.noData}>
+          <Text variant="displayMedium" style={styles.centerText}>
+            Your profile is empty
+          </Text>
+          <Text variant="titleSmall">
+            Enter some health data on the profile page so we can start making
+            predictions.
+          </Text>
+          <Button
+            onPress={() => navigation.navigate("Profile")}
+            mode="contained"
+          >
+            Enter Data
+          </Button>
+        </View>
+      ) : (
+        <ScrollView contentContainerStyle={styles.container}>
+          {loading ? (
+            <ActivityIndicator animating={true} />
+          ) : (
+            <>
+              <VariableFilter
+                dataRecord={dataRecord}
+                checkArray={checkArray}
+                setCheckArray={setCheckArray}
+                survivalChecked={survivalChecked}
+                setSurvivalChecked={setSurvivalChecked}
               />
-            ) : (
-              <></>
-            )}
-            {Object.keys(checkArray).map((variableId) =>
-              isVariableId(variableId) && checkArray[variableId] ? (
+
+              <DomainSelect
+                selectedYear={numPredYears}
+                setSelectedYear={setNumPredYears}
+              />
+              {survivalChecked ? (
                 <HealthDataChart
-                  key={variableId}
-                  label={variableId}
-                  data={dataRecord.predictionData.map((dp) => ({
-                    ...dp,
-                    value: dp.data[variableId],
-                  }))}
+                  key="survival"
+                  label="survival"
+                  data={dataRecord.survivalData}
                   numPoints={numRealDates + numPredYears / PRED_DT}
                   qualToQuant={qualToQuant}
                 />
               ) : (
-                <React.Fragment key={variableId} />
-              )
-            )}
-          </>
-        )}
-      </ScrollView>
+                <></>
+              )}
+              {Object.keys(checkArray).map((variableId) =>
+                isVariableId(variableId) && checkArray[variableId] ? (
+                  <HealthDataChart
+                    key={variableId}
+                    label={variableId}
+                    data={dataRecord.predictionData.map((dp) => ({
+                      ...dp,
+                      value: dp.data[variableId],
+                    }))}
+                    numPoints={numRealDates + numPredYears / PRED_DT}
+                    qualToQuant={qualToQuant}
+                  />
+                ) : (
+                  <React.Fragment key={variableId} />
+                )
+              )}
+            </>
+          )}
+        </ScrollView>
+      )}
     </>
   );
 };
@@ -166,6 +193,17 @@ const styles = StyleSheet.create({
     alignContent: "center",
     width: "100%",
     paddingBottom: 10,
+  },
+  noData: {
+    width: "80%",
+    alignContent: "center",
+    alignSelf: "center",
+    justifyContent: "center",
+    height: "80%",
+    gap: 10,
+  },
+  centerText: {
+    textAlign: "center",
   },
 });
 

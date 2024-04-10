@@ -10,6 +10,7 @@ import { StyleSheet } from "react-native";
 import { useState } from "react";
 import { GraphData } from "../../types/Results";
 import { VariableId, isVariableId } from "../../types/Profile";
+import { getVariable } from "../../utilities/helpers";
 
 type Props = {
   dataRecord: GraphData;
@@ -69,7 +70,7 @@ const VariableFilter = ({
               <Checkbox.Item
                 key={variableId}
                 style={styles.search}
-                label={variableId}
+                label={getVariable(variableId)?.prettyName || variableId}
                 mode="android"
                 status={
                   isVariableId(variableId) && checkArray[variableId]
