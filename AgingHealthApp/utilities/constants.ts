@@ -840,7 +840,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     mean: 5.088684834123225,
     stdev: 0.9870697209153416,
   },
-];
+] as const;
 
 export const PRED_DT = 0.5;
 

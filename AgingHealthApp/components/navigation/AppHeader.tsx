@@ -1,6 +1,4 @@
 import { Appbar, IconButton, Menu } from "react-native-paper";
-import { useAuth } from "../authentication/AuthProvider";
-import { StyleSheet } from "react-native";
 import { useState } from "react";
 import { useNav } from "./NavigationProvider";
 import ContactModal from "../help/ContactModal";
@@ -11,16 +9,10 @@ type Props = {
 };
 
 const AppHeader = ({ title, onBack = null }: Props) => {
-  const auth = useAuth();
   const nav = useNav();
 
   const [contactOpen, setContactOpen] = useState(false);
   const [helpMenuVisible, setHelpMenuVisible] = useState(false);
-
-  const logout = () => {
-    auth.clearAuth();
-    // should do some loading here bc clearAuth is an async call
-  };
 
   return (
     <>
@@ -57,13 +49,5 @@ const AppHeader = ({ title, onBack = null }: Props) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  logout: {
-    position: "relative",
-    top: "0%",
-    right: "5%",
-  },
-});
 
 export default AppHeader;

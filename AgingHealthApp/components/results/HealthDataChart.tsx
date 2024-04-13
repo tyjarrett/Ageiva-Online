@@ -7,7 +7,7 @@ import { graphColors } from "../../style/GraphStyles";
 import inter from "../../assets/Inter-Medium.ttf";
 import { useEffect, useState } from "react";
 import * as Haptics from "expo-haptics";
-import { Button, Dialog, IconButton, Portal, Text } from "react-native-paper";
+import { Dialog, IconButton, Portal, Text } from "react-native-paper";
 import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 import Legend from "./Legend";
 import { QualToQuantResponse } from "../../types/apiResponses";

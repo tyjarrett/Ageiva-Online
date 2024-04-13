@@ -43,10 +43,16 @@ const ProfileView = ({ setCurrentScreen, setDateCheck }: Props) => {
       });
   }
 
+  const logout = () => {
+    auth.clearAuth();
+    // should do some loading here bc clearAuth is an async call
+  };
+
   return (
     <>
       <View style={commonStyles.centerStack}>
         <View style={styles.picture}>
+          <Button onPress={logout}>Logout</Button>
           <Text variant="displayMedium">Pic</Text>
           <Text>{auth.currentUser.username}</Text>
           {responseDates[0].length < 1 ? (
