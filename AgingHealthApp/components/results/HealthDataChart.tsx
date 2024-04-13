@@ -84,14 +84,6 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
   return (
     <>
       <View style={styles.container}>
-        {chartPressActive ? (
-          <Text>
-            {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)} -{" "}
-            {toQualitative(tooltip.y)}
-          </Text>
-        ) : (
-          <></>
-        )}
         <View style={styles.row}>
           <Text style={styles.chartTitle}>{variable?.prettyName || label}</Text>
           <IconButton
@@ -99,6 +91,16 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
             icon="help-rhombus"
             onPress={() => setVisible(true)}
           ></IconButton>
+        </View>
+        <View style={styles.graphInfo}>
+          {chartPressActive ? (
+            <Text variant="titleMedium">
+              {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)}{" "}
+              {isVariableId(label) ? ` - ${toQualitative(tooltip.y)}` : ""}
+            </Text>
+          ) : (
+            <></>
+          )}
         </View>
         <View style={styles.chartContainer}>
           <CartesianChart
@@ -176,6 +178,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
 const styles = StyleSheet.create({
   container: {
     width: "70%",
+    marginBottom: 20,
   },
   chartContainer: {
     height: 200,
@@ -195,6 +198,9 @@ const styles = StyleSheet.create({
   helpButton: {
     marginRight: 0,
     marginLeft: "auto",
+  },
+  graphInfo: {
+    height: 24,
   },
 });
 
