@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text, Button, TextInput } from "react-native-paper";
 import { useState } from "react";
 import { AxiosError } from "axios";
@@ -75,21 +69,21 @@ const CreateUserScreen = ({ setPage }: Props) => {
           label="Email"
           value={user}
           onChangeText={(user) => setUser(user)}
-        ></TextInput>
+        />
         <TextInput
           mode="outlined"
           label="Password"
           value={pass}
           onChangeText={(pass) => setPass(pass)}
           secureTextEntry={true}
-        ></TextInput>
+        />
         <TextInput
           mode="outlined"
           label="Confirm Password"
           value={pass2}
           onChangeText={(pass2) => setPass2(pass2)}
           secureTextEntry={true}
-        ></TextInput>
+        />
       </View>
       <Button
         mode="contained"
@@ -99,7 +93,7 @@ const CreateUserScreen = ({ setPage }: Props) => {
           createUserPressed();
         }}
       >
-        Login
+        Create Account
       </Button>
       <TouchableOpacity onPress={() => setPage("LoginPageStub")}>
         <View style={styles.inLine}>
