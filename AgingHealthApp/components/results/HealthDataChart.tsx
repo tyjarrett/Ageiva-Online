@@ -51,6 +51,9 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
       return "";
     }
     const q2q = qualToQuant[label];
+    if (!q2q) {
+      return "";
+    }
     let qual = variable.qualitativeOptions[0];
     for (const i of Object.keys(q2q).sort()) {
       const index = parseInt(i);
@@ -96,7 +99,9 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
           {chartPressActive ? (
             <Text variant="titleMedium">
               {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)}{" "}
-              {isVariableId(label) ? ` - ${toQualitative(tooltip.y)}` : ""}
+              {isVariableId(label) && toQualitative(tooltip.y)
+                ? ` - ${toQualitative(tooltip.y)}`
+                : ""}
             </Text>
           ) : (
             <></>

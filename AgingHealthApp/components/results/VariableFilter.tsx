@@ -6,8 +6,8 @@ import {
   Searchbar,
 } from "react-native-paper";
 import { SetState } from "../../types/General";
-import { StyleSheet } from "react-native";
-import { useState } from "react";
+import { ScrollView, StyleSheet } from "react-native";
+import React, { useState } from "react";
 import { GraphData } from "../../types/Results";
 import { VariableId, isVariableId } from "../../types/Profile";
 import { getVariable } from "../../utilities/helpers";
@@ -29,6 +29,11 @@ const VariableFilter = ({
 }: Props) => {
   const [search, setSearch] = useState("");
   const [filterVisible, setFilterVisible] = useState(false);
+
+  const filterSearch = (term: string) => {
+    return search === "" || term.toLowerCase().includes(search.toLowerCase());
+  };
+
   return (
     <>
       <Button
@@ -47,44 +52,57 @@ const VariableFilter = ({
             setFilterVisible(false);
           }}
         >
-          <Dialog.Content>
+          <Dialog.Content style={styles.dialog}>
             <Searchbar
               style={styles.search}
               placeholder="Filter "
               value={search}
               onChangeText={setSearch}
             />
-            <Checkbox.Item
-              style={styles.search}
-              label="survival"
-              mode="android"
-              status={survivalChecked ? "checked" : "unchecked"}
-              onPress={() => {
-                setSurvivalChecked(!survivalChecked);
-              }}
-            />
-            {Object.keys(
-              dataRecord.predictionData[dataRecord.predictionData.length - 1]
-                .data
-            ).map((variableId) => (
-              <Checkbox.Item
-                key={variableId}
-                style={styles.search}
-                label={getVariable(variableId)?.prettyName || variableId}
-                mode="android"
-                status={
-                  isVariableId(variableId) && checkArray[variableId]
-                    ? "checked"
-                    : "unchecked"
-                }
-                onPress={() =>
-                  setCheckArray((prev) => ({
-                    ...prev,
-                    [variableId]: isVariableId(variableId) && !prev[variableId],
-                  }))
-                }
-              />
-            ))}
+
+            <ScrollView contentContainerStyle={styles.container}>
+              {filterSearch("survival") ? (
+                <Checkbox.Item
+                  style={styles.search}
+                  label="survival"
+                  mode="android"
+                  status={survivalChecked ? "checked" : "unchecked"}
+                  onPress={() => {
+                    setSurvivalChecked(!survivalChecked);
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+
+              {Object.keys(
+                dataRecord.predictionData[dataRecord.predictionData.length - 1]
+                  .data
+              ).map((variableId) =>
+                filterSearch(getVariable(variableId)?.prettyName || "") ? (
+                  <Checkbox.Item
+                    key={variableId}
+                    style={styles.search}
+                    label={getVariable(variableId)?.prettyName || variableId}
+                    mode="android"
+                    status={
+                      isVariableId(variableId) && checkArray[variableId]
+                        ? "checked"
+                        : "unchecked"
+                    }
+                    onPress={() =>
+                      setCheckArray((prev) => ({
+                        ...prev,
+                        [variableId]:
+                          isVariableId(variableId) && !prev[variableId],
+                      }))
+                    }
+                  />
+                ) : (
+                  <React.Fragment key={variableId}></React.Fragment>
+                )
+              )}
+            </ScrollView>
             <Button
               mode="contained"
               onPress={() => {
@@ -107,6 +125,12 @@ const styles = StyleSheet.create({
   filter: {
     width: 250,
     marginTop: "20%",
+  },
+  container: {
+    flexGrow: 1,
+  },
+  dialog: {
+    height: 500,
   },
 });
 
