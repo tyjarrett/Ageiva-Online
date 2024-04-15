@@ -51,6 +51,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
       return "";
     }
     const q2q = qualToQuant[label];
+
     if (!q2q) {
       return "";
     }
@@ -64,6 +65,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
         qual = variable.qualitativeOptions[index];
       }
     }
+    return qual;
   };
 
   useEffect(() => {
