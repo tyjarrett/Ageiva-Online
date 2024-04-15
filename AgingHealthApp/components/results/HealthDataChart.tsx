@@ -25,6 +25,8 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
   const variableQuery = surveyQuestions.filter((v) => v.variableId === label);
   const variable = variableQuery.length > 0 ? variableQuery[0] : null;
   const [visible, setVisible] = useState(false);
+  type YKey = "value" | "mean";
+  const yKeys = ["value"].concat(variable ? ["mean"] : []) as YKey[];
 
   const dataPoints = data.slice(0, numPoints).map((datum) => ({
     date: datum.date.valueOf(),
@@ -95,7 +97,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
             style={styles.helpButton}
             icon="help-rhombus"
             onPress={() => setVisible(true)}
-          ></IconButton>
+          />
         </View>
         <View style={styles.graphInfo}>
           {chartPressActive ? (
@@ -113,7 +115,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
           <CartesianChart
             data={dataPoints}
             xKey="date"
-            yKeys={["value", "mean"]}
+            yKeys={yKeys}
             axisOptions={{
               font,
               formatXLabel: formatDate,
