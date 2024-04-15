@@ -7,7 +7,7 @@ import { graphColors } from "../../style/GraphStyles";
 import inter from "../../assets/Inter-Medium.ttf";
 import { useEffect, useState } from "react";
 import * as Haptics from "expo-haptics";
-import { Button, Dialog, IconButton, Portal, Text } from "react-native-paper";
+import { Dialog, IconButton, Portal, Text } from "react-native-paper";
 import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 import Legend from "./Legend";
 import { QualToQuantResponse } from "../../types/apiResponses";
@@ -25,6 +25,8 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
   const variableQuery = surveyQuestions.filter((v) => v.variableId === label);
   const variable = variableQuery.length > 0 ? variableQuery[0] : null;
   const [visible, setVisible] = useState(false);
+  type YKey = "value" | "mean";
+  const yKeys = ["value"].concat(variable ? ["mean"] : []) as YKey[];
 
   const dataPoints = data.slice(0, numPoints).map((datum) => ({
     date: datum.date.valueOf(),
@@ -51,6 +53,10 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
       return "";
     }
     const q2q = qualToQuant[label];
+
+    if (!q2q) {
+      return "";
+    }
     let qual = variable.qualitativeOptions[0];
     for (const i of Object.keys(q2q).sort()) {
       const index = parseInt(i);
@@ -61,6 +67,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
         qual = variable.qualitativeOptions[index];
       }
     }
+    return qual;
   };
 
   useEffect(() => {
@@ -84,27 +91,31 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
   return (
     <>
       <View style={styles.container}>
-        {chartPressActive ? (
-          <Text>
-            {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)} -{" "}
-            {toQualitative(tooltip.y)}
-          </Text>
-        ) : (
-          <></>
-        )}
         <View style={styles.row}>
           <Text style={styles.chartTitle}>{variable?.prettyName || label}</Text>
           <IconButton
             style={styles.helpButton}
             icon="help-rhombus"
             onPress={() => setVisible(true)}
-          ></IconButton>
+          />
+        </View>
+        <View style={styles.graphInfo}>
+          {chartPressActive ? (
+            <Text variant="titleMedium">
+              {formatDate(tooltip.x)} : {tooltip.y.toFixed(2)}{" "}
+              {isVariableId(label) && toQualitative(tooltip.y)
+                ? ` - ${toQualitative(tooltip.y)}`
+                : ""}
+            </Text>
+          ) : (
+            <></>
+          )}
         </View>
         <View style={styles.chartContainer}>
           <CartesianChart
             data={dataPoints}
             xKey="date"
-            yKeys={["value", "mean"]}
+            yKeys={yKeys}
             axisOptions={{
               font,
               formatXLabel: formatDate,
@@ -176,6 +187,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
 const styles = StyleSheet.create({
   container: {
     width: "70%",
+    marginBottom: 20,
   },
   chartContainer: {
     height: 200,
@@ -195,6 +207,9 @@ const styles = StyleSheet.create({
   helpButton: {
     marginRight: 0,
     marginLeft: "auto",
+  },
+  graphInfo: {
+    height: 24,
   },
 });
 

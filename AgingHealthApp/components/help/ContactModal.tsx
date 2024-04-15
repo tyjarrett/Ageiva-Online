@@ -1,6 +1,6 @@
 import { Dialog, Portal, Text } from "react-native-paper";
 import { SetState } from "../../types/General";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 type Props = {
   open: boolean;

@@ -77,9 +77,18 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         firstQuestion();
       })
       .catch((err: AxiosError) => {
-        // possibly invalid token, but should do more error validation
-        console.log(err.message);
-        // setLoadingCreds(false);
+        if (err.response?.status === 404) {
+          for (const variable of surveyQuestions) {
+            testRecord[variable.variableId] = {
+              variableId: variable.variableId,
+              type: variable.hasQuantitative ? "quantitative" : "qualitative",
+              response: "",
+            };
+          }
+          firstQuestion();
+        } else {
+          console.log(err.message);
+        }
       });
   }
 
@@ -122,7 +131,7 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
 
   const checkResponses = () => {
     let check = false;
-    for (const [key, entry] of Object.entries(testRecord)) {
+    for (const [, entry] of Object.entries(testRecord)) {
       if (entry.response === "") {
         console.log(entry);
         check = true;
