@@ -259,7 +259,7 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     setRequired(surveyQuestions[newQ].required);
     setErrorText("");
     setRange([
-      surveyQuestions[newQ].mean - surveyQuestions[newQ].stdev * 3,
+      Math.max(surveyQuestions[newQ].mean - surveyQuestions[newQ].stdev * 3, 0),
       surveyQuestions[newQ].mean + surveyQuestions[newQ].stdev * 3,
     ]);
   };

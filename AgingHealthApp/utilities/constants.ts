@@ -7,7 +7,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "gait_speed",
     prettyName: "Gait Speed",
-    question: "gait speed averaged between two timed walks",
+    question: "Your gait speed averaged between two timed walks",
     hasQuantitative: true,
     unit: "m/s",
     qualitativeOptions: [
@@ -25,7 +25,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "grip_dom",
     prettyName: "Dominant Hand Grip Strength",
-    question: "your grip strength of your dominant hand",
+    question: "The grip strength of your dominant hand",
     hasQuantitative: true,
     unit: "lbs",
     qualitativeOptions: [
@@ -42,7 +42,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "grip_ndom",
     prettyName: "Non-Dominant Hand Grip Strength",
-    question: "your grip strength of your non-dominant hand",
+    question: "The grip strength of your non-dominant hand",
     hasQuantitative: true,
     unit: "lbs",
     qualitativeOptions: [
@@ -84,7 +84,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "chair",
     prettyName: "Chair Raises",
     question:
-      "'I want you to try to stand up from a firm straight-backed chair, like a dining chair. First, fold your arms across your chest and sit so that your feet are on the floor; then stand up keeping your arms folded across your chest. repeat 5 times",
+      "I want you to try to stand up from a firm straight-backed chair, like a dining chair. First, fold your arms across your chest and sit so that your feet are on the floor; then stand up keeping your arms folded across your chest. repeat 5 times",
     hasQuantitative: true,
     unit: "sec",
     qualitativeOptions: [
@@ -174,7 +174,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "func",
     prettyName: "Difficulty Walking",
     question:
-      "By yourself and without using any special equipment, how much difficulty do you have walking for a quarter of a mile?",
+      "By yourself and without using any special equipment, how much difficulty do you have walking for a quarter of a mile",
     hasQuantitative: false,
     unit: "sec",
     qualitativeOptions: [
@@ -190,7 +190,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "dias",
     prettyName: "Diastolic Blood Pressure",
-    question: "diastolic blood pressure from 3 measurements",
+    question: "Diastolic blood pressure from 3 measurements",
     hasQuantitative: true,
     unit: "mmHg",
     qualitativeOptions: [
@@ -207,7 +207,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "sys",
     prettyName: "Systolic Blood Pressure",
-    question: "systolic blood pressure from 3 measurements",
+    question: "Systolic blood pressure from 3 measurements",
     hasQuantitative: true,
     unit: "mmHg",
     qualitativeOptions: [
@@ -224,7 +224,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "pulse",
     prettyName: "Pulse",
-    question: "pulse",
+    question: "Your pulse",
     hasQuantitative: true,
     unit: "bpm",
     qualitativeOptions: [
@@ -242,7 +242,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "trig",
     prettyName: "Blood Triglyceride Level",
     question:
-      "Together with total and HDL cholesterol, they provide a lipid profile that can give information on the risk of cardiovascular disease.",
+      "Together with total and HDL cholesterol, they provide a lipid profile that can give information on the risk of cardiovascular disease",
     hasQuantitative: true,
     unit: "mmol/l",
     qualitativeOptions: [
@@ -259,7 +259,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "crp",
     prettyName: "Blood CRP Level",
     question:
-      "The level of this protein in the blood gives information on inflammatory activity in the body, and it is also associated with risk of heart disease.",
+      "The level of this protein in the blood gives information on inflammatory activity in the body, and it is also associated with risk of heart disease",
     hasQuantitative: true,
     unit: "mg/l",
     qualitativeOptions: [
@@ -277,7 +277,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "hdl",
     prettyName: "Blood HDL Level",
     question:
-      "This is ‘good’ cholesterol, which is protective for heart disease. Triglycerides - Together with total and HDL cholesterol, they provide a lipid profile that can give information on the risk of cardiovascular disease.",
+      "This is ‘good’ cholesterol, which is protective for heart disease. Triglycerides - Together with total and HDL cholesterol, they provide a lipid profile that can give information on the risk of cardiovascular disease",
     hasQuantitative: true,
     unit: "mmol/l",
     qualitativeOptions: [
@@ -293,7 +293,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "ldl",
     prettyName: "Blood LDL Level",
     question:
-      "This is ‘bad’ cholesterol; increased levels are associated with atherosclerosis, and thus myocardial infarctions, strokes and peripheral vascular disease.",
+      "This is ‘bad’ cholesterol; increased levels are associated with atherosclerosis, and thus myocardial infarctions, strokes and peripheral vascular disease",
     hasQuantitative: true,
     unit: "mmol/l",
     qualitativeOptions: [
@@ -311,7 +311,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "glucose",
     prettyName: "Blood Glucose Level",
     question:
-      "Blood glucose levels indicate the presence or risk of type 2 diabetes, which is associated with an increased risk of heart disease.",
+      "Blood glucose levels indicate the presence or risk of type 2 diabetes, which is associated with an increased risk of heart disease",
     hasQuantitative: true,
     unit: "mmol/l",
     qualitativeOptions: [
@@ -328,7 +328,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "age",
     prettyName: "Age",
-    question: "How old are you?",
+    question: "How old are you",
     hasQuantitative: true,
     unit: "years",
     qualitativeOptions: [],
@@ -340,7 +340,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "igf1",
     prettyName: "Insulin-Like Growth Factor",
     question:
-      "These are hormones that help control reactions to stress and regulate various body processesincluding digestion, the immune system, mood, and energy usage.",
+      "These are hormones that help control reactions to stress and regulate various body processesincluding digestion, the immune system, mood, and energy usage",
     hasQuantitative: true,
     unit: "mmol/l",
     qualitativeOptions: [
@@ -349,8 +349,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Higher",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 20.0,
+    stdev: 5,
   },
   {
     variableId: "hgb",
@@ -365,14 +365,14 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Higher",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 15,
+    stdev: 3,
   },
   {
     variableId: "fib",
     prettyName: "Blood Fibrinogen Level",
     question:
-      "A protein necessary for blood clotting. High levels are also associated with a higher risk of heart disease.",
+      "A protein necessary for blood clotting. High levels are also associated with a higher risk of heart disease",
     hasQuantitative: true,
     unit: "g/l",
     qualitativeOptions: [
@@ -381,14 +381,14 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Higher",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 3,
+    stdev: 1,
   },
   {
     variableId: "fer",
     prettyName: "Blood Ferritin Level",
     question:
-      "These are measures of iron levels in the body and are related to diet and other factors.",
+      "These are measures of iron levels in the body and are related to diet and other factors",
     hasQuantitative: true,
     unit: "mmol/l",
     qualitativeOptions: [
@@ -397,14 +397,14 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Higher",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 150,
+    stdev: 50,
   },
   {
     variableId: "chol",
     prettyName: "Blood Total Cholesterol Level",
     question:
-      "Cholesterol is a type of fat present in the blood, related to diet. Too much cholesterol in the blood increases the risk of heart disease.",
+      "Cholesterol is a type of fat present in the blood, related to diet. Too much cholesterol in the blood increases the risk of heart disease",
     hasQuantitative: true,
     unit: "mmol/l",
     qualitativeOptions: [
@@ -413,26 +413,26 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "High:  240 mg/dL (6.21 mmol/L) or greater",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 140,
+    stdev: 75,
   },
   {
     variableId: "wbc",
     prettyName: "White Blood Cell Count",
     question:
-      "When looked in combination with ferritin and hemoglobin can indicate anemia.",
+      "When looked in combination with ferritin and hemoglobin can indicate anemia",
     hasQuantitative: true,
     unit: "billions/l",
     qualitativeOptions: ["Lower", "Normal: 4.5 to 11.0 billion/L", "Higher"],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 7.5,
+    stdev: 4,
   },
   {
     variableId: "mch",
     prettyName: "Blood Mean Corpuscular Hemoglobin Level",
     question:
-      "When looked in combination with ferritin and hemoglobin can indicate anemia.",
+      "When looked in combination with ferritin and hemoglobin can indicate anemia",
     hasQuantitative: true,
     unit: "pg/cell",
     qualitativeOptions: [
@@ -441,14 +441,14 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Higher",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 30,
+    stdev: 10,
   },
   {
     variableId: "hba1c",
     prettyName: "Blood Glycated Hemoglobin Level",
     question:
-      "Indicate the presence or risk of type 2 diabetes, which is associated with an increased risk of heart disease.",
+      "Indicate the presence or risk of type 2 diabetes, which is associated with an increased risk of heart disease",
     hasQuantitative: true,
     unit: "%",
     qualitativeOptions: [
@@ -457,14 +457,14 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Diabetes: 6.5% or higher",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 4,
+    stdev: 2,
   },
   {
     variableId: "vitd",
     prettyName: "Vitamin D Level",
     question:
-      "Obtained from the diet and from sunshine, Vitamin D is needed for healthy bones.",
+      "Obtained from the diet and from sunshine, Vitamin D is needed for healthy bones",
     hasQuantitative: true,
     unit: "nmol/L",
     qualitativeOptions: [
@@ -474,13 +474,13 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "High: higher than 125 nmol/L (50 ng/mL)",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 90,
+    stdev: 40,
   },
   {
     variableId: "BP med",
     prettyName: "Blood Pressure Medication",
-    question: "Are you taking medication for blood pressure?",
+    question: "Are you taking medication for blood pressure",
     hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
@@ -491,7 +491,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "anticoagulent med",
     prettyName: "Anticoagulent Medication",
-    question: "Are you taking an anticoagulant medication, such as warfarin?",
+    question: "Are you taking an anticoagulant medication, such as warfarin",
     hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
@@ -503,7 +503,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "chol med",
     prettyName: "Cholesterol Medication",
     question:
-      "Are you taking medicine to lower cholesterol / prevent cholesterol from getting high?",
+      "Are you taking medicine to lower cholesterol / prevent cholesterol from getting high",
     hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
@@ -515,7 +515,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "hip/knee treat",
     prettyName: "Hip/Knee Treatment",
     question:
-      "Do you take medication or calcium/vitamin D pills for osteoporosis?",
+      "Do you take medication or calcium/vitamin D pills for osteoporosis",
     hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
@@ -527,7 +527,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "lung/asthma med",
     prettyName: "Lung/Asthma Medication",
     question:
-      "Are you taking meditation for a lung condition / to prevent the return of a lung condition?",
+      "Are you taking meditation for a lung condition / to prevent the return of a lung condition",
     hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
@@ -538,7 +538,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "longill",
     prettyName: "Long Illness",
-    question: "Do you have any long-standing illness, disability or infirmity?",
+    question: "Do you have any long-standing illness, disability or infirmity",
     hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
@@ -549,8 +549,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "limitact",
     prettyName: "Limit Activity",
-    question:
-      "Does any illness or disability limit your activities in any way?",
+    question: "Does any illness or disability limit your activities in any way",
     hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
@@ -562,8 +561,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "effort",
     prettyName: "Effort Level",
     question:
-      "Much of the time during the past week, have you felt that everything you did was an effort?",
-    hasQuantitative: true,
+      "Much of the time during the past week, have you felt that everything you did was an effort",
+    hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
     required: false,
@@ -573,7 +572,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "smkevr",
     prettyName: "Smoking",
-    question: "Have you ever smoked cigarettes?",
+    question: "Have you ever smoked cigarettes",
     hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
@@ -584,8 +583,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "smknow",
     prettyName: "Current Smoking",
-    question: "Do you smoke cigarettes at all nowadays?",
-    hasQuantitative: true,
+    question: "Do you smoke cigarettes at all nowadays",
+    hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
     required: false,
@@ -596,11 +595,11 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "mobility",
     prettyName: "Mobility",
     question:
-      "Blood glucose levels indicate the presence or risk of type 2 diabetes, which is associated with an increased risk of heart disease.",
+      "Blood glucose levels indicate the presence or risk of type 2 diabetes, which is associated with an increased risk of heart disease",
     hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: [
-      "1.Observed walking without help of another person or using suport",
+      "1. Observed walking without help of another person or using suport",
       "2. Observed walking with help of another person or using support",
       "3. not observed - in wheelchair",
       "4. not observed - bed bound",
@@ -644,7 +643,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "jointrep",
     prettyName: "Joint Replacement",
     question: "Have you ever had any joint replacements?",
-    hasQuantitative: true,
+    hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
     required: false,
@@ -655,7 +654,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     variableId: "fractures",
     prettyName: "Hip Fractures",
     question: "Have you ever fractured your hip?",
-    hasQuantitative: true,
+    hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["Yes", "No"],
     required: false,
@@ -676,8 +675,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Very Tall: (Male) More than 191cm, (Female) More than 181cm",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 182,
+    stdev: 20,
   },
   {
     variableId: "bmi",
@@ -687,22 +686,22 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     hasQuantitative: true,
     unit: "mmol/l",
     qualitativeOptions: [
-      "Normal Fasting blood sugar level: 100 mg/dL (5.6 mmol/L)",
-      "High: 160-189 mg/dL (3.4 - 4.9 mmol/L) or  borderline high or near optimal with coronary artery disease",
-      "Near Optimal: 100 -129 mg/dL (2.6-3.3 mmol/L) or optimal with coronary artery disease",
-      "Optimal: Below 100 mg/dL (Below 2.6 mmol/L)",
       "Best: Below 70 mg/dL (Below 1.8 mmol/L)",
+      "Optimal: 70 - 100 mg/dL (Below 2.6 mmol/L)",
+      "Near Optimal: 100 -129 mg/dL (2.6-3.3 mmol/L) or optimal with coronary artery disease",
+      "Normal Fasting blood sugar level: 130 - 160 mg/dL (5.6 mmol/L)",
+      "High: 160-189 mg/dL (3.4 - 4.9 mmol/L) or  borderline high or near optimal with coronary artery disease",
     ],
     required: false,
-    mean: 5.088684834123225,
-    stdev: 0.9870697209153416,
+    mean: 130,
+    stdev: 40,
   },
   {
     variableId: "ethnicity",
     prettyName: "Ethnicity",
     question:
       "ELSA ethnic group collapsed into White and Non-white to avoid disclosure",
-    hasQuantitative: true,
+    hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["1. White", "2. Non-White"],
     required: false,
@@ -712,9 +711,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "sex",
     prettyName: "Sex",
-    question:
-      "Blood glucose levels indicate the presence or risk of type 2 diabetes, which is associated with an increased risk of heart disease.",
-    hasQuantitative: true,
+    question: "What is your sex",
+    hasQuantitative: false,
     unit: "mmol/l",
     qualitativeOptions: ["1. male", "2. female"],
     required: false,
