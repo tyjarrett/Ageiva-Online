@@ -709,7 +709,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     question: "What is your sex",
     hasQuantitative: false,
     unit: "N/A",
-    qualitativeOptions: ["male", "female"],
+    qualitativeOptions: ["Male", "Female"],
     required: false,
     mean: 5.088684834123225,
     stdev: 0.9870697209153416,
