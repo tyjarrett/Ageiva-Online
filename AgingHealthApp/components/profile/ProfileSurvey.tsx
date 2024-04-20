@@ -73,7 +73,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
           }
           testRecord[key as VariableId] = resp;
         }
-        console.log(testRecord);
         firstQuestion();
       })
       .catch((err: AxiosError) => {
@@ -119,7 +118,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         }
       }
     }
-    console.log(pushRecord);
     createDataPoint(pushRecord, auth.authToken)
       .then(() => {
         console.log("sent");
@@ -133,7 +131,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     let check = false;
     for (const [, entry] of Object.entries(testRecord)) {
       if (entry.response === "") {
-        console.log(entry);
         check = true;
         break;
       }
@@ -175,7 +172,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
   };
 
   const nextPressed = () => {
-    console.log(testRecord[surveyQuestions[currentQ].variableId as VariableId]);
     if (required && currentChoice === "") {
       errorCheck = false;
       setErrorText("Please enter a number");
