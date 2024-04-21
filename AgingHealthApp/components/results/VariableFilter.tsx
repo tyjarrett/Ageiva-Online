@@ -55,7 +55,7 @@ const VariableFilter = ({
           <Dialog.Content style={styles.dialog}>
             <Searchbar
               style={styles.search}
-              placeholder="Filter "
+              placeholder="Search"
               value={search}
               onChangeText={setSearch}
             />
