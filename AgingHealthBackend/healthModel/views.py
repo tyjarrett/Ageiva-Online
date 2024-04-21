@@ -60,7 +60,7 @@ class HealthDataView(APIView):
       qualitative = var_serializer.validated_data["type"] == "qualitative"
       data = var_serializer.validated_data["response"]
       if qualitative and variable in constants.qual_to_quant.keys():
-        if data not in range(0,5):
+        if data not in constants.qual_to_quant[variable]:
           return Response(status=status.HTTP_400_BAD_REQUEST)
         value_to_set = constants.qual_to_quant[variable][data]
       else:
