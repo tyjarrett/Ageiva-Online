@@ -37,7 +37,6 @@ class HealthDataView(APIView):
       background = models.BackgroundData.objects.get(user=request.user)
     except models.BackgroundData.DoesNotExist:
       if "age" not in serializer.validated_data:
-        print("herr")
         return Response({"error": "age must be included in first post"}, status=status.HTTP_400_BAD_REQUEST)
       background = models.BackgroundData.objects.create(user=request.user, age=serializer.validated_data["age"]["response"])
 
@@ -56,16 +55,12 @@ class HealthDataView(APIView):
         continue
       var_serializer = serializers.VariableContentSerializer(data=content)
       if not var_serializer.is_valid():
-        print("over here")
         return Response(status=status.HTTP_400_BAD_REQUEST)
       
       qualitative = var_serializer.validated_data["type"] == "qualitative"
       data = var_serializer.validated_data["response"]
       if qualitative and variable in constants.qual_to_quant.keys():
         if data not in constants.qual_to_quant[variable]:
-          print(variable)
-          print(data)          
-          print("here")
           return Response(status=status.HTTP_400_BAD_REQUEST)
         value_to_set = constants.qual_to_quant[variable][data]
       else:
