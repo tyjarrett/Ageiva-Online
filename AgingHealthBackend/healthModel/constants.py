@@ -35,6 +35,8 @@ def standard_qual_to_quant(variable_name, num_options, reverse=False):
     q2q[mean_index-i] = mean-d_mean
     d_mean += std
     i += 1
+  if 0 not in q2q:
+    q2q[0] = mean-d_mean
   return q2q
 
 # srh, eye, hear, and func should be normalized
@@ -51,7 +53,7 @@ def sequential_qual_to_quant(variable_name, num_options, reverse=False):
 
 # hard-coded values are gotten from design doc, other values are derived from the population mean and std
 qual_to_quant = {
-  "gait_speed": standard_qual_to_quant("gait_speed", 5),
+  "gait_speed": standard_qual_to_quant("gait_speed", 6),
   "grip_dom": standard_qual_to_quant("grip_dom", 5),
   "grip_ndom": standard_qual_to_quant("grip_ndom", 5),
   "chair": standard_qual_to_quant("chair", 5),
@@ -94,9 +96,9 @@ qual_to_quant = {
     4: 1.0
   },
   "glucose": {
-    5.6,
-    6.2,
-    7.2
+    0: 5.6,
+    1: 6.2,
+    2: 7.2
   },
   "igf1": standard_qual_to_quant("igf1", 5), #****
   "hgb": standard_qual_to_quant("hgb", 5), #****
@@ -122,10 +124,10 @@ qual_to_quant = {
   },
   "height": standard_qual_to_quant("height", 5),
   "bmi": {
-    17.5,
-    22.0,
-    27.0,
-    31.0
+    0: 17.5,
+    1: 22.0,
+    2: 27.0,
+    3: 31.0
   },
   # purely qual variables should be normalized
   'srh': normalize_qual(5), 

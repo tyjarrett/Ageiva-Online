@@ -93,29 +93,12 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
 
   const postRecord = () => {
     const pushRecord = {} as Record<VariableId, PResponse>;
-    for (const [key, entry] of Object.entries(testRecord)) {
+    for (const [, entry] of Object.entries(testRecord)) {
       if (entry.response !== "") {
-        if (entry.type == "qualitative") {
-          let i = 0;
-          for (const index in surveyQuestions) {
-            if (surveyQuestions[index].variableId == key) {
-              i = parseInt(index);
-              break;
-            }
-          }
-          pushRecord[entry.variableId] = {
-            type: "quantitative",
-            response: (
-              parseInt(entry.response) * surveyQuestions[i].stdev +
-              surveyQuestions[i].mean
-            ).toString(),
-          };
-        } else {
-          pushRecord[entry.variableId] = {
-            type: entry.type,
-            response: entry.response,
-          };
-        }
+        pushRecord[entry.variableId] = {
+          type: entry.type,
+          response: entry.response,
+        };
       }
     }
     createDataPoint(pushRecord, auth.authToken)
@@ -186,7 +169,10 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     }
     const res = {
       variableId: surveyQuestions[currentQ].variableId,
-      type: quantitative ? "quantitative" : "qualitative",
+      type:
+        surveyQuestions[currentQ].hasQuantitative && quantitative
+          ? "quantitative"
+          : "qualitative",
       response: currentChoice,
     } as QuestionAndResponse;
     if (
@@ -224,10 +210,8 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         const newQuantitative = surveyQuestions[newQ].hasQuantitative;
         setQuantitative(
           surveyQuestions[newQ].variableId in testRecord
-            ? newQuantitative
-              ? testRecord[surveyQuestions[newQ].variableId].type ==
-                "quantitative"
-              : newQuantitative
+            ? testRecord[surveyQuestions[newQ].variableId].type ==
+                "quantitative" && newQuantitative
             : newQuantitative
         );
         setSwitchModeEnabled(

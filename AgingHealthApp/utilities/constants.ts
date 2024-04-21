@@ -2,7 +2,6 @@ import { ProfileSurveyQuestion } from "../types/Profile";
 
 // need to change for production
 export const API_URL = "http://146.190.125.251:8000/api";
-
 export const surveyQuestions: Array<ProfileSurveyQuestion> = [
   {
     variableId: "age",
@@ -147,7 +146,7 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
     question: "How would you rate your overall health",
     hasQuantitative: false,
     unit: "N/A",
-    qualitativeOptions: ["excellent", "very good", "good", "fair", "poor"],
+    qualitativeOptions: ["Excellent", "Very good", "Good", "Fair", "Poor"],
     required: false,
     mean: 0.4033145172962802,
     stdev: 0.27757305612048716,
