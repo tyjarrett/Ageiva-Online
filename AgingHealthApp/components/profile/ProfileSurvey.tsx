@@ -73,7 +73,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
           }
           testRecord[key as VariableId] = resp;
         }
-        console.log(testRecord);
         firstQuestion();
       })
       .catch((err: AxiosError) => {
@@ -94,32 +93,14 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
 
   const postRecord = () => {
     const pushRecord = {} as Record<VariableId, PResponse>;
-    for (const [key, entry] of Object.entries(testRecord)) {
+    for (const [, entry] of Object.entries(testRecord)) {
       if (entry.response !== "") {
-        if (entry.type == "qualitative") {
-          let i = 0;
-          for (const index in surveyQuestions) {
-            if (surveyQuestions[index].variableId == key) {
-              i = parseInt(index);
-              break;
-            }
-          }
-          pushRecord[entry.variableId] = {
-            type: "quantitative",
-            response: (
-              parseInt(entry.response) * surveyQuestions[i].stdev +
-              surveyQuestions[i].mean
-            ).toString(),
-          };
-        } else {
-          pushRecord[entry.variableId] = {
-            type: entry.type,
-            response: entry.response,
-          };
-        }
+        pushRecord[entry.variableId] = {
+          type: entry.type,
+          response: entry.response,
+        };
       }
     }
-    console.log(pushRecord);
     createDataPoint(pushRecord, auth.authToken)
       .then(() => {
         console.log("sent");
@@ -133,7 +114,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     let check = false;
     for (const [, entry] of Object.entries(testRecord)) {
       if (entry.response === "") {
-        console.log(entry);
         check = true;
         break;
       }
@@ -175,7 +155,6 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
   };
 
   const nextPressed = () => {
-    console.log(testRecord[surveyQuestions[currentQ].variableId as VariableId]);
     if (required && currentChoice === "") {
       errorCheck = false;
       setErrorText("Please enter a number");
@@ -190,7 +169,10 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
     }
     const res = {
       variableId: surveyQuestions[currentQ].variableId,
-      type: quantitative ? "quantitative" : "qualitative",
+      type:
+        surveyQuestions[currentQ].hasQuantitative && quantitative
+          ? "quantitative"
+          : "qualitative",
       response: currentChoice,
     } as QuestionAndResponse;
     if (
@@ -228,10 +210,8 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
         const newQuantitative = surveyQuestions[newQ].hasQuantitative;
         setQuantitative(
           surveyQuestions[newQ].variableId in testRecord
-            ? newQuantitative
-              ? testRecord[surveyQuestions[newQ].variableId].type ==
-                "quantitative"
-              : newQuantitative
+            ? testRecord[surveyQuestions[newQ].variableId].type ==
+                "quantitative" && newQuantitative
             : newQuantitative
         );
         setSwitchModeEnabled(

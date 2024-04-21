@@ -3,7 +3,6 @@ import { ProfileSurveyQuestion } from "../../types/Profile";
 import { StyleSheet } from "react-native";
 import MultipleChoice from "./MultipleChoice";
 import { SetState } from "../../types/General";
-import { useEffect } from "react";
 
 type Props = {
   question: ProfileSurveyQuestion;
@@ -21,8 +20,8 @@ const ProfileQuestion = ({
   return (
     <>
       <Text style={styles.question}>
-        {quantitative ? "Enter" : "Estimate"} {question.question}
-        {question.unit && quantitative ? `(${question.unit})` : ""}:
+        {question.question}
+        {question.unit && quantitative ? ` (${question.unit})` : ""}:
       </Text>
       {quantitative ? (
         <TextInput

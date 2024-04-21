@@ -24,7 +24,6 @@ const ProfileView = ({ setCurrentScreen, setDateCheck }: Props) => {
   }, []);
 
   async function fetchData() {
-    console.log(responseDates);
     const dates: string[] = [];
     getHealthData(auth.authToken)
       .then(({ data: res }) => {
