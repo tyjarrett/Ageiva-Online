@@ -97,10 +97,14 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
       if (entry.response !== "") {
         pushRecord[entry.variableId] = {
           type: entry.type,
-          response: entry.response,
+          response:
+            entry.type === "quantitative"
+              ? entry.response
+              : parseInt(entry.response).toString(),
         };
       }
     }
+    console.log(pushRecord);
     createDataPoint(pushRecord, auth.authToken)
       .then(() => {
         console.log("sent");
