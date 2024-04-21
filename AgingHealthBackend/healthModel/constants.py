@@ -117,10 +117,10 @@ qual_to_quant = {
     2: 7.0
   },
   "vitd": {
-    math.log(20),
-    math.log(40),
-    math.log(80),
-    math.log(160)
+    0: math.log(20),
+    1: math.log(40),
+    2: math.log(80),
+    3: math.log(160)
   },
   "height": standard_qual_to_quant("height", 5),
   "bmi": {
