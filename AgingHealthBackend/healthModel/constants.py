@@ -40,8 +40,14 @@ def standard_qual_to_quant(variable_name, num_options, reverse=False):
   return q2q
 
 # srh, eye, hear, and func should be normalized
-def normalize_qual(num_options):
-  return {i : i/(num_options-1) for i in range(num_options)}
+def normalize_qual(num_options, reverse=False):
+  if reverse:
+    return {i : i/(num_options-1) for i in range(num_options-1, -1, -1)}
+  else:
+    return {i : i/(num_options-1) for i in range(num_options)}
+
+def pure_qual(num_options):
+  return {i:i for i in range(num_options)}
 
 # for variables where values are in ascending order with baseline in the first index
 def sequential_qual_to_quant(variable_name, num_options, reverse=False):
@@ -56,32 +62,38 @@ qual_to_quant = {
   "gait_speed": standard_qual_to_quant("gait_speed", 6),
   "grip_dom": standard_qual_to_quant("grip_dom", 5),
   "grip_ndom": standard_qual_to_quant("grip_ndom", 5),
-  "chair": standard_qual_to_quant("chair", 5),
+  "FI_ADL": pure_qual(5),
+  "FI_IADL": pure_qual(5),
+  "chair": standard_qual_to_quant("chair", 5), #***
   "leg_raise": {
-    0: math.log(10),
-    1: math.log(20),
-    2: math.log(30),
+    0: 10,
+    1: 20,
+    2: 30,
   },
   "full_tandem": {
-    0: math.log(10),
-    1: math.log(20),
-    2: math.log(30),
+    0: 10,
+    1: 20,
+    2: 30,
   },
+  'srh': normalize_qual(5, reverse=True), 
+  'eye': normalize_qual(6, reverse=True), 
+  'hear': normalize_qual(5, reverse=True), 
+  'func': normalize_qual(4, reverse=True),
   "dias": standard_qual_to_quant("dias", 5),
   "sys": standard_qual_to_quant("sys", 5),
   "pulse": standard_qual_to_quant("pulse", 5),
   "trig": {
-    0: math.log(1.4),
-    1: math.log(1.8),
-    2: math.log(2.4),
-    3: math.log(5.6)
+    0: 1.5,
+    1: 2.0,
+    2: 2.5,
+    3: 5.6
   }, 
   "crp": {
-    0: .3,
-    1: 1.0,
-    2: 10.0,
-    3: 25.0,
-    4: 50.0,
+    0: .03,
+    1: 0.06,
+    2: .5,
+    3: 2.5,
+    4: 5.0,
   },
   "hdl": {
     0: 1.5,
@@ -97,31 +109,35 @@ qual_to_quant = {
   },
   "glucose": {
     0: 5.6,
-    1: 6.2,
-    2: 7.2
+    1: 4.5,
+    2: 3.5,
+    3: 2.5,
+    4: 1.5
   },
-  "igf1": standard_qual_to_quant("igf1", 5), #****
-  "hgb": standard_qual_to_quant("hgb", 5), #****
-  "fib": standard_qual_to_quant("fib", 5), #****
-  "fer": standard_qual_to_quant("fer", 5), #****
+  "igf1": standard_qual_to_quant("igf1", 3), 
+  "hgb": standard_qual_to_quant("hgb", 3),
+  "fib": standard_qual_to_quant("fib", 3),
+  "fer": standard_qual_to_quant("fer", 3), 
   "chol": {
-    0: 5.0,
-    1: 6.0,
-    2: 7.0
+    0: 150,
+    1: 200,
+    2: 250
   },
-  "wbc": standard_qual_to_quant("wbc", 5), #****
-  "mch": standard_qual_to_quant("mch", 5), #****
+  "wbc": standard_qual_to_quant("wbc", 3),
+  "mch": standard_qual_to_quant("mch", 3),
   "hba1c": {
     0: 5.0,
     1: 6.0,
     2: 7.0
   },
   "vitd": {
-    0: math.log(20),
-    1: math.log(40),
-    2: math.log(80),
-    3: math.log(160)
+    0: 20,
+    1: 40,
+    2: 80,
+    3: 160
   },
+  "mobility": pure_qual(5),
+  "alcohol": pure_qual(6),
   "height": standard_qual_to_quant("height", 5),
   "bmi": {
     0: 17.5,
@@ -129,9 +145,4 @@ qual_to_quant = {
     2: 27.0,
     3: 31.0
   },
-  # purely qual variables should be normalized
-  'srh': normalize_qual(5), 
-  'eye': normalize_qual(6), 
-  'hear': normalize_qual(5), 
-  'func': normalize_qual(4)
 }

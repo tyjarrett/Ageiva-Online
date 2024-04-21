@@ -688,8 +688,8 @@ export const surveyQuestions: Array<ProfileSurveyQuestion> = [
       "Obese",
     ],
     required: false,
-    mean: 130,
-    stdev: 40,
+    mean: 27.781513821745225,
+    stdev: 4.853978745570567,
   },
   {
     variableId: "ethnicity",
