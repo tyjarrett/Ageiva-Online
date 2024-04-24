@@ -154,7 +154,7 @@ class PredictHealthDataView(APIView):
       value = getattr(obj, variable)
       data[variable.replace('_', ' ')] = value if value else -1000
     health_prediction, survival_prediction = run_model(data)
-    survival_prediction = list(map(lambda x: math.pow(10.0, x), survival_prediction))
+    survival_prediction = list(map(lambda x: math.pow(math.e, x), survival_prediction))
     actual_health_pred = list(map(z_score_to_actual, health_prediction))
 
     response = {"health": actual_health_pred, "survival": survival_prediction}
