@@ -21,11 +21,11 @@ import DomainSelect from "./DomainSelect";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/Navigation";
+import SurvivalDisplay from "./SurvivalDisplay";
 
 const ResultsScreen = () => {
   const [currentScreen, setCurrentScreen] = useState("Results");
   const [numPredYears, setNumPredYears] = useState(20);
-  const [survivalChecked, setSurvivalChecked] = useState(true);
   const [checkArray, setCheckArray] = useState(
     {} as Record<VariableId, boolean>
   );
@@ -143,25 +143,14 @@ const ResultsScreen = () => {
                 dataRecord={dataRecord}
                 checkArray={checkArray}
                 setCheckArray={setCheckArray}
-                survivalChecked={survivalChecked}
-                setSurvivalChecked={setSurvivalChecked}
               />
 
               <DomainSelect
                 selectedYear={numPredYears}
                 setSelectedYear={setNumPredYears}
               />
-              {survivalChecked ? (
-                <HealthDataChart
-                  key="survival"
-                  label="survival"
-                  data={dataRecord.survivalData}
-                  numPoints={numRealDates + numPredYears / PRED_DT}
-                  qualToQuant={qualToQuant}
-                />
-              ) : (
-                <></>
-              )}
+              <SurvivalDisplay data={dataRecord.survivalData} />
+
               {Object.keys(checkArray).map((variableId) =>
                 isVariableId(variableId) && checkArray[variableId] ? (
                   <HealthDataChart
