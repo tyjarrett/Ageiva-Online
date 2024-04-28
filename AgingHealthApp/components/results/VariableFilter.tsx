@@ -16,17 +16,9 @@ type Props = {
   dataRecord: GraphData;
   checkArray: Record<VariableId, boolean>;
   setCheckArray: SetState<Record<VariableId, boolean>>;
-  survivalChecked: boolean;
-  setSurvivalChecked: SetState<boolean>;
 };
 
-const VariableFilter = ({
-  dataRecord,
-  checkArray,
-  setCheckArray,
-  survivalChecked,
-  setSurvivalChecked,
-}: Props) => {
+const VariableFilter = ({ dataRecord, checkArray, setCheckArray }: Props) => {
   const [search, setSearch] = useState("");
   const [filterVisible, setFilterVisible] = useState(false);
 
@@ -61,20 +53,6 @@ const VariableFilter = ({
             />
 
             <ScrollView contentContainerStyle={styles.container}>
-              {filterSearch("survival") ? (
-                <Checkbox.Item
-                  style={styles.search}
-                  label="survival"
-                  mode="android"
-                  status={survivalChecked ? "checked" : "unchecked"}
-                  onPress={() => {
-                    setSurvivalChecked(!survivalChecked);
-                  }}
-                />
-              ) : (
-                <></>
-              )}
-
               {Object.keys(
                 dataRecord.predictionData[dataRecord.predictionData.length - 1]
                   .data
