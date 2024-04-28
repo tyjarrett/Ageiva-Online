@@ -11,7 +11,7 @@ import { AxiosError } from "axios";
 import { VariableId, isVariableId } from "../../types/Profile";
 import { filter_data_object } from "../../functions/helpers";
 import moment from "moment";
-import { PRED_DT } from "../../utilities/constants";
+import { PRED_DT, surveyQuestions } from "../../utilities/constants";
 import { GraphData, PredictionData, DateAndValue } from "../../types/Results";
 import HealthDataChart from "./HealthDataChart";
 import { QualToQuantResponse } from "../../types/apiResponses";
@@ -24,7 +24,7 @@ import { RootStackParamList } from "../../types/Navigation";
 import SurvivalDisplay from "./SurvivalDisplay";
 
 const ResultsScreen = () => {
-  const [currentScreen, setCurrentScreen] = useState("Results");
+  const [currentScreen] = useState("Results");
   const [numPredYears, setNumPredYears] = useState(20);
   const [checkArray, setCheckArray] = useState(
     {} as Record<VariableId, boolean>
@@ -37,7 +37,14 @@ const ResultsScreen = () => {
 
   const auth = useAuth();
   useEffect(() => {
-    fetchData();
+    const newCheckArray = {} as Record<VariableId, boolean>;
+    surveyQuestions.forEach((v) => {
+      if (isVariableId(v.variableId)) {
+        newCheckArray[v.variableId] = false;
+      }
+    });
+    setCheckArray(newCheckArray);
+    navigation.addListener("focus", fetchData);
   }, []);
 
   const [dataRecord, setDataRecord] = useState({
@@ -50,7 +57,6 @@ const ResultsScreen = () => {
   async function fetchData() {
     getHealthData(auth.authToken)
       .then(({ data: res }) => {
-        const newCheckArray = {} as Record<VariableId, boolean>;
         const newUserData = res.health_data.map((dataPoint) => {
           const newDataPoint = {
             date: new Date(dataPoint.date),
@@ -59,13 +65,11 @@ const ResultsScreen = () => {
           for (const [key, entry] of Object.entries(dataPoint.data)) {
             if (key !== "age" && isVariableId(key) && entry !== null) {
               newDataPoint.data[key] = entry;
-              newCheckArray[key] = false;
             }
           }
           return newDataPoint;
         });
         setNumRealDates(res.health_data.length);
-        setCheckArray(newCheckArray);
 
         makePrediction(auth.authToken)
           .then(({ data: res }) => {
