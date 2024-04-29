@@ -75,8 +75,8 @@ class TargetUserUsernameView(APIView):
     permission_classes = []
     parser_classes = [JSONParser, FormParser, MultiPartParser]
 
-    def get(self, request, username):
-        user = get_object_or_404(models.User, email=username)
+    def get(self, request, email):
+        user = get_object_or_404(models.User, email=email)
         if request.user.email != user.email and not request.user.is_superuser:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         response = {
