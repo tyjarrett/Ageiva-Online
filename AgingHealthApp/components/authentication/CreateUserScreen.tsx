@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AxiosError } from "axios";
 import {
   createUser,
+  requestPassToken,
   // createUser,
   // getUserGivenToken,
 } from "../../functions/apiCalls";
@@ -58,10 +59,22 @@ const CreateUserScreen = ({ setPage }: Props) => {
     }
   };
 
+  const apiTest = () => {
+    requestPassToken("bobdylan@gmail.com")
+      .then(({ data }) => {
+        console.log(data);
+      })
+      .catch((err: AxiosError) => {
+        // possible username conflict error
+        console.log(err.message);
+      });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text variant="displayMedium">Logo</Text>
       <Text>Welcome</Text>
+      <Button onPress={apiTest}>Test</Button>
       <View style={styles.container3}>
         {style ? <Text style={styles.error}>{errText}</Text> : <></>}
         <TextInput
