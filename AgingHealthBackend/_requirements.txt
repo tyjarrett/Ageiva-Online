@@ -30,3 +30,4 @@ tzdata==2024.1
 urllib3==2.2.1
 torch --extra-index-url https://download.pytorch.org/whl/cpu
 torchvision --extra-index-url https://download.pytorch.org/whl/cpu
+django-rest-passwordreset==1.4.1

@@ -70,6 +70,8 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+DJANGO_REST_LOOKUP_FIELD = "email"
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
