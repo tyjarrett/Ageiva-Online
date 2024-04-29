@@ -143,6 +143,7 @@ const ResultsScreen = () => {
             <ActivityIndicator animating={true} />
           ) : (
             <>
+              <SurvivalDisplay data={dataRecord.survivalData} />
               <VariableFilter
                 dataRecord={dataRecord}
                 checkArray={checkArray}
@@ -153,7 +154,7 @@ const ResultsScreen = () => {
                 selectedYear={numPredYears}
                 setSelectedYear={setNumPredYears}
               />
-              <SurvivalDisplay data={dataRecord.survivalData} />
+              <Text>Press and hold on graphs to get more information</Text>
 
               {Object.keys(checkArray).map((variableId) =>
                 isVariableId(variableId) && checkArray[variableId] ? (

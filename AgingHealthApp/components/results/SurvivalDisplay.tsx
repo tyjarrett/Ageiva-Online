@@ -1,4 +1,4 @@
-import { Text } from "react-native-paper";
+import { IconButton, Text } from "react-native-paper";
 import { DateAndValue } from "../../types/Results";
 import { PRED_DT } from "../../utilities/constants";
 import { StyleSheet, View } from "react-native";
@@ -32,6 +32,7 @@ const SurvivalDisplay = ({ data }: Props) => {
       >
         {survivalResult}
       </Text>
+      <IconButton icon="help-rhombus" />
     </View>
   );
 };
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
   survivalResult: {
     fontWeight: "bold",
   },
+  rowView: {},
 });
 
 export default SurvivalDisplay;
