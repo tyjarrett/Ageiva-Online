@@ -325,8 +325,9 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
           <Dialog.Title style={styles.title}>Missing Information</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium">
-              Some fields are incomplete and will lead to a diminished mortality
-              reading.
+              Some fields are incomplete and will lead to a less accurate
+              mortality reading. You will only be able to view predictions for
+              health variables that you have filled out.
             </Text>
           </Dialog.Content>
           <Dialog.Actions>

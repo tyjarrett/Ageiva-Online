@@ -31,7 +31,7 @@ export const onboardSlides = [
   },
   {
     title: "View Results",
-    text: "You can edit which health variables are shown by clicking the “Filter” button. From this menu, select all health variables that you wish to see and then click “Close”.",
+    text: "You can select which health variables are shown by clicking the “Filter” button. From this menu, select all health variables that you wish to see and then click “Close”.",
     image: require("../assets/help_images/7_.png"),
   },
   {
