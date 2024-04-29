@@ -26,4 +26,8 @@ export type PredictionResponse = {
   survival: number[];
 };
 
+export type PassTokenResponse = {
+  passwordToken: string;
+};
+
 export type QualToQuantResponse = Record<VariableId, Record<number, number>>;

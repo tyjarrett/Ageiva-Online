@@ -24,4 +24,5 @@ urlpatterns = [
     path("", RootView.as_view()),
     path("api/users/", include("users.urls")),
     path("api/healthmodel/", include("healthModel.urls")),
+    path("api/password_reset/", include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]

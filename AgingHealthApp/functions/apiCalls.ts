@@ -6,6 +6,7 @@ import {
   HealthData,
   PredictionResponse,
   QualToQuantResponse,
+  PassTokenResponse,
 } from "../types/apiResponses";
 import { PResponse, VariableId } from "../types/Profile";
 
@@ -53,4 +54,10 @@ export function getQualToQuant(
   token: string
 ): Promise<AxiosResponse<QualToQuantResponse>> {
   return apiGet("healthmodel/q2q/", token);
+}
+
+export function requestPassToken(
+  email: string
+): Promise<AxiosResponse<PassTokenResponse>> {
+  return apiPost("password_reset/", { email: email });
 }
