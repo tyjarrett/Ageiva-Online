@@ -69,6 +69,23 @@ class TargetUserView(APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         user.delete()
         return Response(status=status.HTTP_200_OK)
+    
+
+class TargetUserUsernameView(APIView):
+    permission_classes = []
+    parser_classes = [JSONParser, FormParser, MultiPartParser]
+
+    def get(self, request, username):
+        user = get_object_or_404(models.User, email=username)
+        if request.user.email != user.email and not request.user.is_superuser:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        response = {
+            "userId": user.pk,
+            "username": user.email,
+            "dateJoined": user.date_joined,
+            "isSuperuser": user.is_superuser,
+        }
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class UserViewWithToken(APIView):
