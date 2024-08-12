@@ -177,4 +177,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'tyjarrett71@gmail.com'
-EMAIL_HOST_PASSWORD = 'Cougkye9'
+EMAIL_HOST_PASSWORD = 'xwor rfee ozrd ehmf'
