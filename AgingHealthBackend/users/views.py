@@ -12,6 +12,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from users import models
 from users.models import PasswordReset, User
 from django.core.mail import send_mail
+from django.conf import settings
 
 
 class UserView(APIView):
@@ -122,10 +123,9 @@ class RequestPasswordReset(generics.GenericAPIView):
             send_mail(
                 "Token",
                 token,
-                "tyjarrett71@gmail.com",
+                settings.EMAIL_HOST_USER,
                 ["tyjarrett71@gmail.com"],
                 fail_silently=False,
-                auth_password="Cougkye9"
             )
 
             return Response({'success': 'We have sent you a link to reset your password ' + token}, status=status.HTTP_200_OK)
