@@ -8,4 +8,5 @@ urlpatterns = [
     path("token/", obtain_auth_token),
     path("user/<int:userId>/", views.TargetUserView.as_view()),
     path("user/<str:email>/", views.TargetUserUsernameView.as_view()),
+    path("reset/", views.RequestPasswordReset.as_view()),
 ]
