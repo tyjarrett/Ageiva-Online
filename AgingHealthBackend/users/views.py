@@ -11,7 +11,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from users import models
 from users.models import PasswordReset, User
-import os
+from django.core.mail import send_mail
 
 
 class UserView(APIView):
@@ -119,10 +119,14 @@ class RequestPasswordReset(generics.GenericAPIView):
             reset = PasswordReset(email=email, token=token)
             reset.save()
 
-            #reset_url = f"{os.environ['PASSWORD_RESET_BASE_URL']}/{token}"
-
-            # Sending reset link via email (commented out for clarity)
-            # ... (email sending code)
+            send_mail(
+                "Token",
+                token,
+                "tyjarrett71@gmail.com",
+                ["tyjarrett71@gmail.com"],
+                fail_silently=False,
+                auth_password="Cougkye9"
+            )
 
             return Response({'success': 'We have sent you a link to reset your password ' + token}, status=status.HTTP_200_OK)
         else:
@@ -142,6 +146,8 @@ class ResetPassword(generics.GenericAPIView):
         
         if new_password != confirm_password:
             return Response({"error": "Passwords do not match"}, status=400)
+        
+        print(token)
         
         reset_obj = PasswordReset.objects.filter(token=token).first()
         
