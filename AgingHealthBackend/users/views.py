@@ -119,12 +119,12 @@ class RequestPasswordReset(generics.GenericAPIView):
             reset = PasswordReset(email=email, token=token)
             reset.save()
 
-            reset_url = f"{os.environ['PASSWORD_RESET_BASE_URL']}/{token}"
+            #reset_url = f"{os.environ['PASSWORD_RESET_BASE_URL']}/{token}"
 
             # Sending reset link via email (commented out for clarity)
             # ... (email sending code)
 
-            return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+            return Response({'success': 'We have sent you a link to reset your password ' + token}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "User with credentials not found"}, status=status.HTTP_404_NOT_FOUND)
 
