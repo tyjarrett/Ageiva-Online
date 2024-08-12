@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { Axios, AxiosResponse } from "axios";
 import { apiGet, apiPost } from "./apiUtils";
 import {
   CreateUserResponse,
@@ -7,6 +7,7 @@ import {
   PredictionResponse,
   QualToQuantResponse,
   PassTokenResponse,
+  resetRequestResponse,
 } from "../types/apiResponses";
 import { PResponse, VariableId } from "../types/Profile";
 
@@ -60,4 +61,10 @@ export function requestPassToken(
   email: string
 ): Promise<AxiosResponse<PassTokenResponse>> {
   return apiPost("password_reset/", { email: email });
+}
+
+export function resetRequest(
+  email: string
+): Promise<AxiosResponse<resetRequestResponse>> {
+  return apiPost("users/resetrequest/", {});
 }

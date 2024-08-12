@@ -9,6 +9,10 @@ export type CreateUserResponse = {
   token: string;
 };
 
+export type resetRequestResponse = {
+  email: string;
+};
+
 export type HealthDataPoint = {
   id: number;
   age: number;

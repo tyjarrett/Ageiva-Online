@@ -2,6 +2,8 @@ import { StyleSheet, SafeAreaView } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useState } from "react";
 import React from "react";
+import { resetRequest } from "../../functions/apiCalls";
+import { AxiosError } from "axios";
 
 type Props = {
   setPage: React.Dispatch<React.SetStateAction<string>>;
@@ -9,6 +11,18 @@ type Props = {
 
 const ResetScreen = ({ setPage }: Props) => {
   const [email, setEmail] = useState("");
+
+  const resetRequestPressed = () => {
+    resetRequest(email)
+      .then(({ data }) => {
+        console.log(data);
+        console.log("reset requested");
+      })
+      .catch((err: AxiosError) => {
+        // possible username conflict error
+        console.log(err.message);
+      });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,7 +42,12 @@ const ResetScreen = ({ setPage }: Props) => {
         value={email}
         onChangeText={(email) => setEmail(email)}
       ></TextInput>
-      <Button mode="contained" onPress={() => setPage("LoginPageStub")}>
+      <Button
+        mode="contained"
+        onPress={() => {
+          resetRequestPressed();
+        }}
+      >
         Send
       </Button>
     </SafeAreaView>
