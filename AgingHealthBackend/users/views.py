@@ -126,6 +126,8 @@ class RequestPasswordReset(generics.GenericAPIView):
                 settings.EMAIL_HOST_USER,
                 ["tyjarrett71@gmail.com"],
                 fail_silently=False,
+                auth_password=settings.EMAIL_HOST_PASSWORD,
+                auth_user=settings.EMAIL_HOST_USER,
             )
 
             return Response({'success': 'We have sent you a link to reset your password ' + token}, status=status.HTTP_200_OK)
