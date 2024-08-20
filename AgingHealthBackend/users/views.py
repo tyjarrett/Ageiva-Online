@@ -108,10 +108,8 @@ class RequestPasswordReset(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = ResetPasswordRequestSerializer
 
-    def post(self, request):
+    def post(self, request, email):
         serializer = self.serializer_class(data=request.data)
-        #email = request.data['email']
-        email = "bobdylan@gmail.com"
         user = User.objects.filter(email__iexact=email).first()
 
         if user:
@@ -124,13 +122,13 @@ class RequestPasswordReset(generics.GenericAPIView):
                 "Token",
                 token,
                 settings.EMAIL_HOST_USER,
-                ["tyjarrett71@gmail.com"],
+                [email],
                 fail_silently=False,
                 auth_password=settings.EMAIL_HOST_PASSWORD,
                 auth_user=settings.EMAIL_HOST_USER,
             )
 
-            return Response({'success': 'We have sent you a link to reset your password ' + token}, status=status.HTTP_200_OK)
+            return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "User with credentials not found"}, status=status.HTTP_404_NOT_FOUND)
 
