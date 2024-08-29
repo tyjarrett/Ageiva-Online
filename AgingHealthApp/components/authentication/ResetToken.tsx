@@ -9,16 +9,17 @@ type Props = {
   setPage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ResetScreen = ({ setPage }: Props) => {
-  const [email, setEmail] = useState("");
+const ResetToken = ({ setPage }: Props) => {
+  const [token, setToken] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confPass, setConfPass] = useState("");
 
-  const resetRequestPressed = () => {
-    setPage("ResetRequest");
-    // resetRequest(email)
+  const resetPressed = () => {
+    setPage("LoginPageStub");
+    // resetRequest(token)
     //   .then(({ data }) => {
     //     console.log(data);
     //     console.log("reset requested");
-
     //   })
     //   .catch((err: AxiosError) => {
     //     // possible username conflict error
@@ -36,21 +37,35 @@ const ResetScreen = ({ setPage }: Props) => {
         Back
       </Button>
       <Text variant="displayMedium">Logo</Text>
-      <Text>Enter Email for Password Verification Form</Text>
+      <Text>Enter the token sent to your email and new password</Text>
       <TextInput
         style={styles.container3}
         mode="outlined"
-        label="Email"
-        value={email}
-        onChangeText={(email) => setEmail(email)}
+        label="Token"
+        value={token}
+        onChangeText={(token) => setToken(token)}
+      ></TextInput>
+      <TextInput
+        style={styles.container3}
+        mode="outlined"
+        label="New Password"
+        value={newPass}
+        onChangeText={(newPass) => setNewPass(newPass)}
+      ></TextInput>
+      <TextInput
+        style={styles.container3}
+        mode="outlined"
+        label="Confirm Password"
+        value={confPass}
+        onChangeText={(confPass) => setConfPass(confPass)}
       ></TextInput>
       <Button
         mode="contained"
         onPress={() => {
-          resetRequestPressed();
+          resetPressed();
         }}
       >
-        Send
+        Reset
       </Button>
     </SafeAreaView>
   );
@@ -77,4 +92,4 @@ const styles = StyleSheet.create({
     gap: 25,
   },
 });
-export default ResetScreen;
+export default ResetToken;

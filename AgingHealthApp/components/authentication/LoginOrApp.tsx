@@ -10,6 +10,7 @@ import LoginPageStub from "./LoginPageStub";
 import CreateUserScreen from "./CreateUserScreen";
 import ResetScreen from "./ResetScreen";
 import NavigationProvider from "../navigation/NavigationProvider";
+import ResetToken from "./ResetToken";
 
 const LoginOrApp = () => {
   const auth = useAuthWithoutToken();
@@ -60,6 +61,8 @@ const LoginOrApp = () => {
         <CreateUserScreen setCheckCreds={setCheckCreds} setPage={setPage} />
       ) : page == "Reset" ? (
         <ResetScreen setPage={setPage} />
+      ) : page == "ResetRequest" ? (
+        <ResetToken setPage={setPage} />
       ) : (
         <LoginPageStub setCheckCreds={setCheckCreds} setPage={setPage} />
       )}

@@ -131,6 +131,19 @@ class RequestPasswordReset(generics.GenericAPIView):
             return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "User with credentials not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+class ResetPasswordToken(generics.GenericAPIView):
+    permission_classes = []
+
+    def post(self, request, token):
+        print(token)
+        
+        reset_obj = PasswordReset.objects.filter(token=token).first()
+        
+        if reset_obj:
+            return Response({'success':'Password updated'})
+        else:
+            return Response({'error':'Invalid token'}, status=400)
 
 class ResetPassword(generics.GenericAPIView):
     serializer_class = ResetPasswordSerializer
