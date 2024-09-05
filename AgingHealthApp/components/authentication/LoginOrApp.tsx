@@ -11,12 +11,14 @@ import CreateUserScreen from "./CreateUserScreen";
 import ResetScreen from "./ResetScreen";
 import NavigationProvider from "../navigation/NavigationProvider";
 import ResetToken from "./ResetToken";
+import ResetPass from "./ResetPass";
 
 const LoginOrApp = () => {
   const auth = useAuthWithoutToken();
   const [checkCreds, setCheckCreds] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [page, setPage] = useState("FirstScreen");
+  const [passToken, setPassToken] = useState("");
 
   useEffect(() => {
     setIsAuthorized(false);
@@ -62,7 +64,9 @@ const LoginOrApp = () => {
       ) : page == "Reset" ? (
         <ResetScreen setPage={setPage} />
       ) : page == "ResetRequest" ? (
-        <ResetToken setPage={setPage} />
+        <ResetToken setPage={setPage} setPassToken={setPassToken} />
+      ) : page == "ResetPass" ? (
+        <ResetPass setPage={setPage} passtoken={passToken} />
       ) : (
         <LoginPageStub setCheckCreds={setCheckCreds} setPage={setPage} />
       )}

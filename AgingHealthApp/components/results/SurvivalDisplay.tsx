@@ -49,7 +49,7 @@ const SurvivalDisplay = ({ data }: Props) => {
         </Dialog>
       </Portal>
       <View style={styles.container}>
-        <Text variant="headlineMedium">10-Year Survival Score: </Text>
+        <Text variant="headlineSmall">10-Year Survival Score: </Text>
         <Text
           variant="headlineMedium"
           style={{ color, ...styles.survivalResult }}

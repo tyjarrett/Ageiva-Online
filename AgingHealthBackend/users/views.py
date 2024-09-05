@@ -1,3 +1,4 @@
+from random import randint
 from users.serializers import PostUserSerializer, PutUserSerializer, UserSerializer, ResetPasswordRequestSerializer, ResetPasswordSerializer
 from rest_framework.response import Response
 from rest_framework import status, generics
@@ -113,8 +114,9 @@ class RequestPasswordReset(generics.GenericAPIView):
         user = User.objects.filter(email__iexact=email).first()
 
         if user:
-            token_generator = PasswordResetTokenGenerator()
-            token = token_generator.make_token(user) 
+            token = ""
+            for x in range(8): 
+                token += randint(0, 9)
             reset = PasswordReset(email=email, token=token)
             reset.save()
 

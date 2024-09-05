@@ -2,7 +2,14 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { commonStyles } from "../../style/CommonStyles";
 import { Button, Text, TextInput } from "react-native-paper";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import {
   // createUser,
   getToken,
@@ -45,53 +52,62 @@ const LoginPageStub = ({ setCheckCreds, setPage }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text variant="displayMedium">Logo</Text>
-      <Text>Welcome Back</Text>
-      <View style={styles.container3}>
-        {style ? <Text style={styles.error}>{errText}</Text> : <></>}
-        <TextInput
-          mode="outlined"
-          label="Email"
-          value={user}
-          onChangeText={(user) => setUser(user)}
-        ></TextInput>
-        <TextInput
-          mode="outlined"
-          label="Password"
-          value={pass}
-          onChangeText={(pass) => setPass(pass)}
-          secureTextEntry={true}
-        ></TextInput>
-      </View>
-      <View style={styles.forgot}>
-        <TouchableOpacity>
-          <Text onPress={() => setPage("Reset")}>Forgot Your Password</Text>
-        </TouchableOpacity>
-      </View>
-      <Button
-        mode="contained"
-        loading={isloading}
-        onPress={() => {
-          if (!isloading) {
-            loginUsingCreds();
-          }
-          setLoading(true);
-        }}
-      >
-        Login
-      </Button>
-      <TouchableOpacity onPress={() => setPage("CreateUserScreen")}>
-        <View style={styles.inLine}>
-          <Text>Dont have an Account? </Text>
-          <Text style={styles.bold}>Sign Up</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <Image
+          style={styles.tinyLogo}
+          source={require("../../assets/AH.png")}
+        ></Image>
+        <Text>Welcome Back</Text>
+        <View style={styles.container3}>
+          {style ? <Text style={styles.error}>{errText}</Text> : <></>}
+          <TextInput
+            mode="outlined"
+            label="Email"
+            value={user}
+            onChangeText={(user) => setUser(user)}
+          ></TextInput>
+          <TextInput
+            mode="outlined"
+            label="Password"
+            value={pass}
+            onChangeText={(pass) => setPass(pass)}
+            secureTextEntry={true}
+          ></TextInput>
         </View>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <View style={styles.forgot}>
+          <TouchableOpacity>
+            <Text onPress={() => setPage("Reset")}>Forgot Your Password</Text>
+          </TouchableOpacity>
+        </View>
+        <Button
+          mode="contained"
+          loading={isloading}
+          onPress={() => {
+            if (!isloading) {
+              loginUsingCreds();
+            }
+            setLoading(true);
+          }}
+        >
+          Login
+        </Button>
+        <TouchableOpacity onPress={() => setPage("CreateUserScreen")}>
+          <View style={styles.inLine}>
+            <Text>Dont have an Account? </Text>
+            <Text style={styles.bold}>Sign Up</Text>
+          </View>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
+  tinyLogo: {
+    width: 165,
+    height: 140,
+  },
   container: {
     display: "flex",
     alignContent: "center",

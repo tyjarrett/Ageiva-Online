@@ -2,37 +2,40 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  View,
+  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useState } from "react";
 import React from "react";
-import { resetPassToken } from "../../functions/apiCalls";
+import { resetPass } from "../../functions/apiCalls";
 import { AxiosError } from "axios";
 
 type Props = {
   setPage: React.Dispatch<React.SetStateAction<string>>;
-  setPassToken: React.Dispatch<React.SetStateAction<string>>;
+  passtoken: string;
 };
 
-const ResetToken = ({ setPage, setPassToken }: Props) => {
-  const [token, setToken] = useState("");
+const ResetPass = ({ setPage, passtoken }: Props) => {
+  const [newPass, setNewPass] = useState("");
+  const [confPass, setConfPass] = useState("");
   const [errText, setErrText] = useState("");
   const [isError, setIsError] = useState(false);
   const [isloading, setLoading] = useState(false);
 
   const resetPressed = () => {
-    resetPassToken(token)
+    // setPage("LoginPageStub");
+    resetPass(passtoken, newPass, confPass)
       .then(({ data }) => {
-        console.log("token verified");
-        setPassToken(token);
-        setPage("ResetPass");
+        console.log("pass changed");
+        setPage("LoginPageStub");
       })
       .catch((err: AxiosError) => {
         // possible username conflict error
         console.log(err.message);
-        setErrText("Incorrect Token");
+        setErrText("Password not strong enough");
         setIsError(true);
         setLoading(false);
       });
@@ -52,23 +55,44 @@ const ResetToken = ({ setPage, setPassToken }: Props) => {
           style={styles.tinyLogo}
           source={require("../../assets/AH.png")}
         ></Image>
-        <Text>Enter the token sent to your email</Text>
-        {isError ? <Text style={styles.error}>{errText}</Text> : <></>}
+        <Text>Enter your new password</Text>
+        {isError ? (
+          <View style={styles.error}>
+            <Text style={styles.error}>{errText}</Text>
+          </View>
+        ) : (
+          <></>
+        )}
         <TextInput
           style={styles.container3}
           mode="outlined"
-          label="Token"
-          value={token}
-          onChangeText={(token) => setToken(token)}
+          label="New Password"
+          value={newPass}
+          onChangeText={(newPass) => setNewPass(newPass)}
         ></TextInput>
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={20}>
+          <TextInput
+            style={styles.container3}
+            mode="outlined"
+            label="Confirm Password"
+            value={confPass}
+            onChangeText={(confPass) => setConfPass(confPass)}
+          ></TextInput>
+        </KeyboardAvoidingView>
         <Button
           mode="contained"
           loading={isloading}
           onPress={() => {
-            if (!isloading) {
+            if (!isloading && newPass === confPass) {
               resetPressed();
+              setLoading(true);
+            } else if (newPass !== confPass) {
+              setLoading(false);
+              setErrText("Passwords do not match");
+              setIsError(true);
+            } else {
+              setLoading(true);
             }
-            setLoading(true);
           }}
         >
           Enter
@@ -80,8 +104,13 @@ const ResetToken = ({ setPage, setPassToken }: Props) => {
 
 const styles = StyleSheet.create({
   tinyLogo: {
-    width: 120,
+    width: 165,
     height: 140,
+  },
+  error: {
+    color: "rgb(255, 90, 80)",
+    textAlign: "center",
+    width: 250,
   },
   container: {
     display: "flex",
@@ -93,11 +122,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(29, 27, 30)",
     justifyContent: "center",
   },
-  error: {
-    color: "rgb(255, 90, 80)",
-    textAlign: "center",
-    width: 250,
-  },
   container2: {
     position: "absolute",
     top: "10%",
@@ -108,4 +132,4 @@ const styles = StyleSheet.create({
     gap: 25,
   },
 });
-export default ResetToken;
+export default ResetPass;

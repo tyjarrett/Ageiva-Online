@@ -112,6 +112,7 @@ const ResultsScreen = () => {
       .catch((err: AxiosError) => {
         if (err.response?.status === 404) {
           setNoData(true);
+          console.log(err.message);
         } else {
           console.log(err.message);
         }

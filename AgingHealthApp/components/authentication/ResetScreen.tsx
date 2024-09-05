@@ -1,4 +1,11 @@
-import { StyleSheet, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useState } from "react";
 import React from "react";
@@ -11,52 +18,82 @@ type Props = {
 
 const ResetScreen = ({ setPage }: Props) => {
   const [email, setEmail] = useState("");
+  const [errText, setErrText] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [isloading, setLoading] = useState(false);
 
   const resetRequestPressed = () => {
-    setPage("ResetRequest");
-    // resetRequest(email)
-    //   .then(({ data }) => {
-    //     console.log(data);
-    //     console.log("reset requested");
-
-    //   })
-    //   .catch((err: AxiosError) => {
-    //     // possible username conflict error
-    //     console.log(err.message);
-    //   });
+    resetRequest(email)
+      .then(({ data }) => {
+        console.log("reset requested");
+        setPage("ResetRequest");
+      })
+      .catch((err: AxiosError) => {
+        // possible username conflict error
+        console.log(err.message);
+        setErrText("That email is not in our records");
+        setIsError(true);
+        setLoading(false);
+      });
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Button
-        style={styles.container2}
-        mode="contained"
-        onPress={() => setPage("LoginPageStub")}
-      >
-        Back
-      </Button>
-      <Text variant="displayMedium">Logo</Text>
-      <Text>Enter Email for Password Verification Form</Text>
-      <TextInput
-        style={styles.container3}
-        mode="outlined"
-        label="Email"
-        value={email}
-        onChangeText={(email) => setEmail(email)}
-      ></TextInput>
-      <Button
-        mode="contained"
-        onPress={() => {
-          resetRequestPressed();
-        }}
-      >
-        Send
-      </Button>
-    </SafeAreaView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <Button
+          style={styles.container2}
+          mode="contained"
+          onPress={() => setPage("LoginPageStub")}
+        >
+          Back
+        </Button>
+        <Image
+          style={styles.tinyLogo}
+          source={require("../../assets/AH.png")}
+        ></Image>
+        <Text>Enter Email for Password Verification Form</Text>
+        {isError ? (
+          <View>
+            <Text style={styles.error}>{errText}</Text>
+            <Text style={styles.error}>Please Enter a New Email</Text>
+          </View>
+        ) : (
+          <></>
+        )}
+        <TextInput
+          style={styles.container3}
+          mode="outlined"
+          label="Email"
+          value={email}
+          onChangeText={(email) => setEmail(email)}
+        ></TextInput>
+        <Button
+          mode="contained"
+          loading={isloading}
+          onPress={() => {
+            if (!isloading) {
+              resetRequestPressed();
+            }
+            setLoading(true);
+          }}
+        >
+          Send
+        </Button>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
+  tinyLogo: {
+    width: 120,
+    height: 140,
+  },
+  error: {
+    color: "rgb(255, 90, 80)",
+    textAlign: "center",
+    width: 250,
+  },
   container: {
     display: "flex",
     alignContent: "center",

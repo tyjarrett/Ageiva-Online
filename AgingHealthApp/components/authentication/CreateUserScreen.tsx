@@ -1,11 +1,21 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { Text, Button, TextInput } from "react-native-paper";
 import { useState } from "react";
 import { AxiosError } from "axios";
 import {
   createUser,
   requestPassToken,
+  // requestPassToken,
   // createUser,
   // getUserGivenToken,
 } from "../../functions/apiCalls";
@@ -71,54 +81,77 @@ const CreateUserScreen = ({ setPage }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text variant="displayMedium">Logo</Text>
-      <Text>Welcome</Text>
-      <Button onPress={apiTest}>Test</Button>
-      <View style={styles.container3}>
-        {style ? <Text style={styles.error}>{errText}</Text> : <></>}
-        <TextInput
-          mode="outlined"
-          label="Email"
-          value={user}
-          onChangeText={(user) => setUser(user)}
-        />
-        <TextInput
-          mode="outlined"
-          label="Password"
-          value={pass}
-          onChangeText={(pass) => setPass(pass)}
-          secureTextEntry={true}
-        />
-        <TextInput
-          mode="outlined"
-          label="Confirm Password"
-          value={pass2}
-          onChangeText={(pass2) => setPass2(pass2)}
-          secureTextEntry={true}
-        />
-      </View>
-      <Button
-        mode="contained"
-        loading={isloading}
-        onPress={() => {
-          setLoading(true);
-          createUserPressed();
-        }}
-      >
-        Create Account
-      </Button>
-      <TouchableOpacity onPress={() => setPage("LoginPageStub")}>
-        <View style={styles.inLine}>
-          <Text>Have an Account? </Text>
-          <Text style={styles.bold}>Sign In</Text>
-        </View>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <Button
+          style={styles.container2}
+          mode="contained"
+          onPress={() => setPage("LoginPageStub")}
+        >
+          Back
+        </Button>
+        <Image
+          style={styles.tinyLogo}
+          source={require("../../assets/AH.png")}
+        ></Image>
+        <Text>Welcome</Text>
+        {/* <Button onPress={apiTest}>Test</Button> */}
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={20}>
+          <View style={styles.container3}>
+            {style ? <Text style={styles.error}>{errText}</Text> : <></>}
+            <TextInput
+              mode="outlined"
+              label="Email"
+              value={user}
+              onChangeText={(user) => setUser(user)}
+            />
+            <TextInput
+              mode="outlined"
+              label="Password"
+              value={pass}
+              onChangeText={(pass) => setPass(pass)}
+              secureTextEntry={true}
+            />
+            <TextInput
+              mode="outlined"
+              label="Confirm Password"
+              value={pass2}
+              onChangeText={(pass2) => setPass2(pass2)}
+              secureTextEntry={true}
+            />
+          </View>
+        </KeyboardAvoidingView>
+        <Button
+          mode="contained"
+          loading={isloading}
+          onPress={() => {
+            setLoading(true);
+            createUserPressed();
+          }}
+        >
+          Create Account
+        </Button>
+        <TouchableOpacity onPress={() => setPage("LoginPageStub")}>
+          <View style={styles.inLine}>
+            <Text>Have an Account? </Text>
+            <Text style={styles.bold}>Sign In</Text>
+          </View>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
+  container2: {
+    position: "absolute",
+    top: "10%",
+    left: 10,
+  },
+  tinyLogo: {
+    width: 120,
+    height: 140,
+  },
   container: {
     display: "flex",
     alignContent: "center",

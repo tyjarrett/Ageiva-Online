@@ -10,7 +10,11 @@ export type CreateUserResponse = {
 };
 
 export type resetRequestResponse = {
-  email: string;
+  passToken: string;
+};
+
+export type resetPassTokenResponse = {
+  passToken: string;
 };
 
 export type HealthDataPoint = {
