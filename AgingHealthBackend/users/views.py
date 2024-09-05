@@ -116,7 +116,7 @@ class RequestPasswordReset(generics.GenericAPIView):
         if user:
             token = ""
             for x in range(8): 
-                token += randint(0, 9)
+                token += str(randint(0, 9))
             reset = PasswordReset(email=email, token=token)
             reset.save()
 
