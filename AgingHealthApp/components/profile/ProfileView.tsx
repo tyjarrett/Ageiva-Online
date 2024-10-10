@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { commonStyles } from "../../style/CommonStyles";
 import { useAuth } from "../authentication/AuthProvider";
@@ -52,7 +52,7 @@ const ProfileView = ({ setCurrentScreen, setDateCheck }: Props) => {
       <View style={commonStyles.centerStack}>
         <View style={styles.picture}>
           <Button onPress={logout}>Logout</Button>
-          <Text variant="displayMedium">Pic</Text>
+          <Image></Image>
           <Text>{auth.currentUser.username}</Text>
           {responseDates[0].length < 1 ? (
             <Button mode="contained" onPress={() => setCurrentScreen("Survey")}>
