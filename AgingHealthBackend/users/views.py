@@ -1,4 +1,5 @@
 from random import randint
+from AgingHealthBackend.AgingHealthBackend.settings import MEDIA_ROOT
 from users.serializers import PostUserSerializer, PutUserSerializer, UserSerializer, ResetPasswordRequestSerializer, ResetPasswordSerializer
 from rest_framework.response import Response
 from rest_framework import status, generics
@@ -101,6 +102,7 @@ class TargetUserProfileImgView(APIView):
         if request.user.email != user.email and not request.user.is_superuser:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         response = {
+            MEDIA_ROOT,
             user.get_profileImg()
         }
         return Response(response, status=status.HTTP_200_OK)
