@@ -101,7 +101,7 @@ class TargetUserProfileImgView(APIView):
         if request.user.email != user.email and not request.user.is_superuser:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         response = {
-            "img_url": user.get_profileImg
+            "img_url": user.get_profileImg()
         }
         return Response(response, status=status.HTTP_200_OK)
 
