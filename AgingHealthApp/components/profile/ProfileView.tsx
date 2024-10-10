@@ -52,7 +52,7 @@ const ProfileView = ({ setCurrentScreen, setDateCheck }: Props) => {
       <View style={commonStyles.centerStack}>
         <View style={styles.picture}>
           <Button onPress={logout}>Logout</Button>
-          <Image></Image>
+
           <Text>{auth.currentUser.username}</Text>
           {responseDates[0].length < 1 ? (
             <Button mode="contained" onPress={() => setCurrentScreen("Survey")}>
