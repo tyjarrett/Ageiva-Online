@@ -10,6 +10,7 @@ import {
   resetRequestResponse,
   resetPassTokenResponse,
   resetPassResponse,
+  ProfileImgResponse,
 } from "../types/apiResponses";
 import { PResponse, VariableId } from "../types/Profile";
 
@@ -86,4 +87,10 @@ export function requestPassToken(
   email: string
 ): Promise<AxiosResponse<PassTokenResponse>> {
   return apiPost("password_reset/", { email });
+}
+
+export function getProfileImg(
+  email: string
+): Promise<AxiosResponse<ProfileImgResponse>> {
+  return apiGet("users/user/img/" + email + "/");
 }

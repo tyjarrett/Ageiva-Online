@@ -43,3 +43,7 @@ export type PassTokenResponse = {
 };
 
 export type QualToQuantResponse = Record<VariableId, Record<number, number>>;
+
+export type ProfileImgResponse = {
+  img_url: string;
+};

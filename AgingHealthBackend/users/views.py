@@ -91,6 +91,19 @@ class TargetUserUsernameView(APIView):
             "isSuperuser": user.is_superuser,
         }
         return Response(response, status=status.HTTP_200_OK)
+    
+class TargetUserProfileImgView(APIView):
+    permission_classes = []
+    parser_classes = [JSONParser, FormParser, MultiPartParser]
+
+    def get(self, request, email):
+        user = get_object_or_404(models.User, email=email)
+        if request.user.email != user.email and not request.user.is_superuser:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        response = {
+            "img_url": user.profile_img
+        }
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class UserViewWithToken(APIView):
