@@ -17,6 +17,10 @@ export type resetPassTokenResponse = {
   passToken: string;
 };
 
+export type resetPassResponse = {
+  passToken: string;
+};
+
 export type HealthDataPoint = {
   id: number;
   age: number;

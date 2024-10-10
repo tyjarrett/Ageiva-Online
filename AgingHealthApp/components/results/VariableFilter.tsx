@@ -16,14 +16,34 @@ type Props = {
   dataRecord: GraphData;
   checkArray: Record<VariableId, boolean>;
   setCheckArray: SetState<Record<VariableId, boolean>>;
+  numCheck: number;
+  setNumCheck: SetState<number>;
 };
 
-const VariableFilter = ({ dataRecord, checkArray, setCheckArray }: Props) => {
+const VariableFilter = ({
+  dataRecord,
+  checkArray,
+  setCheckArray,
+  numCheck,
+  setNumCheck,
+}: Props) => {
   const [search, setSearch] = useState("");
   const [filterVisible, setFilterVisible] = useState(false);
 
   const filterSearch = (term: string) => {
     return search === "" || term.toLowerCase().includes(search.toLowerCase());
+  };
+
+  const incrCheck = (id: string) => {
+    setCheckArray((prev) => ({
+      ...prev,
+      [id]: isVariableId(id) && !prev[id],
+    }));
+    if (!checkArray[id as VariableId]) {
+      setNumCheck(numCheck + 1);
+    } else {
+      setNumCheck(numCheck - 1);
+    }
   };
 
   return (
@@ -68,13 +88,7 @@ const VariableFilter = ({ dataRecord, checkArray, setCheckArray }: Props) => {
                         ? "checked"
                         : "unchecked"
                     }
-                    onPress={() =>
-                      setCheckArray((prev) => ({
-                        ...prev,
-                        [variableId]:
-                          isVariableId(variableId) && !prev[variableId],
-                      }))
-                    }
+                    onPress={() => incrCheck(variableId)}
                   />
                 ) : (
                   <React.Fragment key={variableId}></React.Fragment>

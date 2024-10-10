@@ -1,5 +1,5 @@
 import { DateAndValue } from "../../types/Results";
-import { CartesianChart, Line, useChartPressState } from "victory-native";
+import * as Victory from "victory-native";
 import { surveyQuestions } from "../../utilities/constants";
 import { StyleSheet, View } from "react-native";
 import { Circle, useFont } from "@shopify/react-native-skia";
@@ -35,7 +35,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
   }));
   const font = useFont(inter, 12);
   const { isActive: chartPressActive, state: chartPressState } =
-    useChartPressState({
+    Victory.useChartPressState({
       x: dataPoints[0].date,
       y: {
         value: dataPoints[0].value,
@@ -112,7 +112,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
           )}
         </View>
         <View style={styles.chartContainer}>
-          <CartesianChart
+          <Victory.CartesianChart
             data={dataPoints}
             xKey="date"
             yKeys={yKeys}
@@ -130,13 +130,13 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
           >
             {({ points }) => (
               <>
-                <Line
+                <Victory.Line
                   points={points.value}
                   color={graphColors.var}
                   strokeWidth={3}
                 />
                 {variable && (
-                  <Line
+                  <Victory.Line
                     points={points.mean}
                     color={graphColors.mean}
                     strokeWidth={3}
@@ -157,7 +157,7 @@ const HealthDataChart = ({ label, data, numPoints, qualToQuant }: Props) => {
                 )}
               </>
             )}
-          </CartesianChart>
+          </Victory.CartesianChart>
         </View>
 
         <Legend

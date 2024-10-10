@@ -13,7 +13,12 @@ import {
   QuestionAndResponse,
   VariableId,
 } from "../../types/Profile";
-import { StyleSheet, View } from "react-native";
+import {
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { surveyQuestions } from "../../utilities/constants";
 import { useEffect, useState } from "react";
 import ProfileQuestion from "./ProfileQuestion";
@@ -115,18 +120,62 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
   };
 
   const checkResponses = () => {
-    let check = false;
-    for (const [, entry] of Object.entries(testRecord)) {
-      if (entry.response === "") {
-        check = true;
-        break;
+    if (required && currentChoice === "") {
+      errorCheck = false;
+      setErrorText("Please enter a number");
+    } else {
+      errorCheck =
+        /^\d+\.\d+$/.test(currentChoice) ||
+        /^\d+$/.test(currentChoice) ||
+        currentChoice === "";
+      if (!errorCheck) {
+        setErrorText("Please enter only numbers");
       }
     }
-    if (check) {
-      setVisible(true);
-    } else {
-      postRecord();
-      setCurrentScreen("Profile");
+    const res = {
+      variableId: surveyQuestions[currentQ].variableId,
+      type:
+        surveyQuestions[currentQ].hasQuantitative && quantitative
+          ? "quantitative"
+          : "qualitative",
+      response: currentChoice,
+    } as QuestionAndResponse;
+    if (
+      (parseFloat(res.response) > range[1] ||
+        parseFloat(res.response) < range[0]) &&
+      res.type === "quantitative"
+    ) {
+      const errortext =
+        "Enter numbers inside the range (" +
+        (
+          surveyQuestions[currentQ].mean -
+          surveyQuestions[currentQ].stdev * 3
+        ).toFixed(3) +
+        " to " +
+        (
+          surveyQuestions[currentQ].mean +
+          surveyQuestions[currentQ].stdev * 3
+        ).toFixed(3) +
+        ")";
+      setErrorText(errortext);
+      errorCheck = false;
+    }
+    if (errorCheck) {
+      setErrorText("");
+      testRecord[res.variableId] = res;
+      let check = false;
+      for (const [, entry] of Object.entries(testRecord)) {
+        if (entry.response === "") {
+          check = true;
+          break;
+        }
+      }
+      if (check) {
+        setVisible(true);
+      } else {
+        postRecord();
+        setCurrentScreen("Profile");
+      }
     }
   };
 
@@ -159,6 +208,7 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
   };
 
   const nextPressed = () => {
+    Keyboard.dismiss();
     if (required && currentChoice === "") {
       errorCheck = false;
       setErrorText("Please enter a number");
@@ -258,95 +308,102 @@ const ProfileSurvey = ({ setCurrentScreen }: Props) => {
   };
 
   return (
-    <View style={styles.container}>
-      <ProgressBar
-        progress={currentQ / (Object.keys(surveyQuestions).length + 20)}
-        style={{ ...styles.progress }}
-      />
-      <View style={{ flexDirection: "row" }}>
-        {currentQ != 0 ? (
-          <Button mode="contained" onPress={backPressed} icon="arrow-left">
-            Back
-          </Button>
-        ) : (
-          <></>
-        )}
-        {currentQ < Object.keys(surveyQuestions).length ? (
-          <Button
-            mode="contained"
-            style={{ marginLeft: "auto", marginRight: 0 }}
-            onPress={() => {
-              nextPressed();
-            }}
-            icon="arrow-right"
-          >
-            Next
-          </Button>
-        ) : (
-          <></>
-        )}
-      </View>
-      {loading ? (
-        <ActivityIndicator animating={true} />
-      ) : currentQ < Object.keys(surveyQuestions).length ? (
-        <>
-          {required ? <Text>* this field is required</Text> : <></>}
-          {errorText != "" ? (
-            <Text style={styles.error}>{errorText}</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <ProgressBar
+          progress={currentQ / (Object.keys(surveyQuestions).length + 20)}
+          style={{ ...styles.progress }}
+        />
+        <View style={{ flexDirection: "row" }}>
+          {currentQ != 0 ? (
+            <Button mode="contained" onPress={backPressed} icon="arrow-left">
+              Back
+            </Button>
           ) : (
             <></>
           )}
-          <ProfileQuestion
-            question={surveyQuestions[currentQ]}
-            currentChoice={currentChoice}
-            setCurrentChoice={setCurrentChoice}
-            quantitative={quantitative}
-          />
-          {switchModeEnabled && (
+          {currentQ < Object.keys(surveyQuestions).length ? (
             <Button
               mode="contained"
+              style={{ marginLeft: "auto", marginRight: 0 }}
               onPress={() => {
-                setQuantitative((prev) => !prev);
-                setCurrentChoice("");
+                nextPressed();
               }}
+              icon="arrow-right"
             >
-              Provide {quantitative ? "estimate" : "exact value"} instead
+              Next
             </Button>
+          ) : (
+            <></>
           )}
-        </>
-      ) : (
-        <View style={styles.complete}>
-          <Text variant="displayMedium">Quiz Complete</Text>
         </View>
-      )}
-      <Portal>
-        <Dialog visible={visible} onDismiss={() => setCurrentScreen("Profile")}>
-          <Dialog.Icon icon="alert" />
-          <Dialog.Title style={styles.title}>Missing Information</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">
-              Some fields are incomplete and will lead to a less accurate
-              mortality reading. You will only be able to view predictions for
-              health variables that you have filled out.
-            </Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button
-              onPress={() => {
-                backPressed();
-                setVisible(false);
-              }}
-            >
-              Back
-            </Button>
-            <Button onPress={ignorePress}>Ignore</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-      <Button mode="contained" onPress={checkResponses}>
-        Save and Complete
-      </Button>
-    </View>
+        {loading ? (
+          <ActivityIndicator animating={true} />
+        ) : currentQ < Object.keys(surveyQuestions).length ? (
+          <>
+            {required ? <Text>* this field is required</Text> : <></>}
+            {errorText != "" ? (
+              <Text style={styles.error}>{errorText}</Text>
+            ) : (
+              <></>
+            )}
+            <ProfileQuestion
+              question={surveyQuestions[currentQ]}
+              currentChoice={currentChoice}
+              setCurrentChoice={setCurrentChoice}
+              quantitative={quantitative}
+            />
+            {switchModeEnabled && (
+              <Button
+                mode="contained"
+                onPress={() => {
+                  setQuantitative((prev) => !prev);
+                  setCurrentChoice("");
+                }}
+              >
+                Provide {quantitative ? "estimate" : "exact value"} instead
+              </Button>
+            )}
+          </>
+        ) : (
+          <View style={styles.complete}>
+            <Text variant="displayMedium">Quiz Complete</Text>
+          </View>
+        )}
+        <Portal>
+          <Dialog
+            visible={visible}
+            onDismiss={() => setCurrentScreen("Profile")}
+          >
+            <Dialog.Icon icon="alert" />
+            <Dialog.Title style={styles.title}>
+              Missing Information
+            </Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium">
+                Some fields are incomplete and will lead to a less accurate
+                mortality reading. You will only be able to view predictions for
+                health variables that you have filled out.
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button
+                onPress={() => {
+                  backPressed();
+                  setVisible(false);
+                }}
+              >
+                Back
+              </Button>
+              <Button onPress={ignorePress}>Ignore</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+        <Button mode="contained" onPress={checkResponses}>
+          Save and Complete
+        </Button>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

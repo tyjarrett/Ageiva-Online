@@ -56,6 +56,7 @@ const ResetToken = ({ setPage, setPassToken }: Props) => {
         {isError ? <Text style={styles.error}>{errText}</Text> : <></>}
         <TextInput
           style={styles.container3}
+          keyboardType="numeric"
           mode="outlined"
           label="Token"
           value={token}

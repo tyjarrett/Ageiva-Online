@@ -28,6 +28,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
     objects = UserManager()
+    profile_img = models.ImageField(default='fallback.png', blank=True)
 
     USERNAME_FIELD="email"
     REQUIRED_FIELDS=[]

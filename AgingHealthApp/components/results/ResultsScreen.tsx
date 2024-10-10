@@ -26,6 +26,7 @@ import SurvivalDisplay from "./SurvivalDisplay";
 const ResultsScreen = () => {
   const [currentScreen] = useState("Results");
   const [numPredYears, setNumPredYears] = useState(20);
+  const [numCheck, setNumCheck] = useState(0);
   const [checkArray, setCheckArray] = useState(
     {} as Record<VariableId, boolean>
   );
@@ -149,13 +150,19 @@ const ResultsScreen = () => {
                 dataRecord={dataRecord}
                 checkArray={checkArray}
                 setCheckArray={setCheckArray}
+                numCheck={numCheck}
+                setNumCheck={setNumCheck}
               />
 
               <DomainSelect
                 selectedYear={numPredYears}
                 setSelectedYear={setNumPredYears}
               />
-              <Text>Press and hold on graphs to get more information</Text>
+              {numCheck > 0 ? (
+                <Text>Press and hold on graphs to get more information</Text>
+              ) : (
+                <Text>Check out the filter button</Text>
+              )}
 
               {Object.keys(checkArray).map((variableId) =>
                 isVariableId(variableId) && checkArray[variableId] ? (
