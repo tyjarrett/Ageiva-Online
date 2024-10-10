@@ -33,6 +33,9 @@ class User(AbstractUser):
     USERNAME_FIELD="email"
     REQUIRED_FIELDS=[]
 
+    def get_profileImg(self):
+        return self.profile_img.url
+
 class PasswordReset(models.Model):
     email = models.EmailField()
     token = models.CharField(max_length=100)

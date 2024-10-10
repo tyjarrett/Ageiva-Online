@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["userId", "email"]
+        fields = ["userId", "email", "profile_img"]
 
     def get_userId(self, obj):
         return obj.id
