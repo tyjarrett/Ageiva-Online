@@ -106,7 +106,7 @@ class TargetUserImg(APIView):
 
             if(image_instance):
                 image_instance.save()
-                return Response(response, status=status.HTTP_200_OK)
+                return Response(image_instance, status=status.HTTP_200_OK)
             else:
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
             
