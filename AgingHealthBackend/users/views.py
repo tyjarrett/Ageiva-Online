@@ -104,11 +104,11 @@ class TargetUserImg(APIView):
                 img=image_data,
             )
 
+            image_instance.save()
             if(image_instance):
-                image_instance.save()
                 return Response(image_instance, status=status.HTTP_200_OK)
             else:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+                return Response(image_instance, status=status.HTTP_401_UNAUTHORIZED)
             
     
     def image_detail(request, email):
