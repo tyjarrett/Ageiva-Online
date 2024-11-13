@@ -1,4 +1,5 @@
 from random import randint
+from AgingHealthBackend.users.forms import ImageUploadForm
 from users.serializers import PostUserSerializer, PutUserSerializer, UserSerializer, ResetPasswordRequestSerializer, ResetPasswordSerializer
 from rest_framework.response import Response
 from rest_framework import status, generics
@@ -6,7 +7,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.db.utils import IntegrityError
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
@@ -14,6 +15,7 @@ from users import models
 from users.models import PasswordReset, User
 from django.core.mail import send_mail
 from django.conf import settings
+import base64
 
 
 class UserView(APIView):
@@ -92,19 +94,33 @@ class TargetUserUsernameView(APIView):
         }
         return Response(response, status=status.HTTP_200_OK)
     
-class TargetUserProfileImgView(APIView):
-    permission_classes = []
-    parser_classes = [JSONParser, FormParser, MultiPartParser]
+class TargetUserImg():
+    def upload_img(request):
+        if(request.method == "POST"):
+            form = ImageUploadForm(request.POST, request.FILES)
+            if form.is_valid():
+                image_file = request.FILES['img']
+                image_data = image_file.read()  # Read binary data
 
-    def get(self, request, email):
-        user = get_object_or_404(models.User, email=email)
-        if request.user.email != user.email and not request.user.is_superuser:
+                image_instance = TargetUserImg(
+                    user=form.cleaned_data['email'],
+                   img=image_data,
+                )
+                image_instance.save()
+                return redirect('some_view')  # Redirect to another page or render success message
+        else:
+            form = ImageUploadForm()
+        return render(request, 'upload.html', {'form': form})
+    
+    def image_detail(request, email):
+        image_object = get_object_or_404(models.UserImg, email=email)
+        if request.user.email != image_object.email and not request.user.is_superuser:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        response = {
-            settings.MEDIA_ROOT,
-            user.get_profileImg()
-        }
-        return Response(response, status=status.HTTP_200_OK)
+        image_data = base64.b64encode(image_object.img).decode('utf-8')
+        return render(request, 'image_detail.html', {
+            'email': image_object.name,
+            'img': image_data, 
+        })
 
 
 class UserViewWithToken(APIView):

@@ -27,18 +27,19 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
     objects = UserManager()
-    profile_img = models.ImageField(default='fallback.png', blank=True)
 
     USERNAME_FIELD="email"
     REQUIRED_FIELDS=[]
 
-    def get_profileImg(self):
-        return self.profile_img.url
 
 class PasswordReset(models.Model):
     email = models.EmailField()
     token = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class UserImg(models.Model):
+    email = models.EmailField()
+    img = models.BinaryField()
 
     
 
