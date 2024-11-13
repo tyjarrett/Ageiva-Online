@@ -1,5 +1,4 @@
 from random import randint
-from users import forms
 from users.forms import ImageUploadForm
 from users.serializers import PostUserSerializer, PutUserSerializer, UserSerializer, ResetPasswordRequestSerializer, ResetPasswordSerializer
 from rest_framework.response import Response
@@ -95,20 +94,19 @@ class TargetUserUsernameView(APIView):
         }
         return Response(response, status=status.HTTP_200_OK)
     
-class TargetUserImg():
-    def upload_img(request):
-        if(request.method == "POST"):
-            form = ImageUploadForm(request.POST, request.FILES)
-            if form.is_valid():
-                image_file = request.FILES['img']
-                image_data = image_file.read()  # Read binary data
+class TargetUserImg(APIView):
+    def post(self, request):
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            image_file = request.FILES['img']
+            image_data = image_file.read()  # Read binary data
 
-                image_instance = TargetUserImg(
-                    user=form.cleaned_data['email'],
-                   img=image_data,
-                )
-                image_instance.save()
-                return redirect('some_view')  # Redirect to another page or render success message
+            image_instance = TargetUserImg(
+                user=form.cleaned_data['email'],
+                img=image_data,
+            )
+            image_instance.save()
+            return redirect('some_view')  # Redirect to another page or render success message
         else:
             form = ImageUploadForm()
         return render(request, 'upload.html', {'form': form})
