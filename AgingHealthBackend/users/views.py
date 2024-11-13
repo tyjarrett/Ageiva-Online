@@ -12,7 +12,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from users import models
-from users.models import PasswordReset, User
+from users.models import PasswordReset, User, UserImg
 from django.core.mail import send_mail
 from django.conf import settings
 import base64
@@ -96,20 +96,20 @@ class TargetUserUsernameView(APIView):
     
 class TargetUserImg(APIView):
     def post(self, request):
-        form = ImageUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            image_file = request.FILES['img']
+            image_file = request.img
             image_data = image_file.read()  # Read binary data
 
-            image_instance = TargetUserImg(
-                user=form.cleaned_data['email'],
+            image_instance = UserImg(
+                email=request.email,
                 img=image_data,
             )
-            image_instance.save()
-            return redirect('some_view')  # Redirect to another page or render success message
-        else:
-            form = ImageUploadForm()
-        return render(request, 'upload.html', {'form': form})
+
+            if(image_instance):
+                image_instance.save()
+                return Response(response, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            
     
     def image_detail(request, email):
         image_object = get_object_or_404(models.UserImg, email=email)
