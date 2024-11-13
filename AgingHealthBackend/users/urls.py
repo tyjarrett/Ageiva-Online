@@ -11,7 +11,6 @@ urlpatterns = [
     path("token/", obtain_auth_token),
     path("user/<int:userId>/", views.TargetUserView.as_view()),
     path("user/<str:email>/", views.TargetUserUsernameView.as_view()),
-    path("user/img/<str:email>/", views.TargetUserProfileImgView.as_view()),
     path("resetrequest/<str:email>/", views.RequestPasswordReset.as_view()),
     path("resettoken/<str:token>/", views.ResetPasswordToken.as_view()),
     path("reset/<str:token>/", views.ResetPassword.as_view()),
