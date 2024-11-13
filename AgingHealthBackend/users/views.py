@@ -1,5 +1,5 @@
 from random import randint
-from AgingHealthBackend.users.forms import ImageUploadForm
+from users.forms import ImageUploadForm
 from users.serializers import PostUserSerializer, PutUserSerializer, UserSerializer, ResetPasswordRequestSerializer, ResetPasswordSerializer
 from rest_framework.response import Response
 from rest_framework import status, generics
