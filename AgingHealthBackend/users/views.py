@@ -111,12 +111,12 @@ class TargetUserImg(APIView):
             )
 
             image_instance.save()
-            return Response(user, status=status.HTTP_200_OK)
         else:
-            try:
-                field = UserImg.create_field(request.email, image_data)
-            except IntegrityError:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            field = UserImg.create_field(request.email, image_data)
+        
+        image_object = get_object_or_404(models.UserImg, email=request.email)
+        return Response(image_object, status=status.HTTP_200_OK)
+            
 
             
     
