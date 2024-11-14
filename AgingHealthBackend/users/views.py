@@ -1,6 +1,6 @@
 from random import randint
 from users.forms import ImageUploadForm
-from users.serializers import PostUserSerializer, PutUserSerializer, UserSerializer, ResetPasswordRequestSerializer, ResetPasswordSerializer
+from users.serializers import PostUserSerializer, ProfileImgSerializer, PutUserSerializer, UserSerializer, ResetPasswordRequestSerializer, ResetPasswordSerializer
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.authtoken.models import Token
@@ -96,14 +96,15 @@ class TargetUserUsernameView(APIView):
     
 class TargetUserImg(generics.GenericAPIView):
     permission_classes = [AllowAny]
-    serializer_class = ResetPasswordRequestSerializer
+    serializer_class = ProfileImgSerializer
 
     def post(self, request):
 
-        print("hi")
-            
-        serializer = self.serializer_class(data=request.data)
-        user = UserImg.objects.filter(email=request.data["email"]).first()
+        serializer = ProfileImgSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        user = UserImg.objects.filter(email=serializer.email).first()
 
         image_file = request.data["img"]
         image_data = image_file.read()  # Read binary data
