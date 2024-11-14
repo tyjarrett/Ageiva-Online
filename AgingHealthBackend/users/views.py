@@ -94,7 +94,7 @@ class TargetUserUsernameView(APIView):
         }
         return Response(response, status=status.HTTP_200_OK)
     
-class TargetUserImg(APIView):
+class TargetUserImg(generics.GenericAPIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
