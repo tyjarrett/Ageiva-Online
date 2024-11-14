@@ -96,19 +96,26 @@ class TargetUserUsernameView(APIView):
     
 class TargetUserImg(APIView):
     def post(self, request):
-            image_file = request.img
-            image_data = image_file.read()  # Read binary data
+            
+        user = UserImg.objects.filter(email=request.email).first()
 
+        image_file = request.img
+        image_data = image_file.read()  # Read binary data
+        
+        if user:
             image_instance = UserImg(
                 email=request.email,
                 img=image_data,
             )
 
             image_instance.save()
-            if(image_instance):
-                return Response(image_instance, status=status.HTTP_200_OK)
-            else:
-                return Response(image_instance, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(user, status=status.HTTP_200_OK)
+        else:
+            try:
+                field = UserImg.create_field(request.email, image_data)
+            except IntegrityError:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+
             
     
     def image_detail(request, email):

@@ -41,6 +41,11 @@ class UserImg(models.Model):
     email = models.EmailField()
     img = models.BinaryField()
 
+    def create_field(self, email, img):
+        field = self.model(email=email, img=img)
+        field.save()
+        return field
+
     
 
     
