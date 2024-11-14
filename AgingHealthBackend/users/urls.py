@@ -14,7 +14,7 @@ urlpatterns = [
     path("resetrequest/<str:email>/", views.RequestPasswordReset.as_view()),
     path("resettoken/<str:token>/", views.ResetPasswordToken.as_view()),
     path("reset/<str:token>/", views.ResetPassword.as_view()),
-    path("upload_img", views.TargetUserImg.as_view())
+    path("upload_img/", views.TargetUserImg.as_view())
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

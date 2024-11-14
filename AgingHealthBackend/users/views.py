@@ -96,9 +96,11 @@ class TargetUserUsernameView(APIView):
     
 class TargetUserImg(generics.GenericAPIView):
     permission_classes = [AllowAny]
+    serializer_class = ResetPasswordRequestSerializer
 
     def post(self, request):
             
+        serializer = self.serializer_class(data=request.data)
         user = UserImg.objects.filter(email=request.email).first()
 
         image_file = request.img
