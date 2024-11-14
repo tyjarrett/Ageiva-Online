@@ -95,6 +95,8 @@ class TargetUserUsernameView(APIView):
         return Response(response, status=status.HTTP_200_OK)
     
 class TargetUserImg(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
             
         user = UserImg.objects.filter(email=request.email).first()
