@@ -99,11 +99,13 @@ class TargetUserImg(generics.GenericAPIView):
     serializer_class = ResetPasswordRequestSerializer
 
     def post(self, request):
+
+        print("hi")
             
         serializer = self.serializer_class(data=request.data)
-        user = UserImg.objects.filter(email=request.email).first()
+        user = UserImg.objects.filter(email=request.data["email"]).first()
 
-        image_file = request.img
+        image_file = request.data["img"]
         image_data = image_file.read()  # Read binary data
         
         if user:
