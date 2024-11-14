@@ -101,7 +101,7 @@ class TargetUserImg(generics.GenericAPIView):
     def post(self, request):
 
         serializer = ProfileImgSerializer(data=request.data)
-        print(serializer.img)
+        print(request.img)
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
