@@ -63,6 +63,6 @@
       "react-native-paper": "^5.0.0-rc.9"
     }
   },
-  "private": true,
+  "private": false,
   "homepage": "https://tjarrett.github.io/{Agevia-Online}"
 }
