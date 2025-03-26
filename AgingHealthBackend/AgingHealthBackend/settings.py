@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_rest_passwordreset',
     'corsheaders',
+    'sslserver',
 ]
 
 DJANGO_REST_LOOKUP_FIELD = "email"
